@@ -1,0 +1,41 @@
+# AIM — Advisory Board Decision Analysis
+# 5 agents debate a high-stakes business decision → GO/NO-GO/CONDITIONAL brief
+
+goal: >
+  Produce a definitive GO / NO-GO / CONDITIONAL recommendation on whether to launch
+  a $7,500 AI Leadership Bootcamp, backed by multi-angle board debate and
+  a Devil's Advocate rebuttal pass.
+
+inputs:
+  decision_question: "Launch $7,500 live bootcamp or $2,000 self-paced course first?"
+  company_context: "Prompt Advisers — AI consulting & education, 800+ Skool members"
+  output_dir: "outputs/agent_teams_demo/big_problem/"
+
+acceptance_tests:
+  executive_brief:
+    - "contains: GO"
+    - "contains: risk"
+    - "contains: next steps"
+    - "min_words: 400"
+  devils_advocate:
+    - "min_words: 300"
+    - "contains: fail"
+    - "challenges_at_least_2_teammates: true"
+
+guardrails:
+  - "Devil's Advocate must challenge at least 2 other board members by name"
+  - "Executive Brief must state GO/NO-GO/CONDITIONAL in the first paragraph"
+  - "No agent may claim 'certain success' — all projections are estimates"
+  - "Financial model must clearly separate Scenario A and Scenario B"
+
+process_steps:
+  - "Phase 1 (parallel): 5 board members do independent research"
+  - "Phase 2: Each member shares top finding"
+  - "Phase 2b: Devil's Advocate challenges 2 members' conclusions"
+  - "Phase 3: Synthesis Lead produces executive brief with recommendation"
+
+approval_level: auto
+branching:
+  on_strong_disagreement: >
+    If 3+ agents strongly disagree, synthesis lead notes the split and
+    presents both paths in the executive brief rather than forcing consensus.

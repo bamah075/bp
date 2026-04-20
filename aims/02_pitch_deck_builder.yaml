@@ -1,0 +1,43 @@
+# AIM — Pitch Deck Builder
+# Sequential handoff: Researcher → Slide Writer → Designer
+# Task dependencies enforced in code; each stage requires prior stage to complete.
+
+goal: >
+  Produce a complete, data-backed 12-slide pitch deck (.pptx) on AI automation
+  for small businesses, built from verified research through to final file.
+
+inputs:
+  topic: "how AI automation is transforming small business operations in 2026"
+  output_dir: "outputs/agent_teams_demo/pitch_deck/"
+
+acceptance_tests:
+  research_brief:
+    - "min_data_points: 8"
+    - "contains: source"
+    - "no_fabricated_stats: true"
+  slide_content:
+    - "slide_count: 12"
+    - "contains: Speaker notes"
+    - "max_headline_words: 8"
+    - "max_bullet_words: 12"
+  pitch_deck_pptx:
+    - "file_exists: outputs/agent_teams_demo/pitch_deck/pitch_deck.pptx"
+    - "slide_count: 12"
+
+guardrails:
+  - "Researcher must never invent statistics — mark uncertain data as [ESTIMATED]"
+  - "Designer must not begin until Slide Writer completes"
+  - "Slide Writer must not begin until Researcher completes"
+  - "Human plan-approval required before Designer begins building"
+
+process_steps:
+  - "Stage 1: Researcher gathers 8-10 data points with sources"
+  - "GATE: human reviews research_brief.md before continuing"
+  - "Stage 2: Slide Writer builds 12-slide content from research"
+  - "GATE: human approves design approach before Designer begins"
+  - "Stage 3: Designer builds .pptx from slide content"
+
+approval_level: ask   # plan-approval gate before Designer stage
+branching:
+  on_insufficient_data: "Researcher must find more sources before Writer begins"
+  on_design_rejection: "Designer revises approach and resubmits for approval"

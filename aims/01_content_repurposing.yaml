@@ -1,0 +1,46 @@
+# AIM — Content Repurposing Pipeline
+# Human-authored SOP. Treat as the ground truth for this team's behavior.
+
+goal: >
+  Transform one video transcript into 4 platform-specific pieces with zero overlap.
+  Each piece must feel original — different angle, different format, different reader.
+
+inputs:
+  transcript_path: "Absolute path to the .md file containing the video transcript"
+  output_dir: "outputs/agent_teams_demo/content_repurposing/"
+
+acceptance_tests:
+  blog_post:
+    - "min_words: 1000"
+    - "contains: ##"
+    - "contains: CTA"
+    - "first_person: true"
+  linkedin_post:
+    - "min_words: 150"
+    - "max_words: 250"
+    - "max_hashtags: 3"
+  newsletter:
+    - "min_words: 300"
+    - "max_words: 500"
+    - "contains: Subject"
+  twitter_thread:
+    - "min_tweets: 7"
+    - "max_tweets: 10"
+    - "tweet_1_is_hook: true"
+
+guardrails:
+  - "No two platforms may lead with the same insight"
+  - "Never reproduce more than one sentence verbatim from the transcript"
+  - "Never use the word 'delve'"
+  - "All CTAs must point to the same destination"
+
+process_steps:
+  - "Read full transcript"
+  - "Each agent identifies 3 insights independently"
+  - "Agents share insights before writing to check for overlap"
+  - "Write platform content with a unique angle"
+  - "Synthesis Lead flags any inconsistencies"
+
+approval_level: auto
+branching:
+  on_overlap_detected: "Synthesis Lead flags it; humans decide whether to rewrite"

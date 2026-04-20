@@ -1,0 +1,56 @@
+# AIM — Personal AI Business Assistant (PA Assistant)
+# Phase 1: subagent analyzes reference repo
+# Phase 2: 5-agent build team with plan-approval gates
+
+goal: >
+  Build a working Telegram bot (python-telegram-bot) that understands Prompt Advisers'
+  business context, routes tasks to the correct skill, and persists memory in SQLite.
+  Startable with: python src/main.py
+
+inputs:
+  reference_repo: "https://github.com/anthropics/openclawai"
+  company: "Prompt Advisers (https://www.promptadvisers.com/)"
+  output_dir: "outputs/agent_teams_demo/pa_assistant/"
+
+acceptance_tests:
+  architecture:
+    - "contains: component"
+    - "contains: skill router"
+    - "contains: memory"
+    - "min_sections: 4"
+  telegram_bot:
+    - "contains: python-telegram-bot"
+    - "contains: MessageHandler"
+    - "file_exists: outputs/agent_teams_demo/pa_assistant/src/telegram_bot/bot.py"
+  skill_router:
+    - "skill_count: 8"
+    - "contains: intent"
+    - "contains: fallback"
+  memory:
+    - "contains: SQLite"
+    - "contains: learn"
+    - "contains: recall"
+  integration:
+    - "file_exists: outputs/agent_teams_demo/pa_assistant/src/main.py"
+    - "file_exists: outputs/agent_teams_demo/pa_assistant/setup.sh"
+    - "contains_in_main: start_polling"
+
+guardrails:
+  - "Never hardcode API keys — all secrets via .env"
+  - "Architect must complete and be approved before builders begin"
+  - "Each builder must produce runnable Python code with all imports"
+  - "setup.sh must never overwrite an existing .env without prompting"
+  - "Memory system must never log raw message content to audit files"
+
+process_steps:
+  - "Step 1 (subagent): Clone and analyze reference repo"
+  - "GATE: human reviews repo_analysis.md"
+  - "Step 2a: Architect designs system"
+  - "GATE: human approves architecture.md"
+  - "Step 2b (parallel): 4 builders implement their modules"
+  - "Step 3: Integration Dev wires everything and runs tests"
+
+approval_level: ask
+branching:
+  on_architecture_rejection: "Architect revises based on feedback before builders start"
+  on_build_failure: "Failed builder retries; others continue; integration waits"
