@@ -15,13 +15,13 @@ def generate_daily_brief(topics: list[str] = None) -> str:
     Generate a daily brief using Claude with multi-turn conversation.
 
     Args:
-        topics: List of topics to cover (defaults to Substack/Claude/Life Science)
+        topics: List of topics to cover (defaults to Substack AI trends and AI agents)
     """
     if not topics:
         topics = [
-            "Substack trends in AI and Life Sciences",
-            "Claude API updates and capabilities",
-            "Trending Life Science research"
+            "Substack trends in AI and emerging technologies",
+            "Building operating systems using AI agents",
+            "Latest developments in agentic AI systems"
         ]
 
     conversation_history = []
