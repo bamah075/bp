@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd /home/user/bp && python3 daily_brief_generator.py",
+            "statusMessage": "Generating daily brief...",
+            "timeout": 60
+          }
+        ]
+      }
+    ]
+  }
+}
