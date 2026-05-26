@@ -21,7 +21,7 @@ def generate_daily_brief(topics: list[str] = None) -> str:
         topics = [
             "Substack trends in AI and emerging technologies",
             "Building operating systems using AI agents",
-            "Latest developments in agentic AI systems"
+            "AI agent frameworks and tooling innovations"
         ]
 
     conversation_history = []
