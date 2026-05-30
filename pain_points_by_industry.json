@@ -1,0 +1,381 @@
+{
+  "generated_at": "2026-05-30T13:09:45.218076",
+  "total_industries": 10,
+  "total_pain_points": 54,
+  "industries": {
+    "Education": {
+      "count": 2,
+      "pain_points": [
+        {
+          "pain_point": "Student enrollment and course management issues Our educational institution struggles with tuition collection and curriculum management",
+          "source": "https://reddit.com/r/education",
+          "score": 89,
+          "timestamp": "2026-05-30T13:09:45.218051"
+        },
+        {
+          "pain_point": "The problem is integrating learning management systems",
+          "source": "https://reddit.com/r/education",
+          "score": 89,
+          "timestamp": "2026-05-30T13:09:45.218052"
+        }
+      ]
+    },
+    "Finance": {
+      "count": 5,
+      "pain_points": [
+        {
+          "pain_point": "Managing patient records is a nightmare We struggle with HIPAA compliance and our EHR system is outdated",
+          "source": "https://reddit.com/r/healthcare",
+          "score": 245,
+          "timestamp": "2026-05-30T13:09:45.217349"
+        },
+        {
+          "pain_point": "The challenge of integrating multiple hospital systems is becoming increasingly difficult",
+          "source": "https://reddit.com/r/healthcare",
+          "score": 245,
+          "timestamp": "2026-05-30T13:09:45.217350"
+        },
+        {
+          "pain_point": "Hiring talent is impossible in tech Our company struggles to find qualified developers",
+          "source": "https://reddit.com/r/startup",
+          "score": 312,
+          "timestamp": "2026-05-30T13:09:45.217782"
+        },
+        {
+          "pain_point": "The problem of retaining talent with competitive salaries is draining our budget",
+          "source": "https://reddit.com/r/startup",
+          "score": 312,
+          "timestamp": "2026-05-30T13:09:45.217783"
+        },
+        {
+          "pain_point": "Financial compliance is killing our startup Banking integrations are problematic and accounting is a nightmare",
+          "source": "https://reddit.com/r/finance",
+          "score": 267,
+          "timestamp": "2026-05-30T13:09:45.217967"
+        }
+      ]
+    },
+    "HR & Recruitment": {
+      "count": 10,
+      "pain_points": [
+        {
+          "pain_point": "Managing patient records is a nightmare We struggle with HIPAA compliance and our EHR system is outdated",
+          "source": "https://reddit.com/r/healthcare",
+          "score": 245,
+          "timestamp": "2026-05-30T13:09:45.217353"
+        },
+        {
+          "pain_point": "The challenge of integrating multiple hospital systems is becoming increasingly difficult",
+          "source": "https://reddit.com/r/healthcare",
+          "score": 245,
+          "timestamp": "2026-05-30T13:09:45.217357"
+        },
+        {
+          "pain_point": "Inventory management kills our margins Our retail store has serious issues with inventory tracking",
+          "source": "https://reddit.com/r/retail",
+          "score": 156,
+          "timestamp": "2026-05-30T13:09:45.217560"
+        },
+        {
+          "pain_point": "The problem is that our supply chain is fragmented across multiple vendors",
+          "source": "https://reddit.com/r/retail",
+          "score": 156,
+          "timestamp": "2026-05-30T13:09:45.217561"
+        },
+        {
+          "pain_point": "Hiring talent is impossible in tech Our company struggles to find qualified developers",
+          "source": "https://reddit.com/r/startup",
+          "score": 312,
+          "timestamp": "2026-05-30T13:09:45.217791"
+        },
+        {
+          "pain_point": "The problem of retaining talent with competitive salaries is draining our budget",
+          "source": "https://reddit.com/r/startup",
+          "score": 312,
+          "timestamp": "2026-05-30T13:09:45.217792"
+        },
+        {
+          "pain_point": "Real estate property management headaches We struggle with tenant management and maintenance requests",
+          "source": "https://reddit.com/r/realestate",
+          "score": 134,
+          "timestamp": "2026-05-30T13:09:45.217926"
+        },
+        {
+          "pain_point": "The challenge of collecting rent on time is a constant issue",
+          "source": "https://reddit.com/r/realestate",
+          "score": 134,
+          "timestamp": "2026-05-30T13:09:45.217927"
+        },
+        {
+          "pain_point": "Student enrollment and course management issues Our educational institution struggles with tuition collection and curriculum management",
+          "source": "https://reddit.com/r/education",
+          "score": 89,
+          "timestamp": "2026-05-30T13:09:45.218048"
+        },
+        {
+          "pain_point": "The problem is integrating learning management systems",
+          "source": "https://reddit.com/r/education",
+          "score": 89,
+          "timestamp": "2026-05-30T13:09:45.218050"
+        }
+      ]
+    },
+    "Healthcare": {
+      "count": 4,
+      "pain_points": [
+        {
+          "pain_point": "Managing patient records is a nightmare We struggle with HIPAA compliance and our EHR system is outdated",
+          "source": "https://reddit.com/r/healthcare",
+          "score": 245,
+          "timestamp": "2026-05-30T13:09:45.217321"
+        },
+        {
+          "pain_point": "The challenge of integrating multiple hospital systems is becoming increasingly difficult",
+          "source": "https://reddit.com/r/healthcare",
+          "score": 245,
+          "timestamp": "2026-05-30T13:09:45.217347"
+        },
+        {
+          "pain_point": "Hotel booking system failures Our hospitality business has problems with reservation systems",
+          "source": "https://reddit.com/r/hospitality",
+          "score": 156,
+          "timestamp": "2026-05-30T13:09:45.218001"
+        },
+        {
+          "pain_point": "The challenge of managing guest requests and staff coordination is painful",
+          "source": "https://reddit.com/r/hospitality",
+          "score": 156,
+          "timestamp": "2026-05-30T13:09:45.218002"
+        }
+      ]
+    },
+    "Hospitality": {
+      "count": 2,
+      "pain_points": [
+        {
+          "pain_point": "Hotel booking system failures Our hospitality business has problems with reservation systems",
+          "source": "https://reddit.com/r/hospitality",
+          "score": 156,
+          "timestamp": "2026-05-30T13:09:45.218006"
+        },
+        {
+          "pain_point": "The challenge of managing guest requests and staff coordination is painful",
+          "source": "https://reddit.com/r/hospitality",
+          "score": 156,
+          "timestamp": "2026-05-30T13:09:45.218008"
+        }
+      ]
+    },
+    "Manufacturing": {
+      "count": 4,
+      "pain_points": [
+        {
+          "pain_point": "Inventory management kills our margins Our retail store has serious issues with inventory tracking",
+          "source": "https://reddit.com/r/retail",
+          "score": 156,
+          "timestamp": "2026-05-30T13:09:45.217558"
+        },
+        {
+          "pain_point": "The problem is that our supply chain is fragmented across multiple vendors",
+          "source": "https://reddit.com/r/retail",
+          "score": 156,
+          "timestamp": "2026-05-30T13:09:45.217559"
+        },
+        {
+          "pain_point": "Manufacturing production bottlenecks Our factory faces difficulties with quality control and automated assembly lines",
+          "source": "https://reddit.com/r/manufacturing",
+          "score": 98,
+          "timestamp": "2026-05-30T13:09:45.217880"
+        },
+        {
+          "pain_point": "The problem is that our supply chain logistics are inefficient",
+          "source": "https://reddit.com/r/manufacturing",
+          "score": 98,
+          "timestamp": "2026-05-30T13:09:45.217881"
+        }
+      ]
+    },
+    "Marketing": {
+      "count": 2,
+      "pain_points": [
+        {
+          "pain_point": "Marketing ROI tracking is broken We have issues tracking customer acquisition costs across channels",
+          "source": "https://reddit.com/r/marketing",
+          "score": 187,
+          "timestamp": "2026-05-30T13:09:45.217835"
+        },
+        {
+          "pain_point": "The challenge of attribution modeling is frustrating our team",
+          "source": "https://reddit.com/r/marketing",
+          "score": 187,
+          "timestamp": "2026-05-30T13:09:45.217836"
+        }
+      ]
+    },
+    "Real Estate": {
+      "count": 4,
+      "pain_points": [
+        {
+          "pain_point": "Hiring talent is impossible in tech Our company struggles to find qualified developers",
+          "source": "https://reddit.com/r/startup",
+          "score": 312,
+          "timestamp": "2026-05-30T13:09:45.217788"
+        },
+        {
+          "pain_point": "The problem of retaining talent with competitive salaries is draining our budget",
+          "source": "https://reddit.com/r/startup",
+          "score": 312,
+          "timestamp": "2026-05-30T13:09:45.217790"
+        },
+        {
+          "pain_point": "Real estate property management headaches We struggle with tenant management and maintenance requests",
+          "source": "https://reddit.com/r/realestate",
+          "score": 134,
+          "timestamp": "2026-05-30T13:09:45.217924"
+        },
+        {
+          "pain_point": "The challenge of collecting rent on time is a constant issue",
+          "source": "https://reddit.com/r/realestate",
+          "score": 134,
+          "timestamp": "2026-05-30T13:09:45.217925"
+        }
+      ]
+    },
+    "Retail": {
+      "count": 8,
+      "pain_points": [
+        {
+          "pain_point": "Inventory management kills our margins Our retail store has serious issues with inventory tracking",
+          "source": "https://reddit.com/r/retail",
+          "score": 156,
+          "timestamp": "2026-05-30T13:09:45.217556"
+        },
+        {
+          "pain_point": "The problem is that our supply chain is fragmented across multiple vendors",
+          "source": "https://reddit.com/r/retail",
+          "score": 156,
+          "timestamp": "2026-05-30T13:09:45.217557"
+        },
+        {
+          "pain_point": "API integration nightmare in our SaaS product We're struggling with database scaling as our cloud infrastructure grows",
+          "source": "https://reddit.com/r/technology",
+          "score": 423,
+          "timestamp": "2026-05-30T13:09:45.217746"
+        },
+        {
+          "pain_point": "The challenge of maintaining API consistency is painful",
+          "source": "https://reddit.com/r/technology",
+          "score": 423,
+          "timestamp": "2026-05-30T13:09:45.217747"
+        },
+        {
+          "pain_point": "Hiring talent is impossible in tech Our company struggles to find qualified developers",
+          "source": "https://reddit.com/r/startup",
+          "score": 312,
+          "timestamp": "2026-05-30T13:09:45.217786"
+        },
+        {
+          "pain_point": "The problem of retaining talent with competitive salaries is draining our budget",
+          "source": "https://reddit.com/r/startup",
+          "score": 312,
+          "timestamp": "2026-05-30T13:09:45.217787"
+        },
+        {
+          "pain_point": "Manufacturing production bottlenecks Our factory faces difficulties with quality control and automated assembly lines",
+          "source": "https://reddit.com/r/manufacturing",
+          "score": 98,
+          "timestamp": "2026-05-30T13:09:45.217878"
+        },
+        {
+          "pain_point": "The problem is that our supply chain logistics are inefficient",
+          "source": "https://reddit.com/r/manufacturing",
+          "score": 98,
+          "timestamp": "2026-05-30T13:09:45.217879"
+        }
+      ]
+    },
+    "Technology": {
+      "count": 13,
+      "pain_points": [
+        {
+          "pain_point": "Inventory management kills our margins Our retail store has serious issues with inventory tracking",
+          "source": "https://reddit.com/r/retail",
+          "score": 156,
+          "timestamp": "2026-05-30T13:09:45.217551"
+        },
+        {
+          "pain_point": "The problem is that our supply chain is fragmented across multiple vendors",
+          "source": "https://reddit.com/r/retail",
+          "score": 156,
+          "timestamp": "2026-05-30T13:09:45.217554"
+        },
+        {
+          "pain_point": "API integration nightmare in our SaaS product We're struggling with database scaling as our cloud infrastructure grows",
+          "source": "https://reddit.com/r/technology",
+          "score": 423,
+          "timestamp": "2026-05-30T13:09:45.217743"
+        },
+        {
+          "pain_point": "The challenge of maintaining API consistency is painful",
+          "source": "https://reddit.com/r/technology",
+          "score": 423,
+          "timestamp": "2026-05-30T13:09:45.217745"
+        },
+        {
+          "pain_point": "Hiring talent is impossible in tech Our company struggles to find qualified developers",
+          "source": "https://reddit.com/r/startup",
+          "score": 312,
+          "timestamp": "2026-05-30T13:09:45.217784"
+        },
+        {
+          "pain_point": "The problem of retaining talent with competitive salaries is draining our budget",
+          "source": "https://reddit.com/r/startup",
+          "score": 312,
+          "timestamp": "2026-05-30T13:09:45.217785"
+        },
+        {
+          "pain_point": "Manufacturing production bottlenecks Our factory faces difficulties with quality control and automated assembly lines",
+          "source": "https://reddit.com/r/manufacturing",
+          "score": 98,
+          "timestamp": "2026-05-30T13:09:45.217876"
+        },
+        {
+          "pain_point": "The problem is that our supply chain logistics are inefficient",
+          "source": "https://reddit.com/r/manufacturing",
+          "score": 98,
+          "timestamp": "2026-05-30T13:09:45.217877"
+        },
+        {
+          "pain_point": "Real estate property management headaches We struggle with tenant management and maintenance requests",
+          "source": "https://reddit.com/r/realestate",
+          "score": 134,
+          "timestamp": "2026-05-30T13:09:45.217921"
+        },
+        {
+          "pain_point": "The challenge of collecting rent on time is a constant issue",
+          "source": "https://reddit.com/r/realestate",
+          "score": 134,
+          "timestamp": "2026-05-30T13:09:45.217923"
+        },
+        {
+          "pain_point": "Financial compliance is killing our startup Banking integrations are problematic and accounting is a nightmare",
+          "source": "https://reddit.com/r/finance",
+          "score": 267,
+          "timestamp": "2026-05-30T13:09:45.217969"
+        },
+        {
+          "pain_point": "Hotel booking system failures Our hospitality business has problems with reservation systems",
+          "source": "https://reddit.com/r/hospitality",
+          "score": 156,
+          "timestamp": "2026-05-30T13:09:45.218003"
+        },
+        {
+          "pain_point": "The challenge of managing guest requests and staff coordination is painful",
+          "source": "https://reddit.com/r/hospitality",
+          "score": 156,
+          "timestamp": "2026-05-30T13:09:45.218004"
+        }
+      ]
+    }
+  }
+}

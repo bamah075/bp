@@ -1,43 +1,371 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Life Science Newsletter</title>
-    <style type="text/css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Pain Points by Industry</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            color: #333333;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
         }
-        .header {
-            background-color: #6baed6;
-            color: white;
-            padding: 10px;
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
             text-align: center;
-            font-size: 24px;
-        }
-        .content {
-            margin: 15px;
-        }
-        .footer {
-            background-color: #6baed6;
             color: white;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             text-align: center;
-            padding: 10px;
-            font-size: 14px;
+        }
+
+        .stat-card h3 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .controls {
+            margin-bottom: 30px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        button.primary {
+            background: white;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        button.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .industries-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .industry-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .industry-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+
+        .industry-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .industry-header h2 {
+            font-size: 1.3em;
+        }
+
+        .pain-points-count {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .industry-content {
+            padding: 20px;
+        }
+
+        .pain-point {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .pain-point:last-child {
+            border-bottom: none;
+        }
+
+        .pain-point-text {
+            color: #333;
+            font-size: 0.95em;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .pain-point-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8em;
+            color: #999;
+        }
+
+        .pain-point-score {
+            background: #f0f0f0;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .source-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .source-link:hover {
+            text-decoration: underline;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: white;
+            font-size: 1.2em;
+        }
+
+        .error {
+            background: #fee;
+            border: 1px solid #f99;
+            color: #933;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .success {
+            background: #efe;
+            border: 1px solid #9f9;
+            color: #393;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Life Science Newsletter</h1>
+    <div class="container">
+        <header>
+            <h1>📊 Business Pain Points by Industry</h1>
+            <p>Insights from Reddit business communities</p>
+        </header>
+
+        <div class="stats" id="stats">
+            <div class="stat-card">
+                <h3 id="total-industries">0</h3>
+                <p>Industries Covered</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="total-points">0</h3>
+                <p>Pain Points Identified</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="generated-time">-</h3>
+                <p>Last Generated</p>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="primary" onclick="loadData()">📥 Load Results</button>
+            <button class="primary" onclick="exportCSV()">📥 Export as CSV</button>
+        </div>
+
+        <div id="message"></div>
+
+        <div class="industries-grid" id="industries-grid">
+            <div class="no-data">No data loaded. Click "Load Results" to start.</div>
+        </div>
     </div>
-    <div class="content">
-        <h2>Welcome to our latest edition</h2>
-        <p><strong>Dear [Recipient's Name],</strong></p>
-        <p>We are excited to share the latest news and developments in the field of life sciences...</p>
-        <!-- Add your content here -->
-    </div>
-    <div class="footer">
-        <p>&copy; 2023 Life Science Newsletter. All rights reserved.</p>
-    </div>
+
+    <script>
+        let currentData = null;
+
+        async function loadData() {
+            const messageDiv = document.getElementById('message');
+            messageDiv.innerHTML = '';
+
+            try {
+                const response = await fetch('pain_points_by_industry.json');
+                if (!response.ok) {
+                    throw new Error('Could not load pain_points_by_industry.json');
+                }
+
+                currentData = await response.json();
+                displayData(currentData);
+                messageDiv.innerHTML = '<div class="success">✓ Data loaded successfully</div>';
+            } catch (error) {
+                messageDiv.innerHTML = `<div class="error">✗ Error: ${error.message}<br>Run the demo scraper first: python3 demo_scraper.py</div>`;
+            }
+        }
+
+        function displayData(data) {
+            // Update stats
+            document.getElementById('total-industries').textContent = data.total_industries;
+            document.getElementById('total-points').textContent = data.total_pain_points;
+
+            const date = new Date(data.generated_at);
+            document.getElementById('generated-time').textContent = date.toLocaleDateString();
+
+            // Display industries
+            const grid = document.getElementById('industries-grid');
+            grid.innerHTML = '';
+
+            if (Object.keys(data.industries).length === 0) {
+                grid.innerHTML = '<div class="no-data">No pain points found.</div>';
+                return;
+            }
+
+            for (const [industry, info] of Object.entries(data.industries)) {
+                const card = createIndustryCard(industry, info);
+                grid.appendChild(card);
+            }
+        }
+
+        function createIndustryCard(industry, info) {
+            const card = document.createElement('div');
+            card.className = 'industry-card';
+
+            const header = document.createElement('div');
+            header.className = 'industry-header';
+            header.innerHTML = `
+                <h2>${industry}</h2>
+                <div class="pain-points-count">${info.count} points</div>
+            `;
+            card.appendChild(header);
+
+            const content = document.createElement('div');
+            content.className = 'industry-content';
+
+            info.pain_points.slice(0, 5).forEach(point => {
+                const pointDiv = document.createElement('div');
+                pointDiv.className = 'pain-point';
+
+                const text = document.createElement('div');
+                text.className = 'pain-point-text';
+                text.textContent = point.pain_point;
+                pointDiv.appendChild(text);
+
+                const meta = document.createElement('div');
+                meta.className = 'pain-point-meta';
+                meta.innerHTML = `
+                    <span class="pain-point-score">Score: ${point.score}</span>
+                    <a href="${point.source}" target="_blank" class="source-link">View on Reddit</a>
+                `;
+                pointDiv.appendChild(meta);
+
+                content.appendChild(pointDiv);
+            });
+
+            if (info.count > 5) {
+                const more = document.createElement('div');
+                more.style.color = '#999';
+                more.style.fontSize = '0.85em';
+                more.style.marginTop = '10px';
+                more.textContent = `+ ${info.count - 5} more pain points`;
+                content.appendChild(more);
+            }
+
+            card.appendChild(content);
+            return card;
+        }
+
+        function exportCSV() {
+            if (!currentData) {
+                alert('Please load data first');
+                return;
+            }
+
+            let csv = 'Industry,Pain Point,Score,Source,Timestamp\n';
+
+            for (const [industry, info] of Object.entries(currentData.industries)) {
+                info.pain_points.forEach(point => {
+                    const escapedText = `"${point.pain_point.replace(/"/g, '""')}"`;
+                    csv += `${industry},${escapedText},${point.score},${point.source},${point.timestamp}\n`;
+                });
+            }
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'pain_points_by_industry.csv';
+            a.click();
+        }
+
+        // Auto-load on page load
+        window.addEventListener('load', () => {
+            setTimeout(loadData, 500);
+        });
+    </script>
 </body>
 </html>
