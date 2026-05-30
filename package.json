@@ -1,0 +1,22 @@
+{
+  "name": "substack-ai-agent-dashboard",
+  "version": "1.0.0",
+  "description": "Daily AI Agent & Skills dashboard aggregating Substack content",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js & npm run dev:client",
+    "dev:client": "cd client && npm start",
+    "build": "cd client && npm run build",
+    "start": "node server.js",
+    "agent": "node agent.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "axios": "^1.6.0",
+    "anthropic": "^0.14.0",
+    "dotenv": "^16.3.1",
+    "node-cron": "^3.0.2"
+  },
+  "devDependencies": {}
+}
