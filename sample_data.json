@@ -1,0 +1,144 @@
+{
+  "posts": [
+    {
+      "id": "1",
+      "title": "ATO compliance requirements are killing small businesses",
+      "selftext": "The paperwork and complexity of ABN registration, GST filing, and PAYG withholding is overwhelming. We spend thousands on accounting just to stay compliant.",
+      "author": "user1",
+      "upvotes": 245
+    },
+    {
+      "id": "2",
+      "title": "Can't find skilled staff in regional areas",
+      "selftext": "Trying to hire engineers and tradespeople in rural NSW is nearly impossible. Everyone wants to live in Sydney. Salary demands are sky-high and retention is a nightmare.",
+      "author": "user2",
+      "upvotes": 189
+    },
+    {
+      "id": "3",
+      "title": "Interest rates destroying our cash flow",
+      "selftext": "Business loans are now at 8-9%. Our profit margins can't support this. Many of our clients can't pay invoices on time because they're struggling too.",
+      "author": "user3",
+      "upvotes": 412
+    },
+    {
+      "id": "4",
+      "title": "Workplace relations law is a minefield",
+      "selftext": "One wrong move with staff and you get hit with unfair dismissal claims. Modern Awards are complex, casual vs permanent contracts are confusing. Need expensive lawyers just to manage HR.",
+      "author": "user4",
+      "upvotes": 356
+    },
+    {
+      "id": "5",
+      "title": "Competing with Amazon and international sellers",
+      "selftext": "We can't compete on price. They have economies of scale we'll never reach. Shipping costs from China are cheaper than our domestic freight. Consumers only care about price.",
+      "author": "user5",
+      "upvotes": 298
+    },
+    {
+      "id": "6",
+      "title": "Digital transformation is too expensive for SMEs",
+      "selftext": "Cloud migration, cybersecurity, legacy system integration - it costs a fortune. We're stuck with outdated systems but can't afford to modernize. Ransomware attacks are becoming more common.",
+      "author": "user6",
+      "upvotes": 167
+    },
+    {
+      "id": "7",
+      "title": "Supply chain disruptions are ongoing",
+      "selftext": "Post-COVID supply issues are still happening. Shipping delays, supplier reliability problems, inventory management is a nightmare. One disruption and we lose revenue for months.",
+      "author": "user7",
+      "upvotes": 201
+    },
+    {
+      "id": "8",
+      "title": "Commercial rent is unaffordable in major cities",
+      "selftext": "Our lease renewal just came through - 30% increase. We're considering moving to regional Australia but that means losing customers. It's unsustainable.",
+      "author": "user8",
+      "upvotes": 523
+    },
+    {
+      "id": "9",
+      "title": "Finding reliable suppliers is getting harder",
+      "selftext": "Many of our long-term suppliers have gone out of business. New suppliers are unreliable or charge premium prices. Quality control issues waste time and money.",
+      "author": "user9",
+      "upvotes": 134
+    },
+    {
+      "id": "10",
+      "title": "Customer acquisition costs are skyrocketing",
+      "selftext": "Google Ads and Facebook Ads pricing has tripled in 3 years. ROI on marketing spend is terrible. Organic reach is dead. Can't compete with big corporations' advertising budgets.",
+      "author": "user10",
+      "upvotes": 387
+    },
+    {
+      "id": "11",
+      "title": "Superannuation obligations are complex",
+      "selftext": "Tracking different contribution rates, meeting deadlines, understanding super choice rules - it's complicated. One mistake and you face penalties. Accounting fees just for super compliance.",
+      "author": "user11",
+      "upvotes": 98
+    },
+    {
+      "id": "12",
+      "title": "Insurance costs are out of control",
+      "selftext": "Public liability, professional indemnity, workers comp - premiums increase 15-20% annually. We're over-leveraged on insurance but can't operate without it.",
+      "author": "user12",
+      "upvotes": 276
+    },
+    {
+      "id": "13",
+      "title": "Data privacy regulations (Privacy Act) are unclear",
+      "selftext": "GDPR-style compliance is coming. Customer data protection requirements are vague. One breach and we could be sued or fined. Compliance is expensive.",
+      "author": "user13",
+      "upvotes": 143
+    },
+    {
+      "id": "14",
+      "title": "Freight and logistics costs eating profit margins",
+      "selftext": "Last mile delivery is expensive. Fuel surcharges keep increasing. Competing with free shipping promises is impossible for small businesses.",
+      "author": "user14",
+      "upvotes": 209
+    },
+    {
+      "id": "15",
+      "title": "Can't access affordable business loans",
+      "selftext": "Banks won't lend to startups without collateral. Non-bank lenders charge 12-15% interest. Government grants are bureaucratic nightmares. Bootstrapping is the only option.",
+      "author": "user15",
+      "upvotes": 445
+    },
+    {
+      "id": "16",
+      "title": "Staff turnover is draining resources",
+      "selftext": "Training costs, lost productivity, recruitment fees - replacing staff is expensive. Young workers aren't loyal and jump to any higher offer. Retention bonuses aren't sustainable.",
+      "author": "user16",
+      "upvotes": 312
+    },
+    {
+      "id": "17",
+      "title": "Navigating state vs federal regulations",
+      "selftext": "Different rules in each state. Building codes, licensing requirements, occupational health and safety - it's a maze. Compliance across multiple states is duplicative effort.",
+      "author": "user17",
+      "upvotes": 178
+    },
+    {
+      "id": "18",
+      "title": "Can't find niche suppliers for quality materials",
+      "selftext": "We need premium materials but suppliers are limited. Have to buy bulk or pay premiums. Foreign suppliers are unreliable or have long lead times.",
+      "author": "user18",
+      "upvotes": 92
+    },
+    {
+      "id": "19",
+      "title": "Customer payment delays destroying cash flow",
+      "selftext": "Net 30 is standard but we're often waiting 60+ days. Bad debt write-offs happen regularly. Can't offer discounts for early payment when we need cash now.",
+      "author": "user19",
+      "upvotes": 534
+    },
+    {
+      "id": "20",
+      "title": "Managing multiple software subscriptions is expensive",
+      "selftext": "We use 15+ different SaaS tools for various functions. Each month the bills add up. Integration is poor - lots of manual data entry and duplicate work.",
+      "author": "user20",
+      "upvotes": 267
+    }
+  ]
+}

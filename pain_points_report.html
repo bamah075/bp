@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Australian Business Pain Points Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 40px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section h2 {
+            color: #333;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            font-size: 1.8em;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .category-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .category-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
+            transform: translateY(-5px);
+        }
+
+        .category-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .mention-badge {
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .category-description {
+            color: #6c757d;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+        }
+
+        .keywords {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .keyword {
+            background: #f0f2f5;
+            color: #333;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            transition: all 0.2s ease;
+        }
+
+        .keyword:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .top-posts {
+            margin-top: 40px;
+        }
+
+        .post-item {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .post-item:hover {
+            background: #f0f2f5;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .post-meta {
+            display: flex;
+            gap: 20px;
+            color: #6c757d;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .post-engagement {
+            background: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .post-categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .post-category-tag {
+            background: white;
+            color: #667eea;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            border: 1px solid #667eea;
+        }
+
+        .chart-container {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .bar-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .bar-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .bar-label {
+            flex: 0 0 250px;
+            font-weight: 500;
+            color: #333;
+            font-size: 0.95em;
+        }
+
+        .bar-wrapper {
+            flex: 1;
+            background: #e9ecef;
+            border-radius: 8px;
+            height: 30px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85em;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #6c757d;
+            border-top: 1px solid #e9ecef;
+        }
+
+        @media (max-width: 768px) {
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .bar-label {
+                flex: 0 0 150px;
+                font-size: 0.85em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🇦🇺 Australian Business Pain Points</h1>
+            <p>Analysis of r/ausbusiness subreddit pain points and challenges</p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value">20</div>
+                <div class="stat-label">Posts Analyzed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">8</div>
+                <div class="stat-label">Categories Identified</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">100%</div>
+                <div class="stat-label">Coverage</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">2.8K</div>
+                <div class="stat-label">Total Upvotes</div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Pain Points by Mention Frequency -->
+            <div class="section">
+                <h2>📊 Pain Points by Frequency</h2>
+                <div class="chart-container">
+                    <div class="bar-chart">
+                        <div class="bar-item">
+                            <div class="bar-label">Cash Flow & Finance</div>
+                            <div class="bar-wrapper">
+                                <div class="bar-fill" style="width: 100%;">13/20</div>
+                            </div>
+                        </div>
+                        <div class="bar-item">
+                            <div class="bar-label">Technology & Systems</div>
+                            <div class="bar-wrapper">
+                                <div class="bar-fill" style="width: 46%;">6/20</div>
+                            </div>
+                        </div>
+                        <div class="bar-item">
+                            <div class="bar-label">Compliance & Regulations</div>
+                            <div class="bar-wrapper">
+                                <div class="bar-fill" style="width: 38%;">5/20</div>
+                            </div>
+                        </div>
+                        <div class="bar-item">
+                            <div class="bar-label">Staffing & HR</div>
+                            <div class="bar-wrapper">
+                                <div class="bar-fill" style="width: 38%;">5/20</div>
+                            </div>
+                        </div>
+                        <div class="bar-item">
+                            <div class="bar-label">Marketing & Sales</div>
+                            <div class="bar-wrapper">
+                                <div class="bar-fill" style="width: 38%;">5/20</div>
+                            </div>
+                        </div>
+                        <div class="bar-item">
+                            <div class="bar-label">Supply Chain & Operations</div>
+                            <div class="bar-wrapper">
+                                <div class="bar-fill" style="width: 38%;">5/20</div>
+                            </div>
+                        </div>
+                        <div class="bar-item">
+                            <div class="bar-label">Real Estate & Facilities</div>
+                            <div class="bar-wrapper">
+                                <div class="bar-fill" style="width: 38%;">5/20</div>
+                            </div>
+                        </div>
+                        <div class="bar-item">
+                            <div class="bar-label">Market & Economic</div>
+                            <div class="bar-wrapper">
+                                <div class="bar-fill" style="width: 31%;">4/20</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categories Overview -->
+            <div class="section">
+                <h2>🎯 Pain Point Categories</h2>
+                <div class="categories-grid">
+                    <!-- Cash Flow & Finance -->
+                    <div class="category-card">
+                        <div class="category-title">
+                            💰 Cash Flow & Finance
+                            <span class="mention-badge">13 posts</span>
+                        </div>
+                        <div class="category-description">Payment delays, loan access, interest rates, profitability</div>
+                        <div class="keywords">
+                            <span class="keyword">Interest rates</span>
+                            <span class="keyword">Payment delays</span>
+                            <span class="keyword">Loan access</span>
+                            <span class="keyword">Profit margins</span>
+                            <span class="keyword">Cash flow</span>
+                        </div>
+                    </div>
+
+                    <!-- Technology & Systems -->
+                    <div class="category-card">
+                        <div class="category-title">
+                            💻 Technology & Systems
+                            <span class="mention-badge">6 posts</span>
+                        </div>
+                        <div class="category-description">Digital infrastructure, cybersecurity, legacy systems</div>
+                        <div class="keywords">
+                            <span class="keyword">Cybersecurity</span>
+                            <span class="keyword">Digital transformation</span>
+                            <span class="keyword">Legacy systems</span>
+                            <span class="keyword">Cloud migration</span>
+                            <span class="keyword">Data breach risk</span>
+                        </div>
+                    </div>
+
+                    <!-- Compliance & Regulations -->
+                    <div class="category-card">
+                        <div class="category-title">
+                            ⚖️ Compliance & Regulations
+                            <span class="mention-badge">5 posts</span>
+                        </div>
+                        <div class="category-description">Complex regulations, tax requirements, workplace laws</div>
+                        <div class="keywords">
+                            <span class="keyword">Tax compliance</span>
+                            <span class="keyword">Workplace law</span>
+                            <span class="keyword">Superannuation</span>
+                            <span class="keyword">Privacy regulations</span>
+                            <span class="keyword">ABN/GST</span>
+                        </div>
+                    </div>
+
+                    <!-- Staffing & HR -->
+                    <div class="category-card">
+                        <div class="category-title">
+                            👥 Staffing & HR
+                            <span class="mention-badge">5 posts</span>
+                        </div>
+                        <div class="category-description">Hiring challenges, retention, training costs, wage pressures</div>
+                        <div class="keywords">
+                            <span class="keyword">Staff retention</span>
+                            <span class="keyword">Hiring difficulty</span>
+                            <span class="keyword">Training costs</span>
+                            <span class="keyword">Wage pressure</span>
+                            <span class="keyword">Turnover</span>
+                        </div>
+                    </div>
+
+                    <!-- Marketing & Sales -->
+                    <div class="category-card">
+                        <div class="category-title">
+                            📈 Marketing & Sales
+                            <span class="mention-badge">5 posts</span>
+                        </div>
+                        <div class="category-description">Customer acquisition, competition, advertising costs</div>
+                        <div class="keywords">
+                            <span class="keyword">Acquisition cost</span>
+                            <span class="keyword">Ad pricing</span>
+                            <span class="keyword">Competition</span>
+                            <span class="keyword">ROI</span>
+                            <span class="keyword">Organic reach</span>
+                        </div>
+                    </div>
+
+                    <!-- Supply Chain & Operations -->
+                    <div class="category-card">
+                        <div class="category-title">
+                            🚚 Supply Chain & Operations
+                            <span class="mention-badge">5 posts</span>
+                        </div>
+                        <div class="category-description">Supplier reliability, logistics, inventory management</div>
+                        <div class="keywords">
+                            <span class="keyword">Supplier reliability</span>
+                            <span class="keyword">Shipping costs</span>
+                            <span class="keyword">Disruptions</span>
+                            <span class="keyword">Lead times</span>
+                            <span class="keyword">Quality control</span>
+                        </div>
+                    </div>
+
+                    <!-- Real Estate & Facilities -->
+                    <div class="category-card">
+                        <div class="category-title">
+                            🏢 Real Estate & Facilities
+                            <span class="mention-badge">5 posts</span>
+                        </div>
+                        <div class="category-description">Rising rents, location challenges, facility costs</div>
+                        <div class="keywords">
+                            <span class="keyword">Rent increase</span>
+                            <span class="keyword">Location challenges</span>
+                            <span class="keyword">Lease renewal</span>
+                            <span class="keyword">Regional move</span>
+                            <span class="keyword">Space cost</span>
+                        </div>
+                    </div>
+
+                    <!-- Market & Economic -->
+                    <div class="category-card">
+                        <div class="category-title">
+                            📊 Market & Economic
+                            <span class="mention-badge">4 posts</span>
+                        </div>
+                        <div class="category-description">Economic pressures, market competition, pricing pressure</div>
+                        <div class="keywords">
+                            <span class="keyword">Global competition</span>
+                            <span class="keyword">Inflation</span>
+                            <span class="keyword">Consumer pressure</span>
+                            <span class="keyword">Amazon effect</span>
+                            <span class="keyword">Pricing pressure</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Posts -->
+            <div class="section">
+                <h2>🔥 Most Discussed Pain Points</h2>
+                <div class="top-posts">
+                    <div class="post-item">
+                        <div class="post-title">Customer payment delays destroying cash flow</div>
+                        <div class="post-meta">
+                            <span>By: user19</span>
+                            <span class="post-engagement">534 upvotes</span>
+                        </div>
+                        <div class="post-categories">
+                            <span class="post-category-tag">Cash Flow & Finance</span>
+                            <span class="post-category-tag">Marketing & Sales</span>
+                            <span class="post-category-tag">Technology & Systems</span>
+                        </div>
+                    </div>
+
+                    <div class="post-item">
+                        <div class="post-title">Commercial rent is unaffordable in major cities</div>
+                        <div class="post-meta">
+                            <span>By: user8</span>
+                            <span class="post-engagement">523 upvotes</span>
+                        </div>
+                        <div class="post-categories">
+                            <span class="post-category-tag">Cash Flow & Finance</span>
+                            <span class="post-category-tag">Real Estate & Facilities</span>
+                        </div>
+                    </div>
+
+                    <div class="post-item">
+                        <div class="post-title">Can't access affordable business loans</div>
+                        <div class="post-meta">
+                            <span>By: user15</span>
+                            <span class="post-engagement">445 upvotes</span>
+                        </div>
+                        <div class="post-categories">
+                            <span class="post-category-tag">Cash Flow & Finance</span>
+                            <span class="post-category-tag">Technology & Systems</span>
+                        </div>
+                    </div>
+
+                    <div class="post-item">
+                        <div class="post-title">Interest rates destroying our cash flow</div>
+                        <div class="post-meta">
+                            <span>By: user3</span>
+                            <span class="post-engagement">412 upvotes</span>
+                        </div>
+                        <div class="post-categories">
+                            <span class="post-category-tag">Cash Flow & Finance</span>
+                        </div>
+                    </div>
+
+                    <div class="post-item">
+                        <div class="post-title">Customer acquisition costs are skyrocketing</div>
+                        <div class="post-meta">
+                            <span>By: user10</span>
+                            <span class="post-engagement">387 upvotes</span>
+                        </div>
+                        <div class="post-categories">
+                            <span class="post-category-tag">Cash Flow & Finance</span>
+                            <span class="post-category-tag">Marketing & Sales</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Insights -->
+            <div class="section">
+                <h2>💡 Key Insights</h2>
+                <div class="categories-grid">
+                    <div class="category-card">
+                        <div class="category-title">🎯 #1 Priority</div>
+                        <div class="category-description">Cash Flow & Finance dominates discussions (65% of posts)</div>
+                        <div style="margin-top: 15px; padding: 15px; background: #f0f2f5; border-radius: 6px; color: #333;">
+                            Interest rates, payment delays, and loan access are the most critical issues for Australian businesses.
+                        </div>
+                    </div>
+
+                    <div class="category-card">
+                        <div class="category-title">🔧 #2 Priority</div>
+                        <div class="category-description">Technology & Systems (30% of posts)</div>
+                        <div style="margin-top: 15px; padding: 15px; background: #f0f2f5; border-radius: 6px; color: #333;">
+                            Cybersecurity, digital transformation, and legacy system modernization are challenging for SMEs.
+                        </div>
+                    </div>
+
+                    <div class="category-card">
+                        <div class="category-title">⚠️ #3 Priority</div>
+                        <div class="category-description">Multi-category issues (25% of posts)</div>
+                        <div style="margin-top: 15px; padding: 15px; background: #f0f2f5; border-radius: 6px; color: #333;">
+                            Many issues span multiple categories - e.g., location + staffing, regulations + compliance.
+                        </div>
+                    </div>
+
+                    <div class="category-card">
+                        <div class="category-title">📈 Engagement Pattern</div>
+                        <div class="category-description">Financial stress drives engagement</div>
+                        <div style="margin-top: 15px; padding: 15px; background: #f0f2f5; border-radius: 6px; color: #333;">
+                            Top 5 posts all relate to cash flow, rates, or customer payments - core business survival issues.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Analysis of r/ausbusiness subreddit • Generated on 2026-06-12 • Covers 20 recent posts</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,687 @@
+{
+  "timestamp": "2026-06-12T06:00:51.678893",
+  "total_posts": 20,
+  "posts_with_pain_points": 20,
+  "categories": {
+    "Compliance & Regulations": {
+      "description": "Complex regulations, tax requirements, workplace laws",
+      "keywords": [
+        "abn",
+        "ato",
+        "compliance",
+        "federal",
+        "gst",
+        "licensing",
+        "modern awards",
+        "occupational health",
+        "payg",
+        "privacy",
+        "regulation",
+        "state",
+        "super",
+        "superannuation",
+        "unfair dismissal",
+        "workplace relations"
+      ],
+      "mention_count": 5,
+      "post_ids": [
+        "1",
+        "4",
+        "11",
+        "13",
+        "17"
+      ]
+    },
+    "Staffing & HR": {
+      "description": "Hiring challenges, retention, training costs, wage pressures",
+      "keywords": [
+        "bonus",
+        "casual",
+        "hire",
+        "hr",
+        "permanent",
+        "recruitment",
+        "retention",
+        "salary",
+        "staff",
+        "training",
+        "turnover",
+        "workers"
+      ],
+      "mention_count": 5,
+      "post_ids": [
+        "2",
+        "4",
+        "8",
+        "12",
+        "16"
+      ]
+    },
+    "Real Estate & Facilities": {
+      "description": "Rising rents, location challenges, facility costs",
+      "keywords": [
+        "commercial",
+        "lease",
+        "moving",
+        "regional",
+        "rent"
+      ],
+      "mention_count": 5,
+      "post_ids": [
+        "2",
+        "8",
+        "11",
+        "17",
+        "20"
+      ]
+    },
+    "Market & Economic": {
+      "description": "Economic pressures, market competition, pricing pressure",
+      "keywords": [
+        "amazon",
+        "china",
+        "competing",
+        "consumer",
+        "demand",
+        "international",
+        "market"
+      ],
+      "mention_count": 4,
+      "post_ids": [
+        "2",
+        "5",
+        "10",
+        "14"
+      ]
+    },
+    "Cash Flow & Finance": {
+      "description": "Payment delays, loan access, interest rates, profitability",
+      "keywords": [
+        "afford",
+        "bank",
+        "bootstrap",
+        "cash flow",
+        "collateral",
+        "cost",
+        "debt",
+        "expensive",
+        "interest rate",
+        "invoice",
+        "loan",
+        "payment",
+        "profit margin"
+      ],
+      "mention_count": 13,
+      "post_ids": [
+        "3",
+        "4",
+        "5",
+        "6",
+        "8",
+        "10",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "19",
+        "20"
+      ]
+    },
+    "Marketing & Sales": {
+      "description": "Customer acquisition, competition, advertising costs",
+      "keywords": [
+        "acquisition",
+        "ads",
+        "advertising",
+        "budget",
+        "customer",
+        "facebook",
+        "google",
+        "marketing",
+        "organic",
+        "pricing",
+        "reach",
+        "roi"
+      ],
+      "mention_count": 5,
+      "post_ids": [
+        "5",
+        "8",
+        "10",
+        "13",
+        "19"
+      ]
+    },
+    "Supply Chain & Operations": {
+      "description": "Supplier reliability, logistics, inventory management",
+      "keywords": [
+        "delivery",
+        "disruption",
+        "freight",
+        "inventory",
+        "lead time",
+        "logistics",
+        "material",
+        "quality",
+        "shipping",
+        "supplier",
+        "supply chain",
+        "waste"
+      ],
+      "mention_count": 5,
+      "post_ids": [
+        "5",
+        "7",
+        "9",
+        "14",
+        "18"
+      ]
+    },
+    "Technology & Systems": {
+      "description": "Digital infrastructure, cybersecurity, legacy systems",
+      "keywords": [
+        "app",
+        "breach",
+        "cloud",
+        "cyber",
+        "data",
+        "digital",
+        "integration",
+        "legacy",
+        "ransomware",
+        "saas",
+        "security",
+        "software"
+      ],
+      "mention_count": 6,
+      "post_ids": [
+        "6",
+        "7",
+        "13",
+        "15",
+        "19",
+        "20"
+      ]
+    }
+  },
+  "detailed_posts": [
+    {
+      "id": "1",
+      "title": "ATO compliance requirements are killing small businesses",
+      "author": "user1",
+      "upvotes": 245,
+      "categories": [
+        "Compliance & Regulations"
+      ],
+      "keywords": {
+        "Compliance & Regulations": [
+          "abn",
+          "ato",
+          "gst",
+          "payg",
+          "compliance"
+        ]
+      }
+    },
+    {
+      "id": "2",
+      "title": "Can't find skilled staff in regional areas",
+      "author": "user2",
+      "upvotes": 189,
+      "categories": [
+        "Staffing & HR",
+        "Real Estate & Facilities",
+        "Market & Economic"
+      ],
+      "keywords": {
+        "Staffing & HR": [
+          "staff",
+          "hire",
+          "retention",
+          "salary"
+        ],
+        "Real Estate & Facilities": [
+          "regional"
+        ],
+        "Market & Economic": [
+          "demand"
+        ]
+      }
+    },
+    {
+      "id": "3",
+      "title": "Interest rates destroying our cash flow",
+      "author": "user3",
+      "upvotes": 412,
+      "categories": [
+        "Cash Flow & Finance"
+      ],
+      "keywords": {
+        "Cash Flow & Finance": [
+          "cash flow",
+          "invoice",
+          "loan",
+          "interest rate",
+          "profit margin"
+        ]
+      }
+    },
+    {
+      "id": "4",
+      "title": "Workplace relations law is a minefield",
+      "author": "user4",
+      "upvotes": 356,
+      "categories": [
+        "Compliance & Regulations",
+        "Cash Flow & Finance",
+        "Staffing & HR"
+      ],
+      "keywords": {
+        "Compliance & Regulations": [
+          "workplace relations",
+          "modern awards",
+          "unfair dismissal"
+        ],
+        "Cash Flow & Finance": [
+          "expensive"
+        ],
+        "Staffing & HR": [
+          "staff",
+          "hr",
+          "casual",
+          "permanent"
+        ]
+      }
+    },
+    {
+      "id": "5",
+      "title": "Competing with Amazon and international sellers",
+      "author": "user5",
+      "upvotes": 298,
+      "categories": [
+        "Cash Flow & Finance",
+        "Marketing & Sales",
+        "Supply Chain & Operations",
+        "Market & Economic"
+      ],
+      "keywords": {
+        "Cash Flow & Finance": [
+          "cost"
+        ],
+        "Marketing & Sales": [
+          "reach"
+        ],
+        "Supply Chain & Operations": [
+          "shipping",
+          "freight"
+        ],
+        "Market & Economic": [
+          "consumer",
+          "international",
+          "amazon",
+          "china",
+          "competing"
+        ]
+      }
+    },
+    {
+      "id": "6",
+      "title": "Digital transformation is too expensive for SMEs",
+      "author": "user6",
+      "upvotes": 167,
+      "categories": [
+        "Cash Flow & Finance",
+        "Technology & Systems"
+      ],
+      "keywords": {
+        "Cash Flow & Finance": [
+          "afford",
+          "expensive",
+          "cost"
+        ],
+        "Technology & Systems": [
+          "digital",
+          "cyber",
+          "security",
+          "integration",
+          "cloud",
+          "legacy",
+          "ransomware"
+        ]
+      }
+    },
+    {
+      "id": "7",
+      "title": "Supply chain disruptions are ongoing",
+      "author": "user7",
+      "upvotes": 201,
+      "categories": [
+        "Technology & Systems",
+        "Supply Chain & Operations"
+      ],
+      "keywords": {
+        "Technology & Systems": [
+          "app"
+        ],
+        "Supply Chain & Operations": [
+          "supplier",
+          "supply chain",
+          "inventory",
+          "shipping",
+          "disruption"
+        ]
+      }
+    },
+    {
+      "id": "8",
+      "title": "Commercial rent is unaffordable in major cities",
+      "author": "user8",
+      "upvotes": 523,
+      "categories": [
+        "Cash Flow & Finance",
+        "Staffing & HR",
+        "Marketing & Sales",
+        "Real Estate & Facilities"
+      ],
+      "keywords": {
+        "Cash Flow & Finance": [
+          "afford"
+        ],
+        "Staffing & HR": [
+          "hr"
+        ],
+        "Marketing & Sales": [
+          "customer"
+        ],
+        "Real Estate & Facilities": [
+          "rent",
+          "lease",
+          "commercial",
+          "regional",
+          "moving"
+        ]
+      }
+    },
+    {
+      "id": "9",
+      "title": "Finding reliable suppliers is getting harder",
+      "author": "user9",
+      "upvotes": 134,
+      "categories": [
+        "Supply Chain & Operations"
+      ],
+      "keywords": {
+        "Supply Chain & Operations": [
+          "supplier",
+          "quality",
+          "waste"
+        ]
+      }
+    },
+    {
+      "id": "10",
+      "title": "Customer acquisition costs are skyrocketing",
+      "author": "user10",
+      "upvotes": 387,
+      "categories": [
+        "Cash Flow & Finance",
+        "Marketing & Sales",
+        "Market & Economic"
+      ],
+      "keywords": {
+        "Cash Flow & Finance": [
+          "cost"
+        ],
+        "Marketing & Sales": [
+          "customer",
+          "marketing",
+          "advertising",
+          "pricing",
+          "acquisition",
+          "roi",
+          "reach",
+          "ads",
+          "google",
+          "facebook",
+          "organic",
+          "budget"
+        ],
+        "Market & Economic": [
+          "market"
+        ]
+      }
+    },
+    {
+      "id": "11",
+      "title": "Superannuation obligations are complex",
+      "author": "user11",
+      "upvotes": 98,
+      "categories": [
+        "Compliance & Regulations",
+        "Real Estate & Facilities"
+      ],
+      "keywords": {
+        "Compliance & Regulations": [
+          "compliance",
+          "super",
+          "superannuation"
+        ],
+        "Real Estate & Facilities": [
+          "rent"
+        ]
+      }
+    },
+    {
+      "id": "12",
+      "title": "Insurance costs are out of control",
+      "author": "user12",
+      "upvotes": 276,
+      "categories": [
+        "Cash Flow & Finance",
+        "Staffing & HR"
+      ],
+      "keywords": {
+        "Cash Flow & Finance": [
+          "cost"
+        ],
+        "Staffing & HR": [
+          "workers"
+        ]
+      }
+    },
+    {
+      "id": "13",
+      "title": "Data privacy regulations (Privacy Act) are unclear",
+      "author": "user13",
+      "upvotes": 143,
+      "categories": [
+        "Compliance & Regulations",
+        "Cash Flow & Finance",
+        "Marketing & Sales",
+        "Technology & Systems"
+      ],
+      "keywords": {
+        "Compliance & Regulations": [
+          "compliance",
+          "regulation",
+          "privacy"
+        ],
+        "Cash Flow & Finance": [
+          "expensive"
+        ],
+        "Marketing & Sales": [
+          "customer",
+          "reach"
+        ],
+        "Technology & Systems": [
+          "data",
+          "breach"
+        ]
+      }
+    },
+    {
+      "id": "14",
+      "title": "Freight and logistics costs eating profit margins",
+      "author": "user14",
+      "upvotes": 209,
+      "categories": [
+        "Cash Flow & Finance",
+        "Supply Chain & Operations",
+        "Market & Economic"
+      ],
+      "keywords": {
+        "Cash Flow & Finance": [
+          "profit margin",
+          "expensive",
+          "cost"
+        ],
+        "Supply Chain & Operations": [
+          "shipping",
+          "delivery",
+          "logistics",
+          "freight"
+        ],
+        "Market & Economic": [
+          "competing"
+        ]
+      }
+    },
+    {
+      "id": "15",
+      "title": "Can't access affordable business loans",
+      "author": "user15",
+      "upvotes": 445,
+      "categories": [
+        "Cash Flow & Finance",
+        "Technology & Systems"
+      ],
+      "keywords": {
+        "Cash Flow & Finance": [
+          "loan",
+          "bank",
+          "afford",
+          "bootstrap",
+          "collateral"
+        ],
+        "Technology & Systems": [
+          "app"
+        ]
+      }
+    },
+    {
+      "id": "16",
+      "title": "Staff turnover is draining resources",
+      "author": "user16",
+      "upvotes": 312,
+      "categories": [
+        "Cash Flow & Finance",
+        "Staffing & HR"
+      ],
+      "keywords": {
+        "Cash Flow & Finance": [
+          "expensive",
+          "cost"
+        ],
+        "Staffing & HR": [
+          "staff",
+          "recruitment",
+          "retention",
+          "turnover",
+          "training",
+          "workers",
+          "bonus"
+        ]
+      }
+    },
+    {
+      "id": "17",
+      "title": "Navigating state vs federal regulations",
+      "author": "user17",
+      "upvotes": 178,
+      "categories": [
+        "Compliance & Regulations",
+        "Real Estate & Facilities"
+      ],
+      "keywords": {
+        "Compliance & Regulations": [
+          "compliance",
+          "regulation",
+          "occupational health",
+          "licensing",
+          "federal",
+          "state"
+        ],
+        "Real Estate & Facilities": [
+          "rent"
+        ]
+      }
+    },
+    {
+      "id": "18",
+      "title": "Can't find niche suppliers for quality materials",
+      "author": "user18",
+      "upvotes": 92,
+      "categories": [
+        "Supply Chain & Operations"
+      ],
+      "keywords": {
+        "Supply Chain & Operations": [
+          "supplier",
+          "material",
+          "quality",
+          "lead time"
+        ]
+      }
+    },
+    {
+      "id": "19",
+      "title": "Customer payment delays destroying cash flow",
+      "author": "user19",
+      "upvotes": 534,
+      "categories": [
+        "Cash Flow & Finance",
+        "Marketing & Sales",
+        "Technology & Systems"
+      ],
+      "keywords": {
+        "Cash Flow & Finance": [
+          "cash flow",
+          "payment",
+          "debt"
+        ],
+        "Marketing & Sales": [
+          "customer"
+        ],
+        "Technology & Systems": [
+          "app"
+        ]
+      }
+    },
+    {
+      "id": "20",
+      "title": "Managing multiple software subscriptions is expensive",
+      "author": "user20",
+      "upvotes": 267,
+      "categories": [
+        "Cash Flow & Finance",
+        "Technology & Systems",
+        "Real Estate & Facilities"
+      ],
+      "keywords": {
+        "Cash Flow & Finance": [
+          "expensive"
+        ],
+        "Technology & Systems": [
+          "software",
+          "data",
+          "integration",
+          "saas"
+        ],
+        "Real Estate & Facilities": [
+          "rent"
+        ]
+      }
+    }
+  ]
+}
