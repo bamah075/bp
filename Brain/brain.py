@@ -1,23 +1,18 @@
-import sys
-if sys.version_info < (3, 10):
-    try:
-        from typing_extensions import TypeAlias
-        sys.modules['typing'].TypeAlias = TypeAlias
-    except ImportError:
-        pass
-
-try:
-    from webscout import Perplexity
-except ImportError:
-    from webscout import OpenRouter
-
 def Main_Brain(text):
-    try:
-        ai = Perplexity(timeout=30, quiet=True)
-        res = ai.chat(text)
-        return res
-    except Exception:
-        return f"I understood: {text}. Unable to process at the moment."
+    responses = {
+        "hello": "Hello! How can I help you?",
+        "hi": "Hi there! What do you need?",
+        "what can you do": "I can help with system information, weather, image recognition, and various automation tasks.",
+        "what system am i on": "You're running JARVIS on macOS or Linux.",
+        "help": "I'm JARVIS, your AI assistant. Ask me about system info, weather, or just chat!",
+    }
+
+    text_lower = text.lower().strip()
+    for key, response in responses.items():
+        if key in text_lower:
+            return response
+
+    return f"I understand: {text}. How can I help?"
 
 def process_command(text):
     return Main_Brain(text)
