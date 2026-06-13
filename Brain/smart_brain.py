@@ -15,6 +15,7 @@ from .meeting_notes import _meeting_notes
 from .calendar_manager import _calendar
 from .automation_helper import _automation_helper
 from .smart_employee import _smart_employee
+from .maya_memory import _maya_memory
 
 class SmartBrain:
     def __init__(self, user_name="bamah"):
@@ -208,6 +209,9 @@ class SmartBrain:
         # Add to conversation history
         self.conversation_history.append(("user", text))
 
+        # Determine category for learning
+        category = self._determine_category(text_lower)
+
         # Greeting patterns
         if any(word in text_lower for word in ["hello", "hi", "hey", "greetings"]):
             response = self.get_random_response("greeting")
@@ -341,7 +345,35 @@ class SmartBrain:
 
         # Add to history
         self.conversation_history.append(("jarvis", response))
+
+        # Remember this interaction for learning
+        try:
+            _maya_memory.remember_interaction(text, response, category=category)
+        except Exception as e:
+            pass  # Memory system is optional
+
         return response
+
+    def _determine_category(self, text_lower):
+        """Determine the category of the question for learning"""
+        if any(word in text_lower for word in ["meeting", "note", "action"]):
+            return "meeting"
+        elif any(word in text_lower for word in ["task", "schedule", "calendar", "appointment"]):
+            return "calendar"
+        elif any(word in text_lower for word in ["automate", "zapier", "workflow"]):
+            return "automation"
+        elif any(word in text_lower for word in ["help", "plan", "analyze", "draft"]):
+            return "smart_employee"
+        elif any(word in text_lower for word in ["joke", "funny", "laugh"]):
+            return "entertainment"
+        elif any(word in text_lower for word in ["fact", "interesting", "know"]):
+            return "facts"
+        elif any(word in text_lower for word in ["time", "date", "when"]):
+            return "time"
+        elif any(word in text_lower for word in ["system", "platform", "machine"]):
+            return "system_info"
+        else:
+            return "general"
 
     def get_conversation_summary(self):
         """Get summary of conversation"""
