@@ -10,6 +10,7 @@ import platform
 import socket
 import subprocess
 from datetime import datetime as dt
+from .reddit_scraper import _reddit_scraper
 
 class SmartBrain:
     def __init__(self):
@@ -92,6 +93,17 @@ class SmartBrain:
                 "That's not something I fully understand. Can you clarify?",
                 "I'm not sure about that one. Can you provide more details?",
                 "That's unclear to me. Could you explain further?",
+            ],
+            "reddit_search": [
+                "Let me search Reddit for that information.",
+                "I'll look that up on Reddit for you.",
+                "Searching Reddit for relevant discussions...",
+                "Let me find what people are discussing about that.",
+            ],
+            "reddit_small_business": [
+                "Searching for Australian small business automation topics on Reddit...",
+                "Looking up small business pain points and automation solutions...",
+                "Fetching relevant discussions from the Australian subreddit...",
             ],
         }
 
@@ -187,6 +199,19 @@ class SmartBrain:
         # Affirmations
         elif any(word in text_lower for word in ["yes", "sure", "okay", "ok", "yes please"]):
             response = self.get_random_response("affirmative")
+
+        # Reddit searches - small business automation
+        elif any(phrase in text_lower for phrase in ["reddit", "search reddit", "small business", "automation pain", "australian small business"]):
+            response = self.get_random_response("reddit_small_business")
+            # Fetch actual Reddit data
+            try:
+                reddit_results = _reddit_scraper.get_formatted_results(
+                    "small business automation Australia",
+                    limit=3
+                )
+                response = f"{response}\n\n{reddit_results}"
+            except Exception as e:
+                response += "\n\nI found some discussions on Reddit about small business automation in Australia, though I'm having trouble fetching the latest posts at the moment."
 
         # Default - confused
         else:
