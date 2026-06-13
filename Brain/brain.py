@@ -1,28 +1,24 @@
-# from webscout import PhindSearch as brain
+import sys
+if sys.version_info < (3, 10):
+    try:
+        from typing_extensions import TypeAlias
+        sys.modules['typing'].TypeAlias = TypeAlias
+    except ImportError:
+        pass
 
-
-# ai = brain(
-#     is_conversation=True,
-#     max_tokens=800,
-#     timeout=30,
-#     intro='J.A.R.V.I.S',
-#     filepath=r"C:\Users\chatu\Desktop\J.A.R.V.I.S\chat_hystory.txt",
-#     update_file=True,
-#     proxies={},
-#     history_offset=10250,
-#     act=None,
-# )
-
-# def Main_Brain(text):
-#     r = ai.chat(text)
-#     return r 
-
-from webscout import PhindSearch
+try:
+    from webscout import Perplexity
+except ImportError:
+    from webscout import OpenRouter
 
 def Main_Brain(text):
-    ai = PhindSearch(quiet=True, filepath=r"C:\Users\chatu\Desktop\J.A.R.V.I.S\chat_hystory.txt", is_conversation=None)
+    try:
+        ai = Perplexity(timeout=30, quiet=True)
+        res = ai.chat(text)
+        return res
+    except Exception:
+        return f"I understood: {text}. Unable to process at the moment."
 
-    res = ai.chat(text) # internel stream is not available for this Privider
-
-    return res
+def process_command(text):
+    return Main_Brain(text)
 

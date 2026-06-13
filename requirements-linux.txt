@@ -13,3 +13,4 @@ scipy
 gradio_client
 lxml_html_clean
 pyttsx3
+typing_extensions
