@@ -138,28 +138,29 @@ class SmartBrain:
         }
 
     def get_random_response(self, key):
-        """Get a random response from a pool, avoiding repeats within same category"""
+        """Get a random response from a pool, NEVER repeating the last one"""
         if key not in self.response_pool:
             return None
 
         responses = self.response_pool[key]
-        if not responses:
-            return None
+        if not responses or len(responses) < 2:
+            return random.choice(responses) if responses else None
 
-        # Track last response for this specific category to avoid immediate repeats
-        last_for_category = self.last_responses.get(key, None)
+        # Get the last response used for this category
+        last_response = self.last_responses.get(key, None)
 
-        # Filter out the last response used for this category
-        available = [r for r in responses if r != last_for_category]
+        # If we have multiple responses, always pick a different one
+        if last_response and last_response in responses:
+            # Filter out the last used response
+            available = [r for r in responses if r != last_response]
+            if available:
+                response = random.choice(available)
+            else:
+                response = random.choice(responses)
+        else:
+            response = random.choice(responses)
 
-        # If all responses are filtered (shouldn't happen), use all
-        if not available:
-            available = responses
-
-        # Pick a random response
-        response = random.choice(available)
-
-        # Store this as the last response for this category
+        # Always store the selected response
         self.last_responses[key] = response
         self.last_response = response
 
