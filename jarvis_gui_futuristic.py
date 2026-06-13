@@ -9,7 +9,7 @@ from tkinter import ttk, scrolledtext
 import threading
 import time
 from datetime import datetime
-from Brain.brain import process_command
+from Brain.smart_brain import _smart_brain
 from TextToSpeech.Fast_DF_TTS import speak
 from internet_check import is_Online
 import sys
@@ -426,21 +426,35 @@ class JARVISFuturistic:
 
         if self.is_listening:
             self.is_listening = False
-            test_commands = ["hello", "what can you do", "help", "what system am i on"]
+            # Varied test commands that showcase JARVIS capabilities
+            test_commands = [
+                "hello",
+                "what can you do",
+                "help",
+                "what system am i on",
+                "what time is it",
+                "tell me a joke",
+                "tell me a fact",
+                "what's my network info",
+                "tell me something interesting",
+                "hi there"
+            ]
             available_commands = [cmd for cmd in test_commands if cmd != self.last_command]
+            if not available_commands:
+                available_commands = test_commands
             command = random.choice(available_commands)
             self.last_command = command
             self.process_voice_command(command)
 
     def process_voice_command(self, command):
-        """Process command"""
+        """Process command with smart brain"""
         self.update_status("Processing...", self.accent_color)
         self.is_processing = True
 
         self.add_message("user", command)
 
         try:
-            response = process_command(command)
+            response = _smart_brain.process_command(command)
             time.sleep(0.5)
 
             self.update_status("Speaking...", self.success_color)
