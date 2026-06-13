@@ -17,10 +17,11 @@ from .automation_helper import _automation_helper
 from .smart_employee import _smart_employee
 
 class SmartBrain:
-    def __init__(self):
+    def __init__(self, user_name="bamah"):
         self.conversation_history = []
-        self.user_name = "Sir"
+        self.user_name = user_name
         self.last_response = None
+        self.last_responses = {}  # Track last response per category
         self.response_pool = {}
         self.initialize_responses()
 
@@ -28,11 +29,11 @@ class SmartBrain:
         """Initialize diverse response pools"""
         self.response_pool = {
             "greeting": [
-                "Hello! I'm Maya, your AI assistant. How can I help you today?",
-                "Good to see you! What would you like me to help with?",
-                "Greetings! I'm ready to assist you.",
-                "Hi there! What can I do for you?",
-                "Hello! Ready to help. What do you need?",
+                f"Hi bamah! I'm Maya, your AI assistant. How can I help you today?",
+                f"Good to see you, bamah! What would you like me to help with?",
+                f"Greetings, bamah! I'm ready to assist you.",
+                f"Hi bamah! What can I do for you?",
+                f"Hello bamah! Ready to help. What do you need?",
             ],
             "capabilities": [
                 "I can help with system information, check the weather, tell you jokes, provide facts, manage your time, and automate tasks.",
@@ -137,18 +138,31 @@ class SmartBrain:
         }
 
     def get_random_response(self, key):
-        """Get a random response from a pool, avoiding repeats"""
+        """Get a random response from a pool, avoiding repeats within same category"""
         if key not in self.response_pool:
             return None
 
         responses = self.response_pool[key]
-        # Filter out the last response to avoid immediate repeats
-        available = [r for r in responses if r != self.last_response]
+        if not responses:
+            return None
+
+        # Track last response for this specific category to avoid immediate repeats
+        last_for_category = self.last_responses.get(key, None)
+
+        # Filter out the last response used for this category
+        available = [r for r in responses if r != last_for_category]
+
+        # If all responses are filtered (shouldn't happen), use all
         if not available:
             available = responses
 
+        # Pick a random response
         response = random.choice(available)
+
+        # Store this as the last response for this category
+        self.last_responses[key] = response
         self.last_response = response
+
         return response
 
     def get_system_info(self):
@@ -336,8 +350,8 @@ def process_command(text):
     brain = SmartBrain()
     return brain.process_command(text)
 
-# Global instance
-_smart_brain = SmartBrain()
+# Global instance with user name
+_smart_brain = SmartBrain(user_name="bamah")
 
 def Main_Brain(text):
     """Backward compatible function"""

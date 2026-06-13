@@ -4,10 +4,10 @@ import subprocess
 import platform
 import os
 
-# Pleasant voice options
+# Pleasant voice options - force natural voices
 VOICE_PREFERENCES = {
     'default': 'Samantha',  # Natural female voice
-    'alternatives': ['Victoria', 'Moira', 'Karen'],  # Other pleasant voices
+    'alternatives': ['Victoria', 'Moira', 'Karen'],
 }
 
 def print_animated_message(message):
@@ -26,24 +26,36 @@ def get_preferred_voice():
     return VOICE_PREFERENCES['default']
 
 def speak(text, voice=None):
-    """Speak text using macOS 'say' command with pleasant voice"""
+    """Speak text using macOS 'say' command with pleasant natural voice"""
+    if not text or len(text.strip()) == 0:
+        return
+
     try:
         if platform.system() == "Darwin":  # macOS
             selected_voice = voice or get_preferred_voice()
-            # Use macOS built-in 'say' command with selected voice
-            # -r controls speech rate (default 200 wpm), use 150 for natural sounding
+
+            # Force use of Samantha for natural voice (not Alex which is robotic)
+            # Samantha is warm and natural, not robotic
+            if selected_voice.lower() in ['default', 'alex']:
+                selected_voice = 'Samantha'
+
+            # Natural speech parameters
+            # -r 130 is very natural, -v sets voice
             subprocess.run([
                 "say",
-                "-v", selected_voice,
-                "-r", "150",  # Natural speech rate
+                "-v", selected_voice,      # Use Samantha for warm, natural voice
+                "-r", "130",               # Slightly slower for better clarity
                 text
-            ], check=True)
+            ], check=False)
         else:
             # Fallback to animated text on non-Mac systems
             print_animated_message(text)
     except Exception as e:
         # Fallback if 'say' command fails
-        print_animated_message(text)
+        try:
+            print_animated_message(text)
+        except:
+            pass
 
 def get_available_voices():
     """Get list of available macOS voices"""
@@ -58,3 +70,13 @@ def get_available_voices():
 def set_voice(voice_name):
     """Set the voice for Maya"""
     os.environ['MAYA_VOICE'] = voice_name
+
+def test_voices():
+    """Test all available voices"""
+    voices = ['Samantha', 'Victoria', 'Moira', 'Karen', 'Alex']
+    for voice in voices:
+        try:
+            subprocess.run(["say", "-v", voice, f"I am {voice}"], check=False)
+            time.sleep(1)
+        except:
+            pass

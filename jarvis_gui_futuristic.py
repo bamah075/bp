@@ -22,7 +22,7 @@ class AnimatedCanvas(tk.Canvas):
         super().__init__(parent, **kwargs)
         self.animations = []
         self.is_animating = False
-        self.config(bg="#0a0e27", highlightthickness=0)
+        self.config(bg="#0a0e1e", highlightthickness=0)
 
     def draw_circuit_pattern(self):
         """Draw animated circuit board background"""
@@ -118,16 +118,17 @@ class MayaFuturistic:
         style = ttk.Style()
         style.theme_use('clam')
 
-        # Enhanced dark mode with better contrast and visual polish
-        self.bg_dark = "#0a0e27"           # Deep space blue
-        self.bg_card = "#131829"           # Slightly lighter for cards
-        self.primary_color = "#00d9ff"     # Bright cyan
-        self.accent_color = "#ff006e"      # Magenta accent
-        self.success_color = "#06ffa5"     # Bright green
-        self.warning_color = "#ffa500"     # Orange warning
-        self.text_color = "#ffffff"        # Pure white text
-        self.text_secondary = "#aaaaaa"    # Secondary text
-        self.border_color = "#1f2849"      # Subtle borders
+        # Premium dark mode - carefully chosen for aesthetics and readability
+        self.bg_dark = "#0a0e1e"           # Deep midnight blue (not pure black)
+        self.bg_card = "#0f1428"           # Card background (slightly lighter)
+        self.bg_header = "#050810"         # Header darker background
+        self.primary_color = "#00d9ff"     # Bright cyan (not harsh)
+        self.accent_color = "#00ffaa"      # Soft green accent
+        self.success_color = "#00ff99"     # Success green
+        self.warning_color = "#ffaa00"     # Warm orange
+        self.text_color = "#f0f0f0"        # Off-white (easier on eyes than pure white)
+        self.text_secondary = "#888888"    # Secondary text
+        self.border_color = "#1a2540"      # Subtle borders
 
         style.configure("Dark.TFrame", background=self.bg_dark, relief=tk.FLAT)
         style.configure("Dark.TLabel", background=self.bg_dark, foreground=self.text_color)
@@ -169,42 +170,42 @@ class MayaFuturistic:
 
     def create_header(self, parent):
         """Create application header"""
-        header_frame = tk.Frame(parent, bg="#0f1333", height=80)
+        header_frame = tk.Frame(parent, bg=self.bg_header, height=85)
         header_frame.pack(fill=tk.X, padx=0, pady=0)
         header_frame.pack_propagate(False)
 
-        title_frame = tk.Frame(header_frame, bg="#0f1333")
+        title_frame = tk.Frame(header_frame, bg=self.bg_header)
         title_frame.pack(side=tk.LEFT, padx=30, pady=20)
 
-        logo_label = tk.Label(title_frame, text="🤖", font=("Arial", 40), bg="#0f1333")
+        logo_label = tk.Label(title_frame, text="✨", font=("Arial", 36), bg=self.bg_header)
         logo_label.pack(side=tk.LEFT, padx=(0, 15))
 
         title_label = tk.Label(
             title_frame,
             text="Maya",
-            font=("Arial", 32, "bold"),
-            bg="#0f1333",
+            font=("Arial", 34, "bold"),
+            bg=self.bg_header,
             fg=self.primary_color
         )
         title_label.pack(side=tk.LEFT)
 
         subtitle_label = tk.Label(
             title_frame,
-            text="Intelligent Enterprise AI Assistant",
-            font=("Arial", 10),
-            bg="#0f1333",
-            fg="#888888"
+            text="Intelligent AI Assistant for bamah",
+            font=("Arial", 11),
+            bg=self.bg_header,
+            fg=self.text_secondary
         )
         subtitle_label.pack(anchor=tk.W, padx=(20, 0))
 
-        status_frame = tk.Frame(header_frame, bg="#0f1333")
+        status_frame = tk.Frame(header_frame, bg=self.bg_header)
         status_frame.pack(side=tk.RIGHT, padx=30, pady=20)
 
         self.status_indicator = tk.Label(
             status_frame,
             text="●",
             font=("Arial", 16),
-            bg="#0f1333",
+            bg=self.bg_header,
             fg=self.warning_color
         )
         self.status_indicator.pack(side=tk.LEFT, padx=(0, 8))
@@ -213,8 +214,8 @@ class MayaFuturistic:
             status_frame,
             text="Initializing...",
             font=("Arial", 10),
-            bg="#0f1333",
-            fg="#888888"
+            bg=self.bg_header,
+            fg=self.text_secondary
         )
         self.status_text.pack(side=tk.LEFT)
 
@@ -265,23 +266,22 @@ class MayaFuturistic:
             text_frame,
             height=8,
             width=40,
-            bg="#0f1428",
+            bg="#070b18",
             fg=self.text_color,
-            font=("Monaco", 10),
+            font=("Menlo", 10),
             wrap=tk.WORD,
             relief=tk.FLAT,
-            borderwidth=1,
-            bd=0,
-            padx=10,
-            pady=8,
+            borderwidth=0,
+            padx=12,
+            pady=10,
             insertbackground=self.primary_color
         )
         self.text_display.pack(fill=tk.BOTH, expand=True)
         self.text_display.config(state=tk.DISABLED)
 
-        self.text_display.tag_config("user", foreground=self.primary_color, font=("Monaco", 10, "bold"))
-        self.text_display.tag_config("jarvis", foreground=self.success_color, font=("Monaco", 10))
-        self.text_display.tag_config("time", foreground="#555555", font=("Monaco", 9))
+        self.text_display.tag_config("user", foreground=self.primary_color, font=("Menlo", 10, "bold"))
+        self.text_display.tag_config("jarvis", foreground=self.success_color, font=("Menlo", 10))
+        self.text_display.tag_config("time", foreground=self.text_secondary, font=("Menlo", 9))
 
     def create_controls_section(self, parent):
         """Create control buttons"""
@@ -337,16 +337,16 @@ class MayaFuturistic:
 
     def create_footer(self, parent):
         """Create footer"""
-        footer_frame = tk.Frame(parent, bg="#0f1333", height=40)
+        footer_frame = tk.Frame(parent, bg=self.bg_header, height=45)
         footer_frame.pack(fill=tk.X, padx=0, pady=0)
         footer_frame.pack_propagate(False)
 
         footer_text = tk.Label(
             footer_frame,
-            text="Maya Futuristic v1.0 | Advanced Voice AI with Real-time Visualization",
+            text="Maya v1.0 | Intelligent AI Assistant with Beautiful Dark Mode",
             font=("Arial", 9),
-            bg="#0f1333",
-            fg="#666666"
+            bg=self.bg_header,
+            fg=self.text_secondary
         )
         footer_text.pack(side=tk.LEFT, padx=20, pady=10)
 
