@@ -1,0 +1,49 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+*.log
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Large binaries
+*.exe
+*.dll
+*.dylib
+
+# Temporary files
+temp/
+tmp/
+*.tmp
+*.bak
+
+# Generated files
+*.png
+*.gif
+*.jpg
+*.jpeg
+captured_image.*
+generated_image.*
+
+# History and cache files
+*_history.txt
+chat_history.txt
+conv_history.txt
+.cache/
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace

@@ -1,0 +1,14 @@
+requests
+pywhatkit
+playsound==1.2.2
+psutil
+selenium
+webdriver_manager
+webscout
+colorlog
+yaspin
+opencv-python
+scipy
+gradio_client
+lxml_html_clean
+pyttsx3
