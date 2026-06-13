@@ -36,11 +36,11 @@ class SmartBrain:
                 f"Hello bamah! Ready to help. What do you need?",
             ],
             "capabilities": [
-                "I can help with system information, check the weather, tell you jokes, provide facts, manage your time, and automate tasks.",
-                "My capabilities include: system monitoring, time management, information retrieval, entertainment, and automation assistance.",
-                "I can get system info, tell jokes, provide weather updates, manage reminders, and help with various automated tasks.",
-                "I'm capable of: checking system status, retrieving information, entertainment through jokes and facts, and task automation.",
-                "I can assist with: system diagnostics, time/date info, web searches, humor, facts, and automation routines.",
+                "I'm a super powerful assistant! I can: manage meetings, track tasks & calendar, provide automation guidance (Zapier, GHL, Copilot), help you plan and strategize, answer questions, tell jokes, share facts, and much more!",
+                "My advanced capabilities include: meeting management, calendar & task organization, automation setup guides, strategic planning, data analysis, brainstorming, email drafting, research, and intelligent assistance on any topic.",
+                "I can do it all! Capture meetings, manage your schedule, automate workflows, help you plan projects, analyze data, draft communications, provide smart guidance, and be your intelligent assistant for anything you need.",
+                "I'm here as your super intelligent assistant to: organize your work (meetings, tasks, calendar), guide automations (Zapier, GoHighLevel, Copilot), help with planning and strategy, provide research, and assist with any task you ask!",
+                "Powerful features: Smart meeting capture & summaries, intelligent calendar management, automation platform guidance, strategic planning assistance, data analysis frameworks, brainstorming sessions, professional communication help, and real-time information retrieval.",
             ],
             "system_info": [
                 f"You're running {platform.system()} {platform.release()} on a {platform.machine()} processor.",
@@ -55,16 +55,17 @@ class SmartBrain:
                 "That's what I'm here for!",
             ],
             "help": [
-                "I can help you with many things. Ask me about: system info, time, jokes, weather, facts, or say 'what can you do' to learn more.",
-                "Need help? I can do: system checks, time queries, jokes, facts, weather info, or any automation tasks.",
-                "I'm here to help! You can ask me about system status, current time, jokes, interesting facts, and more.",
-                "Ask me for: system information, current time, jokes, facts, weather, or automation help.",
+                "I can help with SO much! Meetings (start/capture/summarize), tasks & calendar, automation setup, strategic planning, problem solving, brainstorming, data analysis, and anything else you need. Just ask!",
+                "I'm your super powerful assistant! I can: organize meetings, manage your calendar & tasks, guide you through automation (Zapier, GoHighLevel, etc.), help plan projects, draft emails, analyze data, and answer any question!",
+                "Want help? I've got you covered: Meeting management, task organization, calendar planning, automation guidance, strategic thinking, problem-solving frameworks, brainstorming sessions, professional communication, and intelligent assistance on any topic!",
+                "Here's what I can do: Capture and summarize meetings, manage tasks and appointments, guide automation setups, help with planning & strategy, analyze information, assist with writing, provide smart suggestions, and help with anything you ask!",
             ],
             "time": [
-                f"The current time is {dt.now().strftime('%I:%M %p')}.",
-                f"It's currently {dt.now().strftime('%I:%M %p and %A, %B %d')}.",
-                f"The time right now is {dt.now().strftime('%H:%M:%S')}.",
-                f"Current time: {dt.now().strftime('%I:%M %p')} on {dt.now().strftime('%A')}.",
+                lambda: f"The current time is {dt.now().strftime('%I:%M %p')}.",
+                lambda: f"It's {dt.now().strftime('%I:%M %p')} on {dt.now().strftime('%A, %B %d')}.",
+                lambda: f"Right now it's {dt.now().strftime('%H:%M:%S')} ({dt.now().strftime('%A')}).",
+                lambda: f"Current time: {dt.now().strftime('%I:%M %p')} - {dt.now().strftime('%A')}.",
+                lambda: f"The time is {dt.now().strftime('%I:%M %p')} on this {dt.now().strftime('%A')}.",
             ],
             "joke": [
                 "Why did the AI go to school? To improve its neural network!",
@@ -144,24 +145,27 @@ class SmartBrain:
 
         responses = self.response_pool[key]
         if not responses or len(responses) < 2:
-            return random.choice(responses) if responses else None
+            selected = random.choice(responses) if responses else None
+            return selected() if callable(selected) else selected
 
-        # Get the last response used for this category
-        last_response = self.last_responses.get(key, None)
+        # Get the last response template used for this category
+        last_response_template = self.last_responses.get(key, None)
 
-        # If we have multiple responses, always pick a different one
-        if last_response and last_response in responses:
-            # Filter out the last used response
-            available = [r for r in responses if r != last_response]
-            if available:
-                response = random.choice(available)
-            else:
-                response = random.choice(responses)
-        else:
-            response = random.choice(responses)
+        # Filter out the last used response template
+        available = [r for r in responses if r != last_response_template]
 
-        # Always store the selected response
-        self.last_responses[key] = response
+        # If all filtered out, use all options
+        if not available:
+            available = responses
+
+        # Pick a random response template
+        response_template = random.choice(available)
+
+        # Store the template (not the generated response)
+        self.last_responses[key] = response_template
+
+        # Generate the actual response (handle callables for dynamic content)
+        response = response_template() if callable(response_template) else response_template
         self.last_response = response
 
         return response
@@ -257,9 +261,11 @@ class SmartBrain:
             else:
                 response += "\n\nNo active meeting to end."
 
-        elif any(phrase in text_lower for phrase in ["add note", "note that", "write down", "remember this"]):
-            # Extract note content
-            note_text = text_lower.replace("add note", "").replace("note that", "").strip()
+        elif any(phrase in text_lower for phrase in ["add note", "note that", "write down", "remember this", "we discussed", "noted"]):
+            # Extract note content - be smarter about it
+            note_text = text_lower
+            for phrase in ["add note", "note that", "write down", "remember this"]:
+                note_text = note_text.replace(phrase, "").strip()
             response = _meeting_notes.add_note(note_text or text)
 
         elif any(phrase in text_lower for phrase in ["action item", "assign task", "who does"]):
