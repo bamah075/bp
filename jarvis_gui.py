@@ -26,6 +26,7 @@ class JARVISGui:
         self.is_processing = False
         self.is_online = False
         self.command_thread = None
+        self.last_command = None
 
         self.setup_styles()
         self.create_widgets()
@@ -398,9 +399,14 @@ class JARVISGui:
         # Only process if still listening (not stopped by user)
         if self.is_listening:
             self.is_listening = False  # Stop listening before processing
-            # Use a varied test command
+            # Use a varied test command, avoiding repeating the last command
             test_commands = ["hello", "what can you do", "help", "what system am i on"]
-            command = random.choice(test_commands)
+
+            # Remove last command from choices to avoid repeats
+            available_commands = [cmd for cmd in test_commands if cmd != self.last_command]
+            command = random.choice(available_commands)
+            self.last_command = command
+
             self.process_voice_command(command)
 
     def process_voice_command(self, command):
