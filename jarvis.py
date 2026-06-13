@@ -1,4 +1,5 @@
 import threading
+import os
 from internet_check import is_Online
 from Alert import Alert
 from Data.DLG_Data import online_dlg,offline_dlg
@@ -9,8 +10,9 @@ from Automation.Battery  import check_plug
 from Time_Operations.throw_alert import check_schedule,check_Alam
 from os import getcwd
 
-Alam_path = f"{getcwd()}\\Alam_data.txt"
-file_path = f'{getcwd()}\\schedule.txt'
+# Cross-platform path handling
+Alam_path = os.path.join(getcwd(), "Alam_data.txt")
+file_path = os.path.join(getcwd(), "schedule.txt")
 
 ran_online_dlg = random.choice(online_dlg)
 ran_offline_dlg = random.choice(offline_dlg)

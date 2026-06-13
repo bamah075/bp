@@ -13,24 +13,51 @@ J.A.R.V.I.S (Just A Rather Very Intelligent System) is an advanced AI assistant 
 
 
 ## Installation ⚙️
+
+### Windows (Recommended)
 1. Clone the repository:
     ```bash
     git clone https://github.com/AnubhavChaturvedi-GitHub/J.A.R.V.I.S.git
-    ```
-2. Navigate to the project directory:
-    ```bash
     cd J.A.R.V.I.S
     ```
-3. Install the dependencies:
+2. Install Python 3.7+ dependencies:
     ```bash
     pip install -r requirements.txt
     ```
+3. Run JARVIS:
+    ```bash
+    python jarvis.py
+    ```
+
+### macOS
+**See [SETUP_MAC.md](SETUP_MAC.md) for detailed macOS setup instructions.**
+
+Quick start:
+```bash
+brew install python@3.11 portaudio
+git clone https://github.com/AnubhavChaturvedi-GitHub/J.A.R.V.I.S.git
+cd J.A.R.V.I.S
+pip install -r requirements-mac.txt
+python jarvis.py
+```
+
+### Linux
+**See [SETUP_LINUX.md](SETUP_LINUX.md) for Linux setup instructions.**
+
+```bash
+git clone https://github.com/AnubhavChaturvedi-GitHub/J.A.R.V.I.S.git
+cd J.A.R.V.I.S
+pip install -r requirements-core.txt
+python jarvis.py
+```
 
 ## Usage 🚀
 To start the assistant, run:
 ```bash
 python jarvis.py
 ```
+
+The application will initialize audio listening and start processing voice commands.
 
 ## Contribution 🤝
 Feel free to fork the repository, submit issues, or create pull requests. Your contributions are welcome!
