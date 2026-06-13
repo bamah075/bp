@@ -1,8 +1,8 @@
-# 🌟 JARVIS Futuristic Edition
+# 🌟 Maya Futuristic Edition
 
 ## Full Animated Sci-Fi Experience
 
-Your JARVIS now has a **complete futuristic visual experience** with advanced animations!
+Your Maya now has a **complete futuristic visual experience** with advanced animations!
 
 ---
 
@@ -33,7 +33,7 @@ Your JARVIS now has a **complete futuristic visual experience** with advanced an
 
 **Spinning Processing Effect**
 - Rotating glow during command processing
-- Shows JARVIS is thinking
+- Shows Maya is thinking
 - Smooth animations
 
 **Split-Screen Layout**
@@ -48,7 +48,7 @@ Your JARVIS now has a **complete futuristic visual experience** with advanced an
 ### Option 1: Double-Click Launcher
 1. **Find `JARVIS_FUTURISTIC.command`** in your `bp` folder
 2. **Double-click it**
-3. **Futuristic JARVIS launches!** 🎉
+3. **Futuristic Maya launches!** 🎉
 
 ### Option 2: Terminal
 ```bash
@@ -73,7 +73,7 @@ bash JARVIS_FUTURISTIC.command
    - Glowing core activates
    - Rings start pulsing outward
 
-2. **JARVIS listens** (for 3 seconds in demo mode)
+2. **Maya listens** (for 3 seconds in demo mode)
    - Waveform bars animate in real-time
    - Shows "Listening..." status
    - Visual feedback for audio input
@@ -83,15 +83,15 @@ bash JARVIS_FUTURISTIC.command
    - Status returns to "Ready"
    - Waveform bars reset
 
-4. **JARVIS processes**
+4. **Maya processes**
    - Spinning glow effect activates
    - Shows "Processing..." status
    - Thinking animation
 
-5. **JARVIS responds**
+5. **Maya responds**
    - Status shows "Speaking..."
    - Response appears in conversation
-   - JARVIS speaks out loud 🔊
+   - Maya speaks out loud 🔊
    - Animation returns to calm glow
 
 6. **Ready again**
@@ -155,7 +155,7 @@ Processing State: Spinning/rotating glow effect
 | **🎤 Ready to listen** | Awaiting voice command |
 | **🎤 Listening...** | Actively listening |
 | **🧠 Processing...** | Processing your command |
-| **🔊 Speaking...** | JARVIS is speaking |
+| **🔊 Speaking...** | Maya is speaking |
 
 ---
 
@@ -228,15 +228,15 @@ Processing State: Spinning/rotating glow effect
 ║   [Animations Canvas]       ║ [Conversation History]      ║
 ║                             ║                             ║
 ║   Glowing Core              ║ [11:45] You: hello         ║
-║   Pulsing Rings             ║ [11:45] JARVIS: Hi there!  ║
+║   Pulsing Rings             ║ [11:45] Maya: Hi there!  ║
 ║   Waveform Bars             ║                             ║
 ║                             ║                             ║
 ║                             ║ [11:46] You: help         ║
-║                             ║ [11:46] JARVIS: I can...   ║
+║                             ║ [11:46] Maya: I can...   ║
 ╠═════════════════════════════════════════════════════════════╣
 ║ [🎤 Listen] [⏹ Stop] [🗑 Clear]                            ║
 ╠═════════════════════════════════════════════════════════════╣
-║ JARVIS Futuristic v1.0 | Advanced Voice AI Visualizer     ║
+║ Maya Futuristic v1.0 | Advanced Voice AI Visualizer     ║
 ╚═════════════════════════════════════════════════════════════╝
 ```
 
@@ -260,7 +260,7 @@ bash JARVIS_FUTURISTIC.command
 - **Click Listen multiple times** to see different animations each time
 - **Watch the waveform bars** - they show audio activity
 - **Notice the rings expand** - synchronizes with listening state
-- **Processing glow spins** - shows JARVIS is thinking
+- **Processing glow spins** - shows Maya is thinking
 - **Core returns to calm** - ready for next command
 
 ---
@@ -282,7 +282,7 @@ bash JARVIS_FUTURISTIC.command
 
 ## 📱 Both Versions Available
 
-You now have **two JARVIS versions**:
+You now have **two Maya versions**:
 
 1. **Standard** (`jarvis_gui.py`)
    - Professional but simple
@@ -298,5 +298,5 @@ You now have **two JARVIS versions**:
 
 ---
 
-**Enjoy your futuristic JARVIS experience!** 🤖✨
+**Enjoy your futuristic Maya experience!** 🤖✨
 

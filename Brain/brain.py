@@ -3,8 +3,8 @@ def Main_Brain(text):
         "hello": "Hello! How can I help you?",
         "hi": "Hi there! What do you need?",
         "what can you do": "I can help with system information, weather, image recognition, and various automation tasks.",
-        "what system am i on": "You're running JARVIS on macOS or Linux.",
-        "help": "I'm JARVIS, your AI assistant. Ask me about system info, weather, or just chat!",
+        "what system am i on": "You're running Maya on macOS or Linux.",
+        "help": "I'm Maya, your AI assistant. Ask me about system info, weather, or just chat!",
     }
 
     text_lower = text.lower().strip()

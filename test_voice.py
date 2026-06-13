@@ -10,12 +10,12 @@ from Features.speaker_health import play_tone, play_sweep
 
 def test_voice_modules():
     print("\n" + "="*60)
-    print("🎤 JARVIS Voice Functionality Test")
+    print("🎤 Maya Voice Functionality Test")
     print("="*60 + "\n")
 
     # Test 1: Text-to-Speech
     print("[Test 1] Testing Text-to-Speech (Animated Output)...")
-    speak("Hello, I am JARVIS. Voice functionality is working!")
+    speak("Hello, I am Maya. Voice functionality is working!")
     print("✓ Text-to-Speech module loaded successfully\n")
 
     # Test 2: PyAudio Import

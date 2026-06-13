@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-JARVIS GUI - Futuristic Edition
+Maya GUI - Futuristic Edition
 Full animated sci-fi experience with pulsing rings, waveform visualizer, and animated background
 """
 
@@ -91,10 +91,10 @@ class AnimatedCanvas(tk.Canvas):
             fill="#00d9ff", outline="#0088ff", width=3
         )
 
-class JARVISFuturistic:
+class MayaFuturistic:
     def __init__(self, root):
         self.root = root
-        self.root.title("J.A.R.V.I.S - Futuristic Voice AI")
+        self.root.title("Maya - Intelligent Voice AI Assistant")
         self.root.geometry("1200x800")
         self.root.configure(bg="#0a0e27")
 
@@ -114,19 +114,22 @@ class JARVISFuturistic:
         self.animate()
 
     def setup_styles(self):
-        """Configure color scheme"""
+        """Configure robust dark mode color scheme"""
         style = ttk.Style()
         style.theme_use('clam')
 
-        self.bg_dark = "#0a0e27"
-        self.bg_card = "#1a1f3a"
-        self.primary_color = "#00d9ff"
-        self.accent_color = "#ff006e"
-        self.success_color = "#06ffa5"
-        self.warning_color = "#ffa500"
-        self.text_color = "#ffffff"
+        # Enhanced dark mode with better contrast and visual polish
+        self.bg_dark = "#0a0e27"           # Deep space blue
+        self.bg_card = "#131829"           # Slightly lighter for cards
+        self.primary_color = "#00d9ff"     # Bright cyan
+        self.accent_color = "#ff006e"      # Magenta accent
+        self.success_color = "#06ffa5"     # Bright green
+        self.warning_color = "#ffa500"     # Orange warning
+        self.text_color = "#ffffff"        # Pure white text
+        self.text_secondary = "#aaaaaa"    # Secondary text
+        self.border_color = "#1f2849"      # Subtle borders
 
-        style.configure("Dark.TFrame", background=self.bg_dark)
+        style.configure("Dark.TFrame", background=self.bg_dark, relief=tk.FLAT)
         style.configure("Dark.TLabel", background=self.bg_dark, foreground=self.text_color)
 
     def create_widgets(self):
@@ -178,8 +181,8 @@ class JARVISFuturistic:
 
         title_label = tk.Label(
             title_frame,
-            text="J.A.R.V.I.S",
-            font=("Arial", 28, "bold"),
+            text="Maya",
+            font=("Arial", 32, "bold"),
             bg="#0f1333",
             fg=self.primary_color
         )
@@ -187,12 +190,12 @@ class JARVISFuturistic:
 
         subtitle_label = tk.Label(
             title_frame,
-            text="Futuristic Voice AI",
+            text="Intelligent Enterprise AI Assistant",
             font=("Arial", 10),
             bg="#0f1333",
             fg="#888888"
         )
-        subtitle_label.pack(anchor=tk.W, padx=(55, 0))
+        subtitle_label.pack(anchor=tk.W, padx=(20, 0))
 
         status_frame = tk.Frame(header_frame, bg="#0f1333")
         status_frame.pack(side=tk.RIGHT, padx=30, pady=20)
@@ -262,19 +265,23 @@ class JARVISFuturistic:
             text_frame,
             height=8,
             width=40,
-            bg="#111111",
+            bg="#0f1428",
             fg=self.text_color,
-            font=("Courier", 9),
+            font=("Monaco", 10),
             wrap=tk.WORD,
             relief=tk.FLAT,
-            borderwidth=0
+            borderwidth=1,
+            bd=0,
+            padx=10,
+            pady=8,
+            insertbackground=self.primary_color
         )
         self.text_display.pack(fill=tk.BOTH, expand=True)
         self.text_display.config(state=tk.DISABLED)
 
-        self.text_display.tag_config("user", foreground=self.primary_color)
-        self.text_display.tag_config("jarvis", foreground=self.success_color)
-        self.text_display.tag_config("time", foreground="#666666")
+        self.text_display.tag_config("user", foreground=self.primary_color, font=("Monaco", 10, "bold"))
+        self.text_display.tag_config("jarvis", foreground=self.success_color, font=("Monaco", 10))
+        self.text_display.tag_config("time", foreground="#555555", font=("Monaco", 9))
 
     def create_controls_section(self, parent):
         """Create control buttons"""
@@ -336,7 +343,7 @@ class JARVISFuturistic:
 
         footer_text = tk.Label(
             footer_frame,
-            text="JARVIS Futuristic v1.0 | Advanced Voice AI with Real-time Visualization",
+            text="Maya Futuristic v1.0 | Advanced Voice AI with Real-time Visualization",
             font=("Arial", 9),
             bg="#0f1333",
             fg="#666666"
@@ -354,7 +361,7 @@ class JARVISFuturistic:
             self.text_display.insert(tk.END, f"You: {text}\n", "user")
         else:
             self.text_display.insert(tk.END, f"[{timestamp}] ", "time")
-            self.text_display.insert(tk.END, f"JARVIS: {text}\n", "jarvis")
+            self.text_display.insert(tk.END, f"Maya: {text}\n", "jarvis")
 
         self.text_display.see(tk.END)
         self.text_display.config(state=tk.DISABLED)
@@ -426,7 +433,7 @@ class JARVISFuturistic:
 
         if self.is_listening:
             self.is_listening = False
-            # Varied test commands that showcase JARVIS capabilities
+            # Varied test commands that showcase Maya capabilities
             test_commands = [
                 "hello",
                 "what can you do",
@@ -521,8 +528,8 @@ class JARVISFuturistic:
 def main():
     """Main entry point"""
     root = tk.Tk()
-    app = JARVISFuturistic(root)
-    app.add_message("jarvis", "JARVIS initialized. Click 'Listen' to begin.")
+    app = MayaFuturistic(root)
+    app.add_message("jarvis", "Maya initialized. Click '🎤 Listen' to begin. Try saying 'hello', 'what can you do', or 'add task'.")
 
     root.mainloop()
 
@@ -530,10 +537,10 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("\n[JARVIS] Shutting down...")
+        print("\n[Maya] Shutting down...")
         sys.exit(0)
     except Exception as e:
-        print(f"[JARVIS Error] {e}")
+        print(f"[Maya Error] {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)

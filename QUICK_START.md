@@ -1,4 +1,4 @@
-# 🚀 JARVIS - Quick Start Guide (No Terminal Needed!)
+# 🚀 Maya - Quick Start Guide (No Terminal Needed!)
 
 ## Option 1: Double-Click Launcher (Easiest!) 🎯
 
@@ -6,14 +6,14 @@
 1. **Open Terminal** (find it in Applications → Utilities)
 2. **Copy and paste this one line:**
    ```bash
-   cd ~/bp && chmod +x JARVIS.command && open JARVIS.command
+   cd ~/bp && chmod +x Maya.command && open Maya.command
    ```
-3. **Done!** JARVIS launches
+3. **Done!** Maya launches
 
 ### Every Time After:
-1. **Find `JARVIS.command`** in your `bp` folder
+1. **Find `Maya.command`** in your `bp` folder
 2. **Double-click it**
-3. **JARVIS launches automatically!**
+3. **Maya launches automatically!**
 
 That's it - no more terminal needed!
 
@@ -27,12 +27,12 @@ That's it - no more terminal needed!
    ```bash
    cd ~/bp && bash create_mac_app.sh
    ```
-3. **A folder called `JARVIS.app` appears**
+3. **A folder called `Maya.app` appears**
 
 ### Use the Mac App:
-- **Double-click `JARVIS.app`** → JARVIS launches
+- **Double-click `Maya.app`** → Maya launches
 - **Or drag to Applications folder** for easier access
-- **Or use Spotlight:** Press `Cmd+Space`, type `JARVIS`, press Enter
+- **Or use Spotlight:** Press `Cmd+Space`, type `Maya`, press Enter
 
 ### That's It!
 Now it feels like a real Mac application. No terminal, no confusion!
@@ -48,13 +48,13 @@ cd ~/bp && bash run_jarvis_gui.sh
 
 ---
 
-## 🎤 Once JARVIS Opens
+## 🎤 Once Maya Opens
 
 You'll see the beautiful GUI with:
 - **Blue "Listen" button** → Click to activate
-- **Speak your command** → JARVIS listens
+- **Speak your command** → Maya listens
 - **See your message appear** → In cyan text
-- **Hear JARVIS respond** → In green text with audio
+- **Hear Maya respond** → In green text with audio
 
 ---
 
@@ -62,8 +62,8 @@ You'll see the beautiful GUI with:
 
 | Option | Ease | Recommendation |
 |--------|------|-----------------|
-| **Double-Click (JARVIS.command)** | ⭐⭐⭐⭐⭐ | **Best for most people** |
-| **Mac App (JARVIS.app)** | ⭐⭐⭐⭐⭐ | **Feels most like a real app** |
+| **Double-Click (Maya.command)** | ⭐⭐⭐⭐⭐ | **Best for most people** |
+| **Mac App (Maya.app)** | ⭐⭐⭐⭐⭐ | **Feels most like a real app** |
 | **Shell Script** | ⭐⭐⭐ | Good if you like seeing terminal |
 
 **I recommend Option 1 or 2** - they both feel native to your Mac!
@@ -74,9 +74,9 @@ You'll see the beautiful GUI with:
 
 - [ ] Git clone: `git clone https://github.com/bamah075/bp.git`
 - [ ] Navigate: `cd bp`
-- [ ] Make launcher executable: `chmod +x JARVIS.command`
-- [ ] Double-click `JARVIS.command` (first time takes 1-2 minutes)
-- [ ] JARVIS GUI opens
+- [ ] Make launcher executable: `chmod +x Maya.command`
+- [ ] Double-click `Maya.command` (first time takes 1-2 minutes)
+- [ ] Maya GUI opens
 - [ ] Click "Listen" and test with "Hello"
 - [ ] Done!
 
@@ -88,7 +88,7 @@ You'll see the beautiful GUI with:
 
 Just:
 1. **First time:** Run setup once
-2. **After that:** Double-click JARVIS.command (or JARVIS.app)
+2. **After that:** Double-click Maya.command (or Maya.app)
 3. **Enjoy:** Talk to your voice AI!
 
 ---
@@ -97,7 +97,7 @@ Just:
 
 ### "Permission denied"
 ```bash
-cd ~/bp && chmod +x JARVIS.command
+cd ~/bp && chmod +x Maya.command
 ```
 
 ### "Python not found"
@@ -114,7 +114,7 @@ Make sure you're in the `bp` folder where you cloned the repository.
 ## 🎁 Bonus: Put It in Your Dock
 
 1. **Create the app:** `bash create_mac_app.sh`
-2. **Find `JARVIS.app`** in Finder
+2. **Find `Maya.app`** in Finder
 3. **Drag it to the Dock** (at the bottom of your screen)
 4. **Now you can launch with one click from your Dock!**
 
@@ -125,8 +125,8 @@ Make sure you're in the `bp` folder where you cloned the repository.
 After setup, you'll have:
 ```
 bp/
-├── JARVIS.command        ← Double-click this!
-├── JARVIS.app/           ← Or use this app
+├── Maya.command        ← Double-click this!
+├── Maya.app/           ← Or use this app
 ├── jarvis_gui.py         ← The GUI code
 ├── venv/                 ← Automatically created
 └── ... other files
@@ -134,5 +134,5 @@ bp/
 
 ---
 
-**You're all set! No more terminal confusion. Just double-click and enjoy JARVIS!** 🤖
+**You're all set! No more terminal confusion. Just double-click and enjoy Maya!** 🤖
 

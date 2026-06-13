@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-JARVIS Demo - Test without voice input
-Run this to verify JARVIS is working correctly
+Maya Demo - Test without voice input
+Run this to verify Maya is working correctly
 """
 
 import sys
@@ -24,7 +24,7 @@ def demo():
         online = False
 
     status = random.choice(online_dlg if online else offline_dlg)
-    print(f"[JARVIS] {status}\n")
+    print(f"[Maya] {status}\n")
 
     # Test commands
     test_commands = [
@@ -39,12 +39,12 @@ def demo():
     for cmd in test_commands:
         print(f"📢 User: {cmd}")
         response = process_command(cmd)
-        print(f"🤖 JARVIS: {response}\n")
+        print(f"🤖 Maya: {response}\n")
 
     print("="*50)
-    print("✅ Demo complete! JARVIS is working correctly.")
+    print("✅ Demo complete! Maya is working correctly.")
     print("="*50 + "\n")
-    print("To run JARVIS with voice input, use:")
+    print("To run Maya with voice input, use:")
     print("  python jarvis.py\n")
 
 
@@ -52,8 +52,8 @@ if __name__ == "__main__":
     try:
         demo()
     except KeyboardInterrupt:
-        print("\n\n[JARVIS] Demo interrupted by user")
+        print("\n\n[Maya] Demo interrupted by user")
         sys.exit(0)
     except Exception as e:
-        print(f"\n[JARVIS Error] {e}")
+        print(f"\n[Maya Error] {e}")
         sys.exit(1)

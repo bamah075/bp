@@ -1,8 +1,8 @@
-# JARVIS GUI - Professional Voice AI Assistant Interface
+# Maya GUI - Professional Voice AI Assistant Interface
 
 ## Overview
 
-`jarvis_gui.py` provides a modern, professional graphical interface for JARVIS with real-time status display, conversation history, and voice control.
+`jarvis_gui.py` provides a modern, professional graphical interface for Maya with real-time status display, conversation history, and voice control.
 
 ## Features
 
@@ -20,7 +20,7 @@
 
 💬 **Conversation Display**
 - Scrollable conversation history
-- Color-coded user/JARVIS messages
+- Color-coded user/Maya messages
 - Timestamps for each message
 - Clear display option
 
@@ -56,7 +56,7 @@ source venv/bin/activate
 pip install -r requirements-mac.txt
 ```
 
-### 4. Run JARVIS GUI
+### 4. Run Maya GUI
 ```bash
 python3 jarvis_gui.py
 ```
@@ -65,17 +65,17 @@ python3 jarvis_gui.py
 
 ### Starting the Application
 1. Run `python3 jarvis_gui.py`
-2. The JARVIS window will open with a professional interface
+2. The Maya window will open with a professional interface
 
 ### Using Voice Commands
-1. **Click "🎤 Listen"** - JARVIS will activate listening mode
+1. **Click "🎤 Listen"** - Maya will activate listening mode
 2. **Speak your command** - The microphone level bar will show input
-3. **JARVIS processes and responds** - Response appears in conversation
+3. **Maya processes and responds** - Response appears in conversation
 4. **Click "⏹ Stop"** - Stop listening at any time
 
 ### Example Commands
 - "Hello" - Get a greeting
-- "What can you do" - Learn about JARVIS capabilities
+- "What can you do" - Learn about Maya capabilities
 - "What system am I on" - Check system information
 - "Help" - Get help information
 
@@ -91,12 +91,12 @@ python3 jarvis_gui.py
 - **🎤 Ready to listen** - Waiting for voice input
 - **🎤 Listening...** - Actively listening for commands
 - **🧠 Processing...** - Processing your command
-- **🔊 Speaking...** - JARVIS is responding
+- **🔊 Speaking...** - Maya is responding
 
 ## GUI Components Explained
 
 ### Header Section
-- JARVIS logo and title
+- Maya logo and title
 - Network status indicator (Online/Offline)
 - Connection status display
 
@@ -109,7 +109,7 @@ python3 jarvis_gui.py
 - Full conversation history
 - Color-coded messages:
   - **Cyan**: Your voice commands
-  - **Green**: JARVIS responses
+  - **Green**: Maya responses
   - **Gray**: Timestamps
 
 ### Control Buttons
@@ -174,7 +174,7 @@ pip install pyaudio
 
 1. **Clone to your Mac** and run `python3 jarvis_gui.py`
 2. **Test voice input** - Use "Listen" button to speak
-3. **Add custom commands** in `Brain/brain.py` to extend JARVIS
+3. **Add custom commands** in `Brain/brain.py` to extend Maya
 4. **Customize the interface** to match your preferences
 5. **Set up keyboard shortcuts** (optional enhancement)
 

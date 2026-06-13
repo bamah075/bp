@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Smart JARVIS Brain - Intelligent conversational AI
+Smart Maya Brain - Intelligent conversational AI
 Provides varied responses, multiple capabilities, and natural interactions
 """
 
@@ -28,7 +28,7 @@ class SmartBrain:
         """Initialize diverse response pools"""
         self.response_pool = {
             "greeting": [
-                "Hello! I'm JARVIS, your AI assistant. How can I help you today?",
+                "Hello! I'm Maya, your AI assistant. How can I help you today?",
                 "Good to see you! What would you like me to help with?",
                 "Greetings! I'm ready to assist you.",
                 "Hi there! What can I do for you?",

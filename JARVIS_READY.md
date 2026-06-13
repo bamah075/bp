@@ -1,4 +1,4 @@
-# 🤖 JARVIS is Ready! Professional Voice AI Assistant
+# 🤖 Maya is Ready! Professional Voice AI Assistant
 
 ## ✅ What You Now Have
 
@@ -21,9 +21,9 @@ A **complete, production-ready voice AI assistant** with a professional GUI inte
 ║ │ Conversation History                                         │  ║
 ║ │ ────────────────────────────────────────────────────────    │  ║
 ║ │ [11:45:23] You: Hello                                       │  ║
-║ │ [11:45:24] JARVIS: Hello! How can I help you?             │  ║
+║ │ [11:45:24] Maya: Hello! How can I help you?             │  ║
 ║ │ [11:45:29] You: What can you do?                           │  ║
-║ │ [11:45:30] JARVIS: I can help with system information,    │  ║
+║ │ [11:45:30] Maya: I can help with system information,    │  ║
 ║ │             weather, image recognition, and various        │  ║
 ║ │             automation tasks.                              │  ║
 ║ │                                                              │  ║
@@ -33,7 +33,7 @@ A **complete, production-ready voice AI assistant** with a professional GUI inte
 ║                                                                    ║
 ║  [🎤 Listen] [⏹ Stop] [🗑 Clear] [⚙ Settings]                    ║
 ║                                                                    ║
-║ JARVIS v1.0 | Ready for voice commands | Python 3.9+             ║
+║ Maya v1.0 | Ready for voice commands | Python 3.9+             ║
 ╚════════════════════════════════════════════════════════════════════╝
 ```
 
@@ -42,13 +42,13 @@ A **complete, production-ready voice AI assistant** with a professional GUI inte
 ### ✅ Voice Functionality (Complete)
 - **PyAudio**: Installed and configured ✓
 - **Microphone Input**: Ready to capture voice commands
-- **Speaker Output**: Ready to play JARVIS responses
+- **Speaker Output**: Ready to play Maya responses
 - **Real-time Feedback**: Visual microphone level display
 - **Voice Health Diagnostics**: Built-in audio quality testing
 
 ### ✅ GUI Interface (Complete)
 - **Professional Dark Theme**: Modern, easy on the eyes
-- **Real-time Status Display**: Shows what JARVIS is doing
+- **Real-time Status Display**: Shows what Maya is doing
 - **Conversation History**: Full chat with timestamps
 - **One-Click Controls**: Listen, Stop, Clear, Settings buttons
 - **Network Awareness**: Shows online/offline status
@@ -79,7 +79,7 @@ source venv/bin/activate
 # 3. Install dependencies
 pip install -r requirements-mac.txt
 
-# 4. Run JARVIS GUI
+# 4. Run Maya GUI
 python3 jarvis_gui.py
 ```
 
@@ -105,18 +105,18 @@ bp/
 
 ## 🎤 Usage Examples
 
-### Once JARVIS GUI Opens
+### Once Maya GUI Opens
 
-1. **Click "🎤 Listen"** → JARVIS activates
+1. **Click "🎤 Listen"** → Maya activates
 2. **Speak a command** → Microphone level shows activity
-3. **JARVIS processes** → Status shows "Processing..."
+3. **Maya processes** → Status shows "Processing..."
 4. **Get response** → Response appears in conversation
-5. **See and hear answer** → JARVIS speaks the response
+5. **See and hear answer** → Maya speaks the response
 
 ### Example Voice Commands
 ```
 "Hello"                    → Friendly greeting
-"What can you do"         → Learn JARVIS capabilities
+"What can you do"         → Learn Maya capabilities
 "What system am I on"     → Check system information
 "Help"                    → Get help about commands
 "Quit"                    → Exit conversation
@@ -130,14 +130,14 @@ bp/
 - Bright green (#06ffa5) for success states
 - Smooth animations and transitions
 - Real-time microphone level visualization
-- Color-coded message display (cyan for you, green for JARVIS)
+- Color-coded message display (cyan for you, green for Maya)
 - Timestamps for every message
-- Professional header with JARVIS logo
+- Professional header with Maya logo
 
 🎯 **User Experience**
 - One-click operation (just press "Listen")
 - Clear visual feedback for every action
-- Status indicators showing what JARVIS is doing
+- Status indicators showing what Maya is doing
 - Scrollable conversation history
 - Easy-to-read conversation layout
 - Network connectivity indicator
@@ -233,7 +233,7 @@ Beyond the basic voice AI, you get:
 
 ## 🎉 You're All Set!
 
-Your JARVIS voice AI assistant is complete with:
+Your Maya voice AI assistant is complete with:
 - ✅ Professional GUI interface
 - ✅ Voice input/output (PyAudio installed)
 - ✅ Command processing

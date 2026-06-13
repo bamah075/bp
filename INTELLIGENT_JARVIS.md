@@ -1,8 +1,8 @@
-# 🧠 Intelligent JARVIS - SmartBrain Edition
+# 🧠 Intelligent Maya - SmartBrain Edition
 
 ## No More Repetition - Truly Robust AI Assistant
 
-JARVIS now has a **real intelligent brain** that understands commands and provides meaningful, varied responses!
+Maya now has a **real intelligent brain** that understands commands and provides meaningful, varied responses!
 
 ---
 
@@ -25,12 +25,12 @@ JARVIS now has a **real intelligent brain** that understands commands and provid
 
 ---
 
-## 🎯 What JARVIS Can Now Do
+## 🎯 What Maya Can Now Do
 
 ### **Greetings** (5 different responses)
 ```
 User: "Hello"
-JARVIS: "Hello! I'm JARVIS, your AI assistant. How can I help you today?"
+Maya: "Hello! I'm Maya, your AI assistant. How can I help you today?"
          OR
          "Good to see you! What would you like me to help with?"
          OR
@@ -41,7 +41,7 @@ JARVIS: "Hello! I'm JARVIS, your AI assistant. How can I help you today?"
 ### **Capabilities** (5 variations)
 ```
 User: "What can you do"
-JARVIS: "I can help with system information, check weather, tell jokes, 
+Maya: "I can help with system information, check weather, tell jokes, 
          provide facts, manage time, and automate tasks."
          OR
          "My capabilities include: system monitoring, time management, 
@@ -52,19 +52,19 @@ JARVIS: "I can help with system information, check weather, tell jokes,
 ### **System Information** (Real data!)
 ```
 User: "What system am I on"
-JARVIS: "System: macOS 15.0 | Machine: arm64 | Hostname: Mac-2"
+Maya: "System: macOS 15.0 | Machine: arm64 | Hostname: Mac-2"
 ```
 
 ### **Network Information** (Real IP/Hostname)
 ```
 User: "What's my IP address"
-JARVIS: "Your hostname is Mac-2 and your IP address is 192.168.1.100"
+Maya: "Your hostname is Mac-2 and your IP address is 192.168.1.100"
 ```
 
 ### **Time & Date** (Dynamic!)
 ```
 User: "What time is it"
-JARVIS: "It's 12:19 PM on Saturday, June 13, 2026."
+Maya: "It's 12:19 PM on Saturday, June 13, 2026."
          OR
          "Current time: 12:19 PM on Saturday, June 13, 2026."
          (Changes every time!)
@@ -73,7 +73,7 @@ JARVIS: "It's 12:19 PM on Saturday, June 13, 2026."
 ### **Jokes** (8 different jokes!)
 ```
 User: "Tell me a joke"
-JARVIS: "Why did the AI go to school? To improve its neural network!"
+Maya: "Why did the AI go to school? To improve its neural network!"
          OR
          "What do you call an AI that tells jokes? A funny algorithm!"
          OR
@@ -84,7 +84,7 @@ JARVIS: "Why did the AI go to school? To improve its neural network!"
 ### **Interesting Facts** (7 different facts!)
 ```
 User: "Tell me a fact"
-JARVIS: "Did you know? Honey never spoils. Archaeologists found 
+Maya: "Did you know? Honey never spoils. Archaeologists found 
          3000-year-old honey in Egyptian tombs that was still edible!"
          OR
          "Fun fact: A group of flamingos is called a 'flamboyance'!"
@@ -94,7 +94,7 @@ JARVIS: "Did you know? Honey never spoils. Archaeologists found
 ### **Help System** (4 helpful variations)
 ```
 User: "Help"
-JARVIS: "I can help you with many things. Ask me about: system info, 
+Maya: "I can help you with many things. Ask me about: system info, 
          time, jokes, weather, facts, or say 'what can you do'."
 ```
 
@@ -133,17 +133,17 @@ User Input          → Keywords Detected → Response Category
 
 ## 📊 Command List
 
-| Category | Keywords | What JARVIS Does |
+| Category | Keywords | What Maya Does |
 |----------|----------|-----------------|
 | **Greeting** | hello, hi, hey, greetings | Gives 5 friendly greetings |
-| **Capabilities** | what can you do, features | Lists what JARVIS can do |
+| **Capabilities** | what can you do, features | Lists what Maya can do |
 | **System Info** | what system, os, platform | Shows real system details |
 | **Network** | ip address, network, hostname | Shows network information |
 | **Time** | what time, date, current | Shows current time & date |
 | **Jokes** | joke, funny, humor | Tells one of 8 jokes |
 | **Facts** | fact, interesting, did you know | Shares one of 7 facts |
 | **Thanks** | thank, thanks, appreciate | 5 gracious responses |
-| **Help** | help, assist, guide | Explains how to use JARVIS |
+| **Help** | help, assist, guide | Explains how to use Maya |
 
 ---
 
@@ -199,7 +199,7 @@ Then:
 ## 🔮 What's Happening Behind the Scenes
 
 1. **User speaks**: "Tell me a joke"
-2. **JARVIS listens** and gets the text
+2. **Maya listens** and gets the text
 3. **SmartBrain analyzes** the keywords
 4. **Recognizes** it's a joke request
 5. **Selects randomly** from 8 jokes (avoiding recent ones)
@@ -243,7 +243,7 @@ These can be added easily:
 ### Example: Asking "hello" 3 times in a row
 
 **Response 1:**
-> "Hello! I'm JARVIS, your AI assistant. How can I help you today?"
+> "Hello! I'm Maya, your AI assistant. How can I help you today?"
 
 **Response 2:**
 > "Good to see you! What would you like me to help with?"
@@ -308,9 +308,9 @@ These can be added easily:
    - Click "Listen" again
    - Say "what time is it"
 
-4. **See JARVIS respond intelligently!** 🧠✨
+4. **See Maya respond intelligently!** 🧠✨
 
 ---
 
-**JARVIS is now a robust, intelligent AI assistant - not a static demo!** 🤖
+**Maya is now a robust, intelligent AI assistant - not a static demo!** 🤖
 

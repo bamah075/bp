@@ -1,4 +1,4 @@
-# 🎤 JARVIS Quick Commands Reference
+# 🎤 Maya Quick Commands Reference
 
 ## Voice Commands Cheat Sheet
 
@@ -73,7 +73,7 @@
 
 ### Daily Standup (Morning)
 ```
-1. "Good morning JARVIS"
+1. "Good morning Maya"
 2. "What's my schedule today?"
 3. "My tasks"
 4. "Any reminders for today?"
@@ -116,7 +116,7 @@
 
 ### In GUI
 1. Click the **🎤 Listen** button
-2. Speak clearly (JARVIS listens for 3 seconds)
+2. Speak clearly (Maya listens for 3 seconds)
 3. Wait for response
 4. Click **Listen** again for next command
 
@@ -135,7 +135,7 @@ print(_smart_brain.process_command('your command here'))
 ### For Meetings
 - Use "add note" for key discussion points
 - Use "action item" for clear ownership
-- JARVIS auto-generates summaries automatically
+- Maya auto-generates summaries automatically
 
 ### For Tasks
 - Add high priority items first
@@ -144,13 +144,13 @@ print(_smart_brain.process_command('your command here'))
 
 ### For Automation
 - Describe what you want to automate clearly
-- JARVIS will suggest platforms
+- Maya will suggest platforms
 - Follow the step-by-step guide
 
 ### For Help
 - Be specific about what you need help with
 - Use keywords like "plan", "analyze", "draft"
-- JARVIS provides structured frameworks
+- Maya provides structured frameworks
 
 ---
 
@@ -176,7 +176,7 @@ print(_smart_brain.process_command('your command here'))
 2. Check the format (dates, times)
 3. Use keywords from the command table
 
-### JARVIS Not Understanding?
+### Maya Not Understanding?
 1. Speak more clearly
 2. Use shorter phrases
 3. Check if a related feature exists
@@ -200,4 +200,4 @@ For complete details, see:
 
 ---
 
-**Need help? Just ask JARVIS - it's designed to assist with anything!** 🤖✨
+**Need help? Just ask Maya - it's designed to assist with anything!** 🤖✨

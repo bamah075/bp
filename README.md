@@ -24,7 +24,7 @@ J.A.R.V.I.S (Just A Rather Very Intelligent System) is an advanced AI assistant 
     ```bash
     pip install -r requirements.txt
     ```
-3. Run JARVIS:
+3. Run Maya:
     ```bash
     python jarvis.py
     ```

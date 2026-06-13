@@ -2,7 +2,7 @@
 
 ## Overview
 
-JARVIS now has the ability to search Reddit for small business automation discussions, specifically focused on Australian small business pain points and solutions.
+Maya now has the ability to search Reddit for small business automation discussions, specifically focused on Australian small business pain points and solutions.
 
 ---
 
@@ -28,7 +28,7 @@ JARVIS now has the ability to search Reddit for small business automation discus
 
 ### Fallback Results
 - Includes fallback responses if Reddit is unavailable
-- Ensures JARVIS continues to function even without internet
+- Ensures Maya continues to function even without internet
 
 ---
 
@@ -39,7 +39,7 @@ JARVIS now has the ability to search Reddit for small business automation discus
 **Command 1: General Reddit Search**
 ```
 User: "Search Reddit for small business automation"
-JARVIS: "Searching for Australian small business automation topics on Reddit...
+Maya: "Searching for Australian small business automation topics on Reddit...
 
 Found 3 posts about 'small business automation Australia':
 
@@ -51,7 +51,7 @@ Found 3 posts about 'small business automation Australia':
 **Command 2: Pain Points Query**
 ```
 User: "What are the pain points for Australian small businesses?"
-JARVIS: "Looking up small business pain points and automation solutions...
+Maya: "Looking up small business pain points and automation solutions...
 
 Found 3 posts about 'small business automation Australia':
 
@@ -63,7 +63,7 @@ Found 3 posts about 'small business automation Australia':
 **Command 3: Automation Solutions**
 ```
 User: "Tell me about Australian small business automation"
-JARVIS: "Fetching relevant discussions from the Australian subreddit...
+Maya: "Fetching relevant discussions from the Australian subreddit...
 
 Found 3 posts about 'small business automation Australia':
 
@@ -224,13 +224,13 @@ If Reddit is unreachable:
 
 ---
 
-## Usage in JARVIS GUI
+## Usage in Maya GUI
 
-When running the futuristic JARVIS GUI:
+When running the futuristic Maya GUI:
 
 1. Click "🎤 Listen"
 2. Say "Tell me about small business automation in Australia"
-3. JARVIS searches Reddit and displays relevant posts
+3. Maya searches Reddit and displays relevant posts
 4. Posts appear in the conversation history with links
 5. Click on links to read full discussions
 
@@ -266,4 +266,4 @@ When running the futuristic JARVIS GUI:
 
 ---
 
-**Reddit integration adds market research capabilities to JARVIS!** 🔍✨
+**Reddit integration adds market research capabilities to Maya!** 🔍✨

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-JARVIS GUI - Professional Voice AI Assistant Interface
+Maya GUI - Professional Voice AI Assistant Interface
 Modern graphical interface with voice activation, status display, and real-time feedback
 """
 
@@ -293,7 +293,7 @@ class JARVISGui:
 
         footer_text = tk.Label(
             footer_frame,
-            text="JARVIS v1.0 | Ready for voice commands | Python 3.9+",
+            text="Maya v1.0 | Ready for voice commands | Python 3.9+",
             font=("Arial", 9),
             bg="#0f1333",
             fg="#666666"
@@ -311,7 +311,7 @@ class JARVISGui:
             self.text_display.insert(tk.END, f"You: {text}\n", "user")
         else:
             self.text_display.insert(tk.END, f"[{timestamp}] ", "time")
-            self.text_display.insert(tk.END, f"JARVIS: {text}\n", "jarvis")
+            self.text_display.insert(tk.END, f"Maya: {text}\n", "jarvis")
 
         self.text_display.see(tk.END)
         self.text_display.config(state=tk.DISABLED)
@@ -452,7 +452,7 @@ class JARVISGui:
     def show_settings(self):
         """Show settings window"""
         settings_window = tk.Toplevel(self.root)
-        settings_window.title("JARVIS Settings")
+        settings_window.title("Maya Settings")
         settings_window.geometry("400x300")
         settings_window.configure(bg=self.bg_dark)
 
@@ -518,7 +518,7 @@ def main():
     app = JARVISGui(root)
 
     # Add welcome message
-    app.add_message("jarvis", "Hello! I'm JARVIS, your personal AI assistant. Click 'Listen' to get started.")
+    app.add_message("jarvis", "Hello! I'm Maya, your personal AI assistant. Click 'Listen' to get started.")
 
     root.mainloop()
 
@@ -526,10 +526,10 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("\n[JARVIS] Shutting down...")
+        print("\n[Maya] Shutting down...")
         sys.exit(0)
     except Exception as e:
-        print(f"[JARVIS Error] {e}")
+        print(f"[Maya Error] {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)

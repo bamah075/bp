@@ -1,4 +1,4 @@
-# 🚀 JARVIS Enterprise Setup Guide
+# 🚀 Maya Enterprise Setup Guide
 
 ## Complete Installation & Configuration
 
@@ -6,7 +6,7 @@
 
 ## Phase 1: Installation ✅ (Already Done!)
 
-JARVIS is ready to use! All core modules are installed:
+Maya is ready to use! All core modules are installed:
 - ✅ Smart Brain
 - ✅ Meeting Notes
 - ✅ Calendar Manager
@@ -20,7 +20,7 @@ No additional installation needed!
 
 ## Phase 2: Quick Start
 
-### Launch JARVIS
+### Launch Maya
 ```bash
 cd ~/bp
 bash JARVIS_FUTURISTIC.command
@@ -51,7 +51,7 @@ print(_smart_brain.process_command('start meeting'))
    ```bash
    # Go to Google Cloud Console
    # https://console.cloud.google.com/
-   # Create new project "JARVIS"
+   # Create new project "Maya"
    # Enable Google Drive API
    # Enable Google Calendar API
    # Create service account
@@ -66,7 +66,7 @@ print(_smart_brain.process_command('start meeting'))
 3. **Create Google Integration Module**
    ```bash
    # File: Brain/google_drive_manager.py
-   # This module will sync JARVIS data with Google Drive
+   # This module will sync Maya data with Google Drive
    ```
 
 4. **Configure Environment**
@@ -82,7 +82,7 @@ print(_smart_brain.process_command('start meeting'))
 - Appointments synced with Google Calendar
 - Tasks synced with Google Tasks
 - Email drafts saved to Google Drive
-- Access JARVIS data from anywhere
+- Access Maya data from anywhere
 
 ### Option B: Automation API Keys
 
@@ -162,7 +162,7 @@ export CLAUDE_API_KEY="your-claude-api-key"
 ```bash
 python3 << 'EOF'
 import sys
-print("Checking JARVIS modules...")
+print("Checking Maya modules...")
 
 modules = [
     'Brain.smart_brain',
@@ -198,7 +198,7 @@ tests = {
     'help': 'help me plan my day'
 }
 
-print("Running JARVIS tests...\n")
+print("Running Maya tests...\n")
 for feature, command in tests.items():
     try:
         result = _smart_brain.process_command(command)
@@ -301,7 +301,7 @@ echo $CLAUDE_API_KEY
 # Verify API keys are valid and active
 ```
 
-### JARVIS Not Responding
+### Maya Not Responding
 ```bash
 # Check if Python process is running
 ps aux | grep jarvis_gui_futuristic
@@ -402,7 +402,7 @@ python3 jarvis_gui_futuristic.py
 
 ## ✅ Next Steps
 
-1. **Start using JARVIS** - Launch the GUI and try commands
+1. **Start using Maya** - Launch the GUI and try commands
 2. **Test all features** - Try each module to understand capabilities
 3. **Configure integrations** - Setup cloud/API integrations as needed
 4. **Create workflows** - Build custom commands and automations
@@ -410,6 +410,6 @@ python3 jarvis_gui_futuristic.py
 
 ---
 
-**JARVIS is ready to work for you!** 🤖✨
+**Maya is ready to work for you!** 🤖✨
 
 Start with voice commands, explore features, configure integrations as needed.

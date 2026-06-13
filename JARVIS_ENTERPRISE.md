@@ -1,8 +1,8 @@
-# 🚀 JARVIS Enterprise Edition
+# 🚀 Maya Enterprise Edition
 
 ## Smart AI Assistant with Complete Business Capabilities
 
-JARVIS has evolved from a simple voice assistant into a comprehensive **Enterprise AI Employee** that handles:
+Maya has evolved from a simple voice assistant into a comprehensive **Enterprise AI Employee** that handles:
 
 - 📝 Meeting notes and summaries
 - 📅 Calendar and reminders management
@@ -19,13 +19,13 @@ JARVIS has evolved from a simple voice assistant into a comprehensive **Enterpri
 #### Start & Capture Meetings
 ```
 User: "Start meeting"
-JARVIS: "Starting a new meeting. Ready to capture notes."
+Maya: "Starting a new meeting. Ready to capture notes."
 
 User: "Add note we discussed budget constraints"
-JARVIS: "Note added: we discussed budget constraints"
+Maya: "Note added: we discussed budget constraints"
 
 User: "End meeting"
-JARVIS: "All done! Here's what we covered:
+Maya: "All done! Here's what we covered:
 Meeting: Meeting 2026-06-13 12:35
 Key Notes:
   1. we discussed budget constraints
@@ -47,7 +47,7 @@ Action Items: [Any action items captured]"
 #### View Your Schedule
 ```
 User: "What's my schedule today?"
-JARVIS: "📅 Today's Schedule (2026-06-13)
+Maya: "📅 Today's Schedule (2026-06-13)
 Appointments:
   • 10:00 - Team Standup (1 hour)
   • 14:00 - Client Call (30 mins)
@@ -61,15 +61,15 @@ To-Do Items:
 #### Manage Tasks
 ```
 User: "Add task finish project report"
-JARVIS: "🟡 To-do added: finish project report (Due: Not set)"
+Maya: "🟡 To-do added: finish project report (Due: Not set)"
 
 User: "My tasks"
-JARVIS: "📋 To-Do Items:
+Maya: "📋 To-Do Items:
 1. 🔴 Complete project proposal (Due: 2026-06-13)
 2. 🟡 Finish project report (Due: Not set)"
 
 User: "Week summary"
-JARVIS: "📊 Week Summary (Jun 13 - Jun 20)
+Maya: "📊 Week Summary (Jun 13 - Jun 20)
 Upcoming Appointments: 5
 Pending To-Do Items: 8
 Key Appointments: [Listed]
@@ -93,7 +93,7 @@ Top Priorities: [Listed]"
 #### Get Automation Guidance
 ```
 User: "Help me automate email campaigns"
-JARVIS: "Let me help you automate that.
+Maya: "Let me help you automate that.
 
 🤖 Automation Suggestion for: help me automate email campaigns
 
@@ -130,14 +130,14 @@ Smart Employee handles ANY task you ask for:
 #### Document Assistance
 ```
 User: "Help me draft an email"
-JARVIS: "I can help draft an email. Please provide: 
+Maya: "I can help draft an email. Please provide: 
 recipient name, subject, and purpose."
 ```
 
 #### Planning
 ```
 User: "Help me plan my project"
-JARVIS: "📋 Action Plan: [Your Goal]
+Maya: "📋 Action Plan: [Your Goal]
 
 Phase 1: Planning (Week 1)
   1. Define clear objectives
@@ -155,7 +155,7 @@ Phase 3: Review & Adjust (Week 5)
 #### Data Analysis
 ```
 User: "Analyze our sales data"
-JARVIS: "📊 Data Analysis Framework:
+Maya: "📊 Data Analysis Framework:
 1. Data Collection - Gather all relevant data
 2. Data Cleaning - Remove duplicates, standardize
 3. Exploratory Analysis - Find patterns
@@ -166,7 +166,7 @@ JARVIS: "📊 Data Analysis Framework:
 #### Problem Solving
 ```
 User: "Help me solve this workflow issue"
-JARVIS: "🔧 Problem-Solving Framework:
+Maya: "🔧 Problem-Solving Framework:
 1. Understand the Problem
 2. Root Cause Analysis
 3. Generate Solutions
@@ -177,7 +177,7 @@ JARVIS: "🔧 Problem-Solving Framework:
 #### Brainstorming
 ```
 User: "Brainstorm ideas for our new product"
-JARVIS: "💡 Creative Approaches:
+Maya: "💡 Creative Approaches:
 1. Traditional Method
 2. Innovative Approach
 3. Collaborative Approach
@@ -210,7 +210,7 @@ JARVIS: "💡 Creative Approaches:
 
 ```
 User: "Tell me about Australian small business automation"
-JARVIS: "Searching for Australian small business automation topics...
+Maya: "Searching for Australian small business automation topics...
 
 Found 3 posts about 'small business automation Australia':
 
@@ -298,7 +298,7 @@ Brain/
 - Calendar events stored in memory
 
 ### Cloud Integration (Coming Soon)
-JARVIS will support Google Workspace integration:
+Maya will support Google Workspace integration:
 - ☐ Google Drive for document storage
 - ☐ Google Calendar for appointments
 - ☐ Gmail for email drafting
@@ -310,8 +310,8 @@ JARVIS will support Google Workspace integration:
 
 ### Daily Morning Briefing
 ```
-User: "Good morning JARVIS"
-JARVIS: "Good morning! Here's your briefing:
+User: "Good morning Maya"
+Maya: "Good morning! Here's your briefing:
 
 📅 Today's Schedule:
 - 10:00 Team Standup
@@ -336,13 +336,13 @@ JARVIS: "Good morning! Here's your briefing:
 4. User: "Action: John to prepare content by June 18"
 5. User: "End meeting"
 
-JARVIS: [Generates and stores meeting summary with action items]
+Maya: [Generates and stores meeting summary with action items]
 ```
 
 ### Automation Setup
 ```
 User: "I want to automate our lead follow-up"
-JARVIS: "📌 Lead Capture & Automation
+Maya: "📌 Lead Capture & Automation
    Platforms: Zapier, GoHighLevel
    Steps:
    1. Set up form trigger
@@ -358,7 +358,7 @@ Would you like step-by-step guidance on any of these?"
 
 ## 🚀 Quick Start
 
-### Using JARVIS
+### Using Maya
 ```bash
 cd ~/bp
 python3 jarvis_gui_futuristic.py
@@ -505,6 +505,6 @@ For questions or issues:
 
 ---
 
-**JARVIS is now a complete Enterprise AI Assistant!** 🚀✨
+**Maya is now a complete Enterprise AI Assistant!** 🚀✨
 
-Every task, every workflow, every challenge - JARVIS is here to help.
+Every task, every workflow, every challenge - Maya is here to help.
