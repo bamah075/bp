@@ -213,8 +213,13 @@ class SmartBrain:
         # Determine category for learning
         category = self._determine_category(text_lower)
 
+        # Advanced reasoning - super powers (check FIRST to avoid substring conflicts like "hi" in "machine")
+        if any(word in text_lower for word in ["think about", "analyze", "reason", "explain", "complex", "difficult", "help me understand"]):
+            question = text_lower.replace("think about", "").replace("analyze", "").replace("reason about", "").replace("explain", "").strip()
+            response = _maya_super.advanced_reasoning(question or text)
+
         # Greeting patterns
-        if any(word in text_lower for word in ["hello", "hi", "hey", "greetings"]):
+        elif any(word in text_lower for word in ["hello", "hi", "hey", "greetings"]):
             response = self.get_random_response("greeting")
 
         # Capability queries
@@ -341,11 +346,6 @@ class SmartBrain:
                 response = _maya_super.get_forecast(city)
             else:
                 response = _maya_super.get_weather(city)
-
-        # Advanced reasoning - super powers
-        elif any(word in text_lower for word in ["think about", "analyze", "reason", "explain", "complex", "difficult", "help me understand"]):
-            question = text_lower.replace("think about", "").replace("analyze", "").replace("reason about", "").replace("explain", "").strip()
-            response = _maya_super.advanced_reasoning(question or text)
 
         # Reddit searches - small business automation
         elif any(phrase in text_lower for phrase in ["reddit", "search reddit", "small business", "automation pain", "australian small business"]):
