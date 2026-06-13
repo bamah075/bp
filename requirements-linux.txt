@@ -6,9 +6,10 @@ psutil
 selenium
 webdriver_manager
 webscout
-lxml_html_clean
-gradio_client
 colorlog
 yaspin
 opencv-python
 scipy
+gradio_client
+lxml_html_clean
+pyttsx3

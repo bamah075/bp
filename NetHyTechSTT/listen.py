@@ -4,24 +4,44 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
-from os import getcwd
-# Setting up Chrome options with specific arguments
-chrome_options = Options()
-chrome_options.add_argument("--use-fake-ui-for-media-stream")
-chrome_options.add_argument("--headless=old")  # Remove this if you want to see the browser UI
-# Manually set the path to the ChromeDriver executable
-chrome_driver_path = f"{getcwd()}\\chromedriver.exe"
-service = Service(executable_path=chrome_driver_path)
-# Setting up the Chrome driver with the service and options
-driver = webdriver.Chrome(service=service, options=chrome_options)
-# Creating the URL for the website using the current working directory
+import os
+import sys
+
+driver = None
 website = "https://allorizenproject1.netlify.app/"
-# Opening the website in the Chrome browser
-driver.get(website)
-Recog_File = f"{getcwd()}\\input.txt"
+
+def _get_chrome_driver_path():
+    cwd = os.getcwd()
+    if sys.platform == "win32":
+        return os.path.join(cwd, "chromedriver.exe")
+    else:
+        return os.path.join(cwd, "chromedriver")
+
+def _get_recognition_file_path():
+    return os.path.join(os.getcwd(), "input.txt")
+
+def _initialize_driver():
+    global driver
+    if driver is not None:
+        return driver
+
+    chrome_options = Options()
+    chrome_options.add_argument("--use-fake-ui-for-media-stream")
+    chrome_options.add_argument("--headless=old")
+
+    chrome_driver_path = _get_chrome_driver_path()
+    service = Service(executable_path=chrome_driver_path)
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+    driver.get(website)
+    return driver
+
 def listen():
     print("Support in Youtube @NetHyTech")
+    global driver
     try:
+        driver = _initialize_driver()
+        recog_file = _get_recognition_file_path()
+
         start_button = WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.ID, 'startButton')))
         start_button.click()
         print("Listening...")
@@ -37,7 +57,7 @@ def listen():
                 is_second_click = True
             if current_text != output_text:
                 output_text = current_text
-                with open(Recog_File, "w") as file:
+                with open(recog_file, "w") as file:
                     file.write(output_text.lower())
                     print("User:", output_text)
     except KeyboardInterrupt:
@@ -45,4 +65,6 @@ def listen():
     except Exception as e:
         print("An error occurred:", e)
     finally:
-        driver.quit()
+        if driver is not None:
+            driver.quit()
+            driver = None

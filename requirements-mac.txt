@@ -1,4 +1,5 @@
 requests
+pyautogui
 pywhatkit
 playsound==1.2.2
 psutil
