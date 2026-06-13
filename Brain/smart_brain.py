@@ -11,6 +11,10 @@ import socket
 import subprocess
 from datetime import datetime as dt
 from .reddit_scraper import _reddit_scraper
+from .meeting_notes import _meeting_notes
+from .calendar_manager import _calendar
+from .automation_helper import _automation_helper
+from .smart_employee import _smart_employee
 
 class SmartBrain:
     def __init__(self):
@@ -104,6 +108,31 @@ class SmartBrain:
                 "Searching for Australian small business automation topics on Reddit...",
                 "Looking up small business pain points and automation solutions...",
                 "Fetching relevant discussions from the Australian subreddit...",
+            ],
+            "meeting_start": [
+                "Starting a new meeting. Ready to capture notes.",
+                "Let's begin the meeting. I'll track notes and action items.",
+                "Meeting initialized. You can now add notes and decisions.",
+            ],
+            "meeting_end": [
+                "Meeting concluded. Here's your summary:",
+                "Meeting finished. Summary prepared:",
+                "All done! Here's what we covered:",
+            ],
+            "calendar_check": [
+                "Checking your schedule...",
+                "Pulling up your calendar...",
+                "Let me show you what's on your plate...",
+            ],
+            "automation_help": [
+                "Let me help you automate that.",
+                "I can guide you through the automation setup.",
+                "Let's figure out the best way to automate this.",
+            ],
+            "employee_assist": [
+                "Happy to help with that task.",
+                "I'm here to assist. Let me break this down for you.",
+                "Let's work through this together.",
             ],
         }
 
@@ -199,6 +228,78 @@ class SmartBrain:
         # Affirmations
         elif any(word in text_lower for word in ["yes", "sure", "okay", "ok", "yes please"]):
             response = self.get_random_response("affirmative")
+
+        # Meeting notes management
+        elif any(phrase in text_lower for phrase in ["start meeting", "begin meeting", "new meeting"]):
+            response = self.get_random_response("meeting_start")
+            _meeting_notes.start_meeting()
+
+        elif any(phrase in text_lower for phrase in ["end meeting", "stop meeting", "finish meeting", "meeting summary"]):
+            response = self.get_random_response("meeting_end")
+            summary = _meeting_notes.end_meeting()
+            if isinstance(summary, dict) and 'summary_text' in summary:
+                response = f"{response}\n\n{summary['summary_text']}"
+            else:
+                response += "\n\nNo active meeting to end."
+
+        elif any(phrase in text_lower for phrase in ["add note", "note that", "write down", "remember this"]):
+            # Extract note content
+            note_text = text_lower.replace("add note", "").replace("note that", "").strip()
+            response = _meeting_notes.add_note(note_text or text)
+
+        elif any(phrase in text_lower for phrase in ["action item", "assign task", "who does"]):
+            response = _meeting_notes.get_active_meeting_status()
+
+        # Calendar and reminders - CHECK VIEW FIRST
+        elif any(phrase in text_lower for phrase in ["what's my schedule", "show my schedule", "today's schedule", "what do i have today", "my appointments"]):
+            response = self.get_random_response("calendar_check")
+            response = f"{response}\n\n{_calendar.get_today_schedule()}"
+
+        elif any(phrase in text_lower for phrase in ["week summary", "what's this week", "weekly overview"]):
+            response = f"Let me show you your week:\n\n{_calendar.get_week_summary()}"
+
+        elif any(phrase in text_lower for phrase in ["my tasks", "to-do", "todo list", "what tasks do i have"]):
+            response = _calendar.list_todos()
+
+        elif any(phrase in text_lower for phrase in ["add appointment", "book meeting", "schedule appointment", "add appointment"]):
+            response = f"I can help you schedule that. Please provide: title, date (YYYY-MM-DD), and time (HH:MM)"
+
+        elif any(phrase in text_lower for phrase in ["add task", "add todo", "add to my list", "new task"]):
+            task_text = text_lower.replace("add task", "").replace("add todo", "").replace("add to my list", "").replace("new task", "").strip()
+            response = _calendar.add_todo(task_text or "Untitled task", priority="medium")
+
+        elif any(phrase in text_lower for phrase in ["set reminder", "remind me", "schedule reminder"]):
+            response = "I can set a reminder. Please provide: message, date (YYYY-MM-DD), and time (HH:MM)"
+
+        # Automation help
+        elif any(phrase in text_lower for phrase in ["automate", "automation", "zapier", "goHighLevel", "ghl", "copilot", "workflow"]):
+            response = self.get_random_response("automation_help")
+            # Extract the automation request
+            automation_request = text_lower
+            suggestion = _automation_helper.get_automation_suggestion(automation_request)
+            response = f"{response}\n\n{suggestion}"
+
+        # Smart Employee assistance
+        elif any(phrase in text_lower for phrase in ["help with", "assist with", "help me", "can you help", "i need help", "draft email", "write email"]):
+            response = self.get_random_response("employee_assist")
+
+            if any(word in text_lower for word in ["email", "draft", "write"]):
+                response = "I can help draft an email. Please provide: recipient name, subject, and purpose."
+            elif any(word in text_lower for word in ["plan", "goal", "objective"]):
+                goal = text_lower.replace("help with", "").replace("plan", "").strip()
+                plan = _smart_employee.create_action_plan(goal or "your goal")
+                response = f"{response}\n\n{plan}"
+            elif any(word in text_lower for word in ["analyze", "data"]):
+                response = f"{response}\n\n{_smart_employee.analyze_data('your data')}"
+            elif any(word in text_lower for word in ["problem", "issue", "trouble"]):
+                problem = text_lower.replace("help with", "").strip()
+                response = f"{response}\n\n{_smart_employee.problem_solver(problem or 'this problem')}"
+            elif any(word in text_lower for word in ["brainstorm", "ideas", "creative"]):
+                topic = text_lower.replace("brainstorm", "").replace("ideas", "").strip()
+                response = f"{response}\n\n{_smart_employee.brainstorm_ideas(topic or 'your topic')}"
+            else:
+                task = text_lower.replace("help with", "").replace("assist with", "").strip()
+                response = f"{response}\n\n{_smart_employee.help_with_task(task or 'this task')}"
 
         # Reddit searches - small business automation
         elif any(phrase in text_lower for phrase in ["reddit", "search reddit", "small business", "automation pain", "australian small business"]):
