@@ -47,3 +47,9 @@ conv_history.txt
 .idea/
 *.sublime-project
 *.sublime-workspace
+# Package files
+*.zip
+*.tar.gz
+*.tar
+jarvis-mac-setup.zip
+jarvis-mac-setup.tar.gz
