@@ -16,6 +16,7 @@ from .calendar_manager import _calendar
 from .automation_helper import _automation_helper
 from .smart_employee import _smart_employee
 from .maya_memory import _maya_memory
+from .maya_super_powers import _maya_super
 
 class SmartBrain:
     def __init__(self, user_name="bamah"):
@@ -325,6 +326,26 @@ class SmartBrain:
             else:
                 task = text_lower.replace("help with", "").replace("assist with", "").strip()
                 response = f"{response}\n\n{_smart_employee.help_with_task(task or 'this task')}"
+
+        # Weather - super powers
+        elif any(word in text_lower for word in ["weather", "temperature", "forecast", "rain", "sunny", "cloudy", "what's the weather"]):
+            # Extract city name if possible
+            city = "London"  # Default city
+            words = text_lower.split()
+            for i, word in enumerate(words):
+                if word in ["in", "at"] and i + 1 < len(words):
+                    city = words[i + 1].capitalize()
+                    break
+
+            if "forecast" in text_lower:
+                response = _maya_super.get_forecast(city)
+            else:
+                response = _maya_super.get_weather(city)
+
+        # Advanced reasoning - super powers
+        elif any(word in text_lower for word in ["think about", "analyze", "reason", "explain", "complex", "difficult", "help me understand"]):
+            question = text_lower.replace("think about", "").replace("analyze", "").replace("reason about", "").replace("explain", "").strip()
+            response = _maya_super.advanced_reasoning(question or text)
 
         # Reddit searches - small business automation
         elif any(phrase in text_lower for phrase in ["reddit", "search reddit", "small business", "automation pain", "australian small business"]):

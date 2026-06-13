@@ -53,3 +53,4 @@ conv_history.txt
 *.tar
 jarvis-mac-setup.zip
 jarvis-mac-setup.tar.gz
+.env
