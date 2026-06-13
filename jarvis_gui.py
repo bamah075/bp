@@ -394,7 +394,9 @@ class JARVISGui:
             self.update_level_bar(level)
             time.sleep(0.1)
 
+        # Only process if still listening (not stopped by user)
         if self.is_listening:
+            self.is_listening = False  # Stop listening before processing
             # Process simulated command
             self.process_voice_command("hello")
 
