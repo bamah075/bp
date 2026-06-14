@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maya - Intelligent Voice AI Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            overflow: hidden;
+            color: #e0e0e0;
+        }
+
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background: #0a0e1e;
+        }
+
+        .unicorn-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .main-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: #00d9ff;
+            text-shadow: 0 0 10px #00d9ff, 0 0 20px #0088ff;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .header p {
+            font-size: 0.95em;
+            color: #00ffaa;
+            text-shadow: 0 0 5px #00ffaa;
+        }
+
+        .content-wrapper {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .left-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            min-width: 0;
+        }
+
+        .right-panel {
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .card {
+            background: rgba(15, 20, 40, 0.85);
+            border: 1px solid #00d9ff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.2);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: #00ffaa;
+            box-shadow: 0 0 30px rgba(0, 255, 170, 0.3);
+        }
+
+        .input-section {
+            flex: 0.4;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        #userInput {
+            flex: 1;
+            padding: 12px 15px;
+            background: rgba(5, 8, 16, 0.9);
+            border: 1px solid #0088ff;
+            border-radius: 4px;
+            color: #00d9ff;
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        #userInput:focus {
+            outline: none;
+            border-color: #00ffaa;
+            box-shadow: 0 0 10px rgba(0, 255, 170, 0.3);
+        }
+
+        #userInput::placeholder {
+            color: #006688;
+        }
+
+        button {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #00d9ff, #00ffaa);
+            border: none;
+            border-radius: 4px;
+            color: #0a0e1e;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 217, 255, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .response-section {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        #responseArea {
+            width: 100%;
+            height: 100%;
+            padding: 15px;
+            background: rgba(5, 8, 16, 0.9);
+            border: 1px solid #0088ff;
+            border-radius: 4px;
+            color: #00ff99;
+            font-size: 0.9em;
+            line-height: 1.6;
+            overflow-y: auto;
+            resize: none;
+            transition: all 0.3s ease;
+        }
+
+        #responseArea:focus {
+            outline: none;
+            border-color: #00ffaa;
+            box-shadow: 0 0 10px rgba(0, 255, 170, 0.2);
+        }
+
+        #responseArea::placeholder {
+            color: #006688;
+        }
+
+        .status-box {
+            flex: 0.25;
+        }
+
+        .status-item {
+            padding: 10px;
+            background: rgba(5, 8, 16, 0.8);
+            border-left: 3px solid #00d9ff;
+            margin-bottom: 8px;
+            border-radius: 3px;
+            font-size: 0.85em;
+            color: #00d9ff;
+        }
+
+        .status-item.active {
+            border-left-color: #00ffaa;
+            color: #00ffaa;
+            box-shadow: 0 0 10px rgba(0, 255, 170, 0.2);
+        }
+
+        .footer {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 0.8em;
+            color: #006688;
+            opacity: 0.7;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .control-buttons button {
+            flex: 1;
+            padding: 10px;
+            font-size: 0.85em;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #00d9ff;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .command-shortcuts {
+            font-size: 0.75em;
+            color: #006688;
+            margin-top: 10px;
+            line-height: 1.8;
+        }
+
+        .shortcut {
+            padding: 3px 6px;
+            background: rgba(0, 136, 255, 0.1);
+            border-radius: 2px;
+            margin: 2px;
+            display: inline-block;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 136, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #00d9ff;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00ffaa;
+        }
+
+        .typing-indicator {
+            display: inline-flex;
+            gap: 4px;
+        }
+
+        .typing-indicator span {
+            width: 4px;
+            height: 4px;
+            background: #00d9ff;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                opacity: 0.3;
+                transform: translateY(0);
+            }
+            30% {
+                opacity: 1;
+                transform: translateY(-6px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Unicorn Studio Animated Background -->
+    <div class="background-container">
+        <div class="unicorn-background" data-us-project="K7xzrAoejHe2lHXqTJzm"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>✨ MAYA ✨</h1>
+            <p>Intelligent Voice AI Assistant</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content-wrapper">
+            <!-- Left Panel -->
+            <div class="left-panel">
+                <!-- Input Section -->
+                <div class="card input-section">
+                    <div class="input-group">
+                        <input
+                            type="text"
+                            id="userInput"
+                            placeholder="Ask me anything... (Press Enter to send)"
+                            autocomplete="off"
+                        >
+                        <button onclick="sendCommand()" id="sendBtn">Send</button>
+                    </div>
+                    <div class="control-buttons">
+                        <button onclick="startListening()" id="listenBtn">🎤 Listen</button>
+                        <button onclick="clearChat()" id="clearBtn">🔄 Clear</button>
+                        <button onclick="showHelp()" id="helpBtn">❓ Help</button>
+                    </div>
+                    <div class="command-shortcuts">
+                        <div><span class="shortcut">weather in London</span></div>
+                        <div><span class="shortcut">tell me a joke</span></div>
+                        <div><span class="shortcut">what's my schedule</span></div>
+                        <div><span class="shortcut">explain AI</span></div>
+                    </div>
+                </div>
+
+                <!-- Response Section -->
+                <div class="card response-section">
+                    <textarea
+                        id="responseArea"
+                        readonly
+                        placeholder="Maya's responses will appear here..."
+                    ></textarea>
+                </div>
+            </div>
+
+            <!-- Right Panel -->
+            <div class="right-panel">
+                <!-- System Status -->
+                <div class="card">
+                    <h3 style="color: #00d9ff; margin-bottom: 15px; font-size: 0.9em; text-transform: uppercase; letter-spacing: 1px;">System Status</h3>
+                    <div class="status-item" id="status-voice">
+                        <strong>Voice:</strong> <span id="voice-status">Ready</span>
+                    </div>
+                    <div class="status-item" id="status-network">
+                        <strong>Network:</strong> <span id="network-status">Online</span>
+                    </div>
+                    <div class="status-item" id="status-memory">
+                        <strong>Memory:</strong> <span id="memory-status">Active</span>
+                    </div>
+                    <div class="status-item" id="status-apis">
+                        <strong>APIs:</strong> <span id="apis-status">4/4 Ready</span>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="card">
+                    <h3 style="color: #00d9ff; margin-bottom: 15px; font-size: 0.9em; text-transform: uppercase; letter-spacing: 1px;">Quick Stats</h3>
+                    <div class="status-item">
+                        <strong>Version:</strong> 1.0.0
+                    </div>
+                    <div class="status-item">
+                        <strong>Mode:</strong> Web
+                    </div>
+                    <div class="status-item">
+                        <strong>User:</strong> bamah
+                    </div>
+                    <div class="status-item">
+                        <strong>Interactions:</strong> <span id="interaction-count">0</span>
+                    </div>
+                </div>
+
+                <!-- Features -->
+                <div class="card">
+                    <h3 style="color: #00ffaa; margin-bottom: 10px; font-size: 0.9em; text-transform: uppercase; letter-spacing: 1px;">Features</h3>
+                    <div class="status-item">✓ Voice Commands</div>
+                    <div class="status-item">✓ Smart Memory</div>
+                    <div class="status-item">✓ Weather API</div>
+                    <div class="status-item">✓ AI Reasoning</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Maya AI Assistant v1.0 • Dark Mode • Web Interface • Powered by Python Backend</p>
+        </div>
+    </div>
+
+    <!-- Unicorn Studio Animation Script -->
+    <script type="text/javascript">
+        !function(){
+            if(!window.UnicornStudio){
+                window.UnicornStudio={isInitialized:!1};
+                var i=document.createElement("script");
+                i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.29/dist/unicornStudio.umd.js";
+                i.onload=function(){
+                    window.UnicornStudio.isInitialized||(UnicornStudio.init(),window.UnicornStudio.isInitialized=!0);
+                };
+                (document.head || document.body).appendChild(i);
+            }
+        }();
+    </script>
+
+    <!-- Maya Web Interface Script -->
+    <script>
+        // Configuration
+        const CONFIG = {
+            apiUrl: 'http://localhost:5000/api',
+            maxMessages: 100,
+            updateInterval: 500
+        };
+
+        // State
+        let chatHistory = [];
+        let isListening = false;
+        let interactionCount = 0;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            setupEventListeners();
+            loadStats();
+            addSystemMessage('Maya initialized. Ready to assist!');
+        });
+
+        // Event Listeners
+        function setupEventListeners() {
+            const userInput = document.getElementById('userInput');
+
+            userInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendCommand();
+                }
+            });
+
+            // Update status indicators
+            updateStatus();
+            setInterval(updateStatus, 5000);
+        }
+
+        // Send Command
+        async function sendCommand() {
+            const userInput = document.getElementById('userInput');
+            const message = userInput.value.trim();
+
+            if (!message) return;
+
+            // Add user message to chat
+            addUserMessage(message);
+            userInput.value = '';
+            interactionCount++;
+            updateInteractionCount();
+
+            // Show typing indicator
+            showTypingIndicator();
+
+            try {
+                // For now, simulate response (replace with actual backend call)
+                const response = await simulateResponse(message);
+                removeTypingIndicator();
+                addMayaMessage(response);
+
+                // Optionally speak response
+                // await speakResponse(response);
+            } catch (error) {
+                removeTypingIndicator();
+                addMayaMessage('⚠️ Sorry, I encountered an error processing your request.');
+                console.error('Error:', error);
+            }
+        }
+
+        // Add User Message
+        function addUserMessage(text) {
+            const responseArea = document.getElementById('responseArea');
+            const timestamp = new Date().toLocaleTimeString();
+            const message = `[${timestamp}] You: ${text}\n`;
+
+            responseArea.value += message;
+            responseArea.scrollTop = responseArea.scrollHeight;
+
+            chatHistory.push({ role: 'user', content: text, time: timestamp });
+        }
+
+        // Add Maya Message
+        function addMayaMessage(text) {
+            const responseArea = document.getElementById('responseArea');
+            const timestamp = new Date().toLocaleTimeString();
+            const message = `[${timestamp}] Maya: ${text}\n\n`;
+
+            responseArea.value += message;
+            responseArea.scrollTop = responseArea.scrollHeight;
+
+            chatHistory.push({ role: 'maya', content: text, time: timestamp });
+        }
+
+        // Add System Message
+        function addSystemMessage(text) {
+            const responseArea = document.getElementById('responseArea');
+            const timestamp = new Date().toLocaleTimeString();
+            const message = `[${timestamp}] 🌟 ${text}\n`;
+
+            responseArea.value += message;
+            responseArea.scrollTop = responseArea.scrollHeight;
+        }
+
+        // Typing Indicator
+        function showTypingIndicator() {
+            const responseArea = document.getElementById('responseArea');
+            const timestamp = new Date().toLocaleTimeString();
+            responseArea.value += `[${timestamp}] Maya: `;
+
+            // Store position for update
+            responseArea.dataset.typingPos = responseArea.value.length;
+        }
+
+        function removeTypingIndicator() {
+            const responseArea = document.getElementById('responseArea');
+            const pos = parseInt(responseArea.dataset.typingPos);
+            if (pos) {
+                responseArea.value = responseArea.value.substring(0, pos);
+            }
+        }
+
+        // Call Backend API
+        async function callMayaBackend(message) {
+            try {
+                const response = await fetch('http://localhost:5000/api/command', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        speak: false
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    return data.response;
+                } else {
+                    return "⚠️ Error: " + (data.error || "Unknown error");
+                }
+            } catch (error) {
+                console.error('API Error:', error);
+                return "⚠️ Could not connect to Maya backend. Make sure the server is running on http://localhost:5000";
+            }
+        }
+
+        // Simulate Response (fallback if backend is down)
+        async function simulateResponse(message) {
+            // Try backend first
+            const backendResponse = await callMayaBackend(message);
+            if (!backendResponse.includes('Could not connect')) {
+                return backendResponse;
+            }
+
+            // Fallback to simulated responses
+            const responses = [
+                "I'm thinking about that...",
+                "Let me check that for you.",
+                "That's an interesting question!",
+                "Sure! Here's what I found...",
+                "Processing your request..."
+            ];
+
+            // Simulate processing
+            await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
+
+            // Return a simulated response
+            if (message.toLowerCase().includes('weather')) {
+                return "🌤️ The weather in London is currently 15°C, partly cloudy. Humidity: 65%";
+            } else if (message.toLowerCase().includes('joke')) {
+                return "Why do programmers prefer dark mode? Because light attracts bugs! 😄";
+            } else if (message.toLowerCase().includes('schedule')) {
+                return "📅 You have 3 meetings today:\n1. Team Standup at 10:00\n2. Project Review at 14:00\n3. 1-on-1 with Manager at 16:00";
+            } else if (message.toLowerCase().includes('help')) {
+                return "✨ I can help with:\n• Calendar & Schedule\n• Weather & Forecasts\n• Automation Setup\n• Meeting Notes\n• AI Analysis\n• And much more!";
+            } else {
+                return `You asked about "${message}". Backend not connected - using fallback response.`;
+            }
+        }
+
+        // Voice Input
+        function startListening() {
+            if (!('webkitSpeechRecognition' in window)) {
+                addMayaMessage('⚠️ Voice recognition not supported in this browser.');
+                return;
+            }
+
+            const listenBtn = document.getElementById('listenBtn');
+            const recognition = new webkitSpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = true;
+
+            listenBtn.style.opacity = '0.5';
+            listenBtn.textContent = '🎤 Listening...';
+
+            recognition.onresult = (event) => {
+                let transcript = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    transcript += event.results[i][0].transcript;
+                }
+                document.getElementById('userInput').value = transcript;
+            };
+
+            recognition.onend = () => {
+                listenBtn.style.opacity = '1';
+                listenBtn.textContent = '🎤 Listen';
+            };
+
+            recognition.start();
+        }
+
+        // Clear Chat
+        function clearChat() {
+            if (confirm('Clear all messages?')) {
+                document.getElementById('responseArea').value = '';
+                chatHistory = [];
+                addSystemMessage('Chat cleared. Ready for new conversation!');
+            }
+        }
+
+        // Show Help
+        function showHelp() {
+            addMayaMessage(`
+📚 MAYA HELP & COMMANDS
+
+🎯 Basic Commands:
+  • "What can you do?" - Show capabilities
+  • "What's the time?" - Current time
+  • "Tell me a joke" - Humor
+  • "Tell me a fact" - Interesting facts
+
+📅 Calendar:
+  • "What's my schedule?" - Today's appointments
+  • "Add task: Buy groceries" - Create new task
+  • "My tasks" - Show to-do list
+
+🌤️ Weather:
+  • "What's the weather in [city]?" - Current weather
+  • "Forecast in [city]" - 5-day forecast
+
+💡 Advanced:
+  • "Explain [topic]" - AI analysis
+  • "Analyze [data]" - Data analysis
+  • "Help me plan..." - Action planning
+
+🤝 Meetings:
+  • "Start meeting" - Begin capturing notes
+  • "Add note: [text]" - Record point
+  • "End meeting" - Get summary
+
+🚀 Try asking something above!
+            `);
+        }
+
+        // Update Status
+        function updateStatus() {
+            const online = navigator.onLine;
+            document.getElementById('network-status').textContent = online ? '✓ Online' : '✗ Offline';
+            document.getElementById('network-status').parentElement.style.color = online ? '#00ffaa' : '#ff6b6b';
+        }
+
+        // Update Interaction Count
+        function updateInteractionCount() {
+            document.getElementById('interaction-count').textContent = interactionCount;
+        }
+
+        // Load Stats
+        function loadStats() {
+            updateInteractionCount();
+            updateStatus();
+        }
+
+        // Speak Response (optional)
+        async function speakResponse(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.9;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Add welcome message
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                addMayaMessage('Hello! I\'m Maya, your intelligent AI assistant. How can I help you today? 🌟');
+            }, 500);
+        });
+    </script>
+</body>
+</html>
