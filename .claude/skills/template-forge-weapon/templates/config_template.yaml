@@ -1,0 +1,62 @@
+# Application Configuration Template
+# Replace [PLACEHOLDER] values with your actual configuration
+# Use ${ENV_VAR} or ${ENV_VAR:default_value} for environment variable substitution
+
+app:
+  name: [APP_NAME]
+  version: [VERSION]
+  environment: ${APP_ENV:development}
+  debug: ${DEBUG:false}
+
+server:
+  host: ${SERVER_HOST:0.0.0.0}
+  port: ${SERVER_PORT:8000}
+  workers: ${WORKERS:4}
+  timeout: ${TIMEOUT:30}
+
+database:
+  url: ${DATABASE_URL}
+  pool_size: ${DB_POOL_SIZE:10}
+  max_overflow: ${DB_MAX_OVERFLOW:20}
+  echo: ${DB_ECHO:false}
+
+# External service integrations
+integrations:
+  [SERVICE_NAME]:
+    enabled: ${[SERVICE_ENABLED]:false}
+    api_key: ${[SERVICE_API_KEY]}
+    base_url: ${[SERVICE_BASE_URL]}
+    timeout: ${[SERVICE_TIMEOUT]:30}
+
+# Logging configuration
+logging:
+  level: ${LOG_LEVEL:INFO}
+  format: ${LOG_FORMAT:json}
+
+  # Log file settings (optional)
+  file:
+    enabled: ${LOG_FILE_ENABLED:false}
+    path: ${LOG_FILE_PATH:./logs/app.log}
+    max_size_mb: 100
+    backup_count: 5
+
+# Feature flags
+features:
+  [FEATURE_NAME]:
+    enabled: ${FEATURE_[NAME]_ENABLED:false}
+
+# Cache configuration
+cache:
+  enabled: ${CACHE_ENABLED:true}
+  backend: ${CACHE_BACKEND:redis}
+  ttl: ${CACHE_TTL:3600}
+
+# Monitoring and observability
+monitoring:
+  sentry:
+    enabled: ${SENTRY_ENABLED:false}
+    dsn: ${SENTRY_DSN}
+
+  metrics:
+    enabled: ${METRICS_ENABLED:false}
+    port: ${METRICS_PORT:9090}
