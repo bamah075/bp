@@ -7,6 +7,7 @@ import rateLimit from 'express-rate-limit';
 import { errorHandler } from './middleware/errorHandler';
 import { requestLogger } from './middleware/requestLogger';
 import { validateEnv } from './config/environment';
+import authRoutes from './routes/auth';
 
 // Validate environment variables
 validateEnv();
@@ -39,8 +40,9 @@ app.use('/api/v1/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+app.use('/api/v1/auth', authRoutes);
+
 // TODO: Import and use routes
-// app.use('/api/v1/auth', authRoutes);
 // app.use('/api/v1/users', userRoutes);
 // app.use('/api/v1/teams', teamRoutes);
 // app.use('/api/v1/projects', projectRoutes);
