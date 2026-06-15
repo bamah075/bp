@@ -47,3 +47,6 @@ conv_history.txt
 .idea/
 *.sublime-project
 *.sublime-workspace
+
+# Claude Code agent temporary files
+.claude/
