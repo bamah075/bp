@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Capabilities Overview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #0a0a0f;
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            padding: 60px 20px;
+            text-align: center;
+            border-bottom: 1px solid #1e3a5f;
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.5px;
+            margin-bottom: 12px;
+        }
+
+        header h1 span {
+            color: #7c9ef8;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: #8a9bc0;
+            max-width: 560px;
+            margin: 0 auto;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 0 24px;
+        }
+
+        .card {
+            background: #111827;
+            border: 1px solid #1f2d45;
+            border-radius: 12px;
+            padding: 28px;
+            transition: border-color 0.2s, transform 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent, #7c9ef8);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .card:hover {
+            border-color: #2e4a7a;
+            transform: translateY(-3px);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-number {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent, #7c9ef8);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .card h2 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #f0f4ff;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            color: #7a8ba8;
+            line-height: 1.6;
+            margin-bottom: 18px;
+        }
+
+        .uses {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tag {
+            font-size: 0.75rem;
+            background: #1a2540;
+            color: #6b83b0;
+            border: 1px solid #253555;
+            border-radius: 4px;
+            padding: 3px 8px;
+        }
+
+        .card:nth-child(1)  { --accent: #7c9ef8; }
+        .card:nth-child(2)  { --accent: #56d9b1; }
+        .card:nth-child(3)  { --accent: #f8a84b; }
+        .card:nth-child(4)  { --accent: #e87cba; }
+        .card:nth-child(5)  { --accent: #a78bfa; }
+        .card:nth-child(6)  { --accent: #38bdf8; }
+        .card:nth-child(7)  { --accent: #4ade80; }
+        .card:nth-child(8)  { --accent: #fb923c; }
+        .card:nth-child(9)  { --accent: #f472b6; }
+        .card:nth-child(10) { --accent: #c084fc; }
+        .card:nth-child(11) { --accent: #67e8f9; }
+        .card:nth-child(12) { --accent: #86efac; }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #3a4a6a;
+            font-size: 0.85rem;
+            border-top: 1px solid #111827;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>What <span>Claude</span> Can Do</h1>
+    <p>12 powerful capabilities — from shipping code to designing decks — all in plain English.</p>
+</header>
+
+<div class="grid">
+
+    <div class="card">
+        <div class="card-number">01</div>
+        <h2>Build CLI Tools in Minutes</h2>
+        <p>Describe it in plain English. Claude builds, codes, and tests it. Get a ready-to-run binary.</p>
+        <div class="uses">
+            <span class="tag">Claude Code</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-number">02</div>
+        <h2>Spin Up Your Own MCP Server</h2>
+        <p>Choose the tool. Define endpoints and auth. Claude builds the entire server and config.</p>
+        <div class="uses">
+            <span class="tag">Claude Code</span>
+            <span class="tag">MCP Protocol</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-number">03</div>
+        <h2>Personal RAG Over Your Notes</h2>
+        <p>Connect Notion, Drive, Gmail. Ask questions. Get cited answers from your own data.</p>
+        <div class="uses">
+            <span class="tag">Connectors</span>
+            <span class="tag">Memory</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-number">04</div>
+        <h2>Learn Any Codebase in an Hour</h2>
+        <p>Drop a GitHub repo into Claude. Ask it to map the architecture. Get a guided walkthrough file by file.</p>
+        <div class="uses">
+            <span class="tag">Claude Code</span>
+            <span class="tag">Projects</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-number">05</div>
+        <h2>Mock Interview Practice on Demand</h2>
+        <p>Tell Claude the role and round type. It role plays as the interviewer. Get live feedback after every answer.</p>
+        <div class="uses">
+            <span class="tag">Skills Interview</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-number">06</div>
+        <h2>Automate the Browser</h2>
+        <p>Install Claude in Chrome. Say "find me the cheapest flight under $400." Claude finds it.</p>
+        <div class="uses">
+            <span class="tag">Claude in Chrome</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-number">07</div>
+        <h2>Tailor Your Resume Per Job</h2>
+        <p>Paste the JD and your resume. Claude rewrites for ATS keywords. Exports a clean PDF ready to send.</p>
+        <div class="uses">
+            <span class="tag">Skills Resume</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-number">08</div>
+        <h2>Schedule Cloud Routines While You Sleep</h2>
+        <p>Set a prompt and schedule. Connect your tools. Nightly sync, data backup, report generation — output ready every morning.</p>
+        <div class="uses">
+            <span class="tag">Routines</span>
+            <span class="tag">Connectors</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-number">09</div>
+        <h2>Design Landing Pages Without Figma</h2>
+        <p>Describe what you need. Claude designs it live. Export as PDF.</p>
+        <div class="uses">
+            <span class="tag">Claude Design</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-number">10</div>
+        <h2>Run Parallel Multi-Agent Code Reviews</h2>
+        <p>Drop /ultrareview on your open PR. Multiple agents scan for bugs simultaneously. Get labeled results — Critical, Major, Minor.</p>
+        <div class="uses">
+            <span class="tag">/ultrareview</span>
+            <span class="tag">Sub-agents</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-number">11</div>
+        <h2>Let Auto Mode Ship Code End to End</h2>
+        <p>Give Claude a spec or bug. It plans, codes, tests, fixes, and opens a PR for review.</p>
+        <div class="uses">
+            <span class="tag">Claude Code</span>
+            <span class="tag">Auto Mode</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-number">12</div>
+        <h2>Build Your Own Skills with /commands</h2>
+        <p>Give Claude a spec. It builds and tests. Creates reusable slash commands for your entire workflow.</p>
+        <div class="uses">
+            <span class="tag">Skills 2.0</span>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    <p>Claude Capabilities Overview &mdash; Powered by Anthropic</p>
+</footer>
+
+</body>
+</html>
