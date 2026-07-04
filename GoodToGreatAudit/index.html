@@ -561,7 +561,7 @@
       <div class="answer-buttons" id="answerButtons"></div>
       <div class="input-row">
         <button class="mic-btn" id="micBtn" title="Answer by voice">🎙️</button>
-        <input type="text" id="textInput" placeholder="Or type your answer…" autocomplete="off">
+        <input type="text" id="textInput" placeholder="Yes / No / Maybe, or ask “what does this mean?”" autocomplete="off">
         <button class="send-btn" id="sendBtn" title="Send">➜</button>
       </div>
     </div>
@@ -635,26 +635,42 @@
   };
 
   var QUESTIONS = [
-    {pillar:'attract', type:'ynm', text:'We know exactly who our ideal customer is — their goals, objections, and what makes them buy.'},
-    {pillar:'attract', type:'ynm', text:'Our traffic comes from multiple channels, and losing any single one wouldn\'t sink us.'},
-    {pillar:'attract', type:'ynm', text:'We publish fresh, valuable content on a regular schedule across more than one platform.'},
+    {pillar:'attract', type:'ynm', text:'We know exactly who our ideal customer is — their goals, objections, and what makes them buy.',
+      clarify:'Think of a one-page profile: their role, their biggest frustration, and the moment they decide to buy. If that doesn\'t exist anywhere in writing, the honest answer is No.'},
+    {pillar:'attract', type:'ynm', text:'Our traffic comes from multiple channels, and losing any single one wouldn\'t sink us.',
+      clarify:'If nearly all your visits come from one place — one ad platform, one referral partner — and that pipe got shut off tomorrow, would you be fine? If not, that\'s a No.'},
+    {pillar:'attract', type:'ynm', text:'We publish fresh, valuable content on a regular schedule across more than one platform.',
+      clarify:'This means a real publishing rhythm — weekly, not "whenever inspiration strikes" — showing up on more than just one channel.'},
 
-    {pillar:'convert', type:'ynm', text:'Our offer is so clear and compelling that people say yes without heavy convincing.'},
-    {pillar:'convert', type:'ynm', text:'We have a repeatable funnel that turns strangers into leads, and leads into customers, without heroics.'},
-    {pillar:'convert', type:'ynm', text:'We know which past campaigns performed best, and we can relaunch them anytime.'},
+    {pillar:'convert', type:'ynm', text:'Our offer is so clear and compelling that people say yes without heavy convincing.',
+      clarify:'Picture someone seeing your offer cold. Do they get it and want it fast, or do you need a long call to talk them into it?'},
+    {pillar:'convert', type:'ynm', text:'We have a repeatable funnel that turns strangers into leads, and leads into customers, without heroics.',
+      clarify:'A funnel here means: stranger sees something, becomes a lead, becomes a customer — and it runs the same way every time, without you personally chasing each one.'},
+    {pillar:'convert', type:'ynm', text:'We know which past campaigns performed best, and we can relaunch them anytime.',
+      clarify:'Could you pull up your best-performing promotion from a year ago right now and run it again this week?'},
 
-    {pillar:'ascend', type:'ynm', text:'We have higher-priced offers ready for customers who want to go deeper with us.'},
-    {pillar:'ascend', type:'ynm', text:'Follow-up with new and past customers happens automatically — we don\'t rely on remembering.'},
-    {pillar:'ascend', type:'ynm', text:'Happy customers regularly leave reviews and send us referrals, and we have a system for it.'},
+    {pillar:'ascend', type:'ynm', text:'We have higher-priced offers ready for customers who want to go deeper with us.',
+      clarify:'This is about having a bigger offer ready for your happiest customers — not just one price point for everyone.'},
+    {pillar:'ascend', type:'ynm', text:'Follow-up with new and past customers happens automatically — we don\'t rely on remembering.',
+      clarify:'If a customer buys and you never contact them again unless they reach out first, that\'s a No.'},
+    {pillar:'ascend', type:'ynm', text:'Happy customers regularly leave reviews and send us referrals, and we have a system for it.',
+      clarify:'Do happy customers get asked for a review or referral as a normal step in your process, or only if you happen to remember?'},
 
-    {pillar:'accelerate', type:'ynm', text:'We set goals, track them with real numbers, and know at any moment if we\'re on pace.'},
-    {pillar:'accelerate', type:'ynm', text:'Our tools (CRM, funnel builder, email/SMS, analytics) all talk to each other instead of fighting each other.'},
-    {pillar:'accelerate', type:'ynm', text:'Our team knows their role and executes without us having to micromanage.'},
+    {pillar:'accelerate', type:'ynm', text:'We set goals, track them with real numbers, and know at any moment if we\'re on pace.',
+      clarify:'Could you say, right now, whether this month is ahead or behind target — with a number, not a feeling?'},
+    {pillar:'accelerate', type:'ynm', text:'Our tools (CRM, funnel builder, email/SMS, analytics) all talk to each other instead of fighting each other.',
+      clarify:'Do leads and data flow between your tools automatically, or does someone manually copy and paste between systems?'},
+    {pillar:'accelerate', type:'ynm', text:'Our team knows their role and executes without us having to micromanage.',
+      clarify:'If you took a two-week vacation with no contact, would the business keep running the same way?'},
 
-    {pillar:'attract', type:'tf', text:'Traffic is NOT holding us back — we already get all the visibility we need.'},
-    {pillar:'convert', type:'tf', text:'Conversion is NOT holding us back — the traffic we get turns into customers just fine.'},
-    {pillar:'ascend', type:'tf', text:'Retention and referrals are NOT holding us back — customers buy again and refer often.'},
-    {pillar:'accelerate', type:'tf', text:'Systems and team are NOT holding us back — the business runs without depending on any one person.'}
+    {pillar:'attract', type:'tf', text:'Traffic is NOT holding us back — we already get all the visibility we need.',
+      clarify:'True means traffic genuinely isn\'t your limiting factor — you have more demand than you can serve. False means you need more eyes on the business.'},
+    {pillar:'convert', type:'tf', text:'Conversion is NOT holding us back — the traffic we get turns into customers just fine.',
+      clarify:'True means whatever traffic you get reliably turns into paying customers already. False means people show up but don\'t buy at the rate they should.'},
+    {pillar:'ascend', type:'tf', text:'Retention and referrals are NOT holding us back — customers buy again and refer often.',
+      clarify:'True means existing customers keep buying and keep sending you referrals without much effort. False means most customers buy once and disappear.'},
+    {pillar:'accelerate', type:'tf', text:'Systems and team are NOT holding us back — the business runs without depending on any one person.',
+      clarify:'True means the business runs smoothly on systems and people, not on your personal effort. False means too much still depends on one person holding it together.'}
   ];
 
   var ZONES = [
@@ -812,11 +828,25 @@
     return 0;
   }
 
+  var ACKS = ['Noted.', 'Got it.', 'Logged.', 'Understood.', 'On to the next.', 'That\'s on the record.', 'Okay — moving on.', 'Thanks, next one.'];
+  var lastAck = -1;
+  function randomAck(){
+    var i;
+    do{ i = Math.floor(Math.random()*ACKS.length); } while(ACKS.length > 1 && i === lastAck);
+    lastAck = i;
+    return ACKS[i];
+  }
+
   function commitAnswer(value, label){
     var q = QUESTIONS[idx];
     addBubble(label, 'user');
     answers.push({pillar:q.pillar, type:q.type, value:value, points: scoreFor(q.type, value)});
     idx++;
+    if(idx >= QUESTIONS.length){
+      addBubble('That\'s all 16 — crunching your score…', 'system');
+    } else {
+      addBubble(randomAck(), 'system');
+    }
     setTimeout(function(){
       if(idx >= QUESTIONS.length){
         updateProgress();
@@ -824,26 +854,41 @@
       } else {
         askCurrentQuestion();
       }
-    }, 220);
+    }, 260);
   }
+
+  var CLARIFY_RE = /what does (this|that) mean|explain|clarify|i don'?t understand|not sure what you mean|what do you mean|can you explain/;
+  var YES_RE = /\b(yes|yeah|yep|yup|definitely|absolutely|for sure|of course|correct|indeed|certainly)\b/;
+  var NO_RE = /\b(no|nope|not really|no way|negative|not at all|never)\b/;
+  var MAYBE_RE = /\b(maybe|somewhat|kind of|kinda|sort of|sorta|not sure|unsure|partially|partly|depends|possibly|perhaps)\b/;
+  var TRUE_RE = /\b(true|agree|agreed|correct|yes|yeah|yep|definitely|absolutely)\b/;
+  var FALSE_RE = /\b(false|disagree|disagreed|incorrect|no|nope|negative|not really)\b/;
 
   function handleRawInput(raw){
     var t = raw.toLowerCase();
     var q = QUESTIONS[idx];
     if(!q) return;
+
+    if(CLARIFY_RE.test(t)){
+      var explain = q.clarify || 'Answer based on how things actually run today, not how you\'d like them to run.';
+      addBubble(explain, 'bot');
+      speak(explain);
+      return;
+    }
+
     var value = null, label = null;
     if(q.type === 'tf'){
-      if(/\btrue\b|\byes\b|\byeah\b|\byep\b/.test(t)){ value='yes'; label='True'; }
-      else if(/\bfalse\b|\bno\b|\bnope\b/.test(t)){ value='no'; label='False'; }
+      if(TRUE_RE.test(t)){ value='yes'; label='True'; }
+      else if(FALSE_RE.test(t)){ value='no'; label='False'; }
     } else {
-      if(/\bmaybe\b|\bsometimes\b|\bkind of\b|\bsort of\b/.test(t)){ value='maybe'; label='Maybe'; }
-      else if(/\byes\b|\byeah\b|\byep\b/.test(t)){ value='yes'; label='Yes'; }
-      else if(/\bno\b|\bnope\b|\bnot really\b/.test(t)){ value='no'; label='No'; }
+      if(MAYBE_RE.test(t)){ value='maybe'; label='Maybe'; }
+      else if(YES_RE.test(t)){ value='yes'; label='Yes'; }
+      else if(NO_RE.test(t)){ value='no'; label='No'; }
     }
     if(value){
       commitAnswer(value, label);
     } else {
-      addBubble('Heard: "' + raw + '" — didn\'t catch a clear answer. Try again, or tap a button below.', 'system');
+      addBubble('Heard: "' + raw + '" — didn\'t catch a clear answer. Try again, tap a button below, or ask "what does this mean?"', 'system');
     }
   }
 
@@ -864,7 +909,7 @@
     gaugeWrap.style.display = 'block';
     idx = 0; answers = [];
     messagesEl.innerHTML = '';
-    addBubble('Let\'s find out where your business really stands. Answer honestly — this only works if you\'re straight with yourself.', 'system');
+    addBubble('Let\'s find out where your business really stands. Answer honestly — this only works if you\'re straight with yourself. Stuck on one? Ask "what does this mean?" any time, by typing or by voice.', 'system');
     setTimeout(askCurrentQuestion, 350);
   });
 
