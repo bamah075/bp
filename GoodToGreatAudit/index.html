@@ -5,438 +5,552 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Good to Great Audit</title>
 <style>
+  /* ---------- Tokens ---------- */
   :root{
-    --bg:#f3f4f6;
-    --card:#ffffff;
-    --text:#1f2430;
-    --muted:#6b7280;
-    --green:#22c55e;
-    --green-dark:#16a34a;
-    --orange:#f97316;
-    --red:#ef4444;
-    --border:#e5e7eb;
+    --ink:#1b2029;
+    --paper:#e9ebee;
+    --panel:#f6f7f9;
+    --panel-2:#ffffff;
+    --brass:#a9743a;
+    --brass-hi:#8f5f2c;
+    --moss:#3c704c;
+    --ember:#a8402a;
+    --hairline: rgba(27,32,41,0.14);
+    --muted: rgba(27,32,41,0.62);
+    --shadow: rgba(20,20,25,0.10);
+
+    --font-display: ui-serif, 'Iowan Old Style', 'Palatino Linotype', Georgia, 'Times New Roman', serif;
+    --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
   }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
+  @media (prefers-color-scheme: dark){
+    :root{
+      --ink:#eceef2;
+      --paper:#12151b;
+      --panel:#1b2029;
+      --panel-2:#20262f;
+      --brass:#c8903f;
+      --brass-hi:#e6b567;
+      --moss:#5b9a6f;
+      --ember:#d1634a;
+      --hairline: rgba(236,238,242,0.14);
+      --muted: rgba(236,238,242,0.62);
+      --shadow: rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#eceef2;
+    --paper:#12151b;
+    --panel:#1b2029;
+    --panel-2:#20262f;
+    --brass:#c8903f;
+    --brass-hi:#e6b567;
+    --moss:#5b9a6f;
+    --ember:#d1634a;
+    --hairline: rgba(236,238,242,0.14);
+    --muted: rgba(236,238,242,0.62);
+    --shadow: rgba(0,0,0,0.35);
+  }
+  :root[data-theme="light"]{
+    --ink:#1b2029;
+    --paper:#e9ebee;
+    --panel:#f6f7f9;
+    --panel-2:#ffffff;
+    --brass:#a9743a;
+    --brass-hi:#8f5f2c;
+    --moss:#3c704c;
+    --ember:#a8402a;
+    --hairline: rgba(27,32,41,0.14);
+    --muted: rgba(27,32,41,0.62);
+    --shadow: rgba(20,20,25,0.10);
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
   body{
-    background:var(--bg);
-    color:var(--text);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-body);
     display:flex;
     justify-content:center;
     min-height:100vh;
+    -webkit-font-smoothing:antialiased;
   }
+  ::selection{ background:var(--brass); color:var(--paper); }
+
   #app{
     width:100%;
-    max-width:480px;
-    background:var(--card);
+    max-width:640px;
     min-height:100vh;
     display:flex;
     flex-direction:column;
-    box-shadow:0 0 24px rgba(0,0,0,0.06);
-  }
-  header{
-    padding:20px 20px 12px;
-    border-bottom:1px solid var(--border);
-  }
-  .brand{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    font-weight:800;
-    font-size:20px;
-    letter-spacing:-0.02em;
-  }
-  .brand .dot{
-    width:14px;height:14px;border-radius:50%;
-    background:linear-gradient(135deg,var(--green),var(--orange));
-    flex-shrink:0;
-  }
-  .brand small{
-    display:block;
-    font-weight:500;
-    font-size:12px;
-    color:var(--muted);
-    letter-spacing:0;
-    margin-top:2px;
-  }
-  .progress-wrap{
-    padding:10px 20px;
-    background:#fafafa;
-    border-bottom:1px solid var(--border);
-  }
-  .progress-track{
-    height:8px;
-    border-radius:999px;
-    background:#e5e7eb;
-    overflow:hidden;
-  }
-  .progress-fill{
-    height:100%;
-    background:linear-gradient(90deg,var(--green),var(--orange));
-    width:0%;
-    transition:width .35s ease;
-  }
-  .progress-label{
-    margin-top:6px;
-    font-size:12px;
-    color:var(--muted);
-    text-align:center;
+    background:var(--panel);
+    border-left:1px solid var(--hairline);
+    border-right:1px solid var(--hairline);
   }
 
-  /* Intro screen */
+  a, button, input{ font-family:inherit; }
+  button:focus-visible, input:focus-visible, [tabindex]:focus-visible{
+    outline:2px solid var(--brass);
+    outline-offset:2px;
+  }
+
+  /* ---------- Header / brand ---------- */
+  header{
+    padding:20px 24px;
+    border-bottom:1px solid var(--hairline);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+  }
+  .brand-row{ display:flex; align-items:center; gap:14px; min-width:0; }
+  .flywheel{ flex-shrink:0; animation:spin var(--spin-dur, 3.6s) linear infinite; transform-origin:50% 50%; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce){ .flywheel{ animation:none; } }
+  .brand-text{ min-width:0; }
+  .brand-text .eyebrow{
+    font-family:var(--font-mono);
+    font-size:10px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+  .brand-text h1{
+    font-family:var(--font-display);
+    font-variant:small-caps;
+    letter-spacing:.03em;
+    font-size:20px;
+    font-weight:600;
+    margin:1px 0 0;
+    color:var(--ink);
+  }
+  .voice-toggle-fab{
+    flex-shrink:0;
+    width:36px; height:36px;
+    border-radius:6px;
+    border:1px solid var(--hairline);
+    background:var(--panel-2);
+    color:var(--ink);
+    font-size:15px;
+    cursor:pointer;
+  }
+
+  /* ---------- Gauge strip (progress) ---------- */
+  .gauge-wrap{
+    display:none;
+    padding:12px 24px 14px;
+    border-bottom:1px solid var(--hairline);
+    background:var(--panel-2);
+  }
+  .gauge-readout{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:var(--muted);
+    margin-bottom:8px;
+    font-variant-numeric: tabular-nums;
+  }
+  .gauge-readout b{ color:var(--brass); font-weight:700; }
+  .tick-strip{ display:flex; gap:3px; }
+  .tick{
+    flex:1;
+    height:16px;
+    background:var(--paper);
+    border:1px solid var(--hairline);
+    border-radius:2px;
+    transition:background .25s ease, border-color .25s ease;
+  }
+  .tick.lit{ background:var(--brass); border-color:var(--brass); }
+  .tick-strip.small{ gap:2px; }
+  .tick-strip.small .tick{ height:9px; border-radius:1px; }
+
+  /* ---------- Intro ---------- */
   #intro{
-    padding:28px 24px;
+    padding:32px 24px 28px;
     flex:1;
     display:flex;
     flex-direction:column;
-    justify-content:center;
-    gap:16px;
+    gap:20px;
   }
-  #intro h1{
-    font-size:28px;
-    line-height:1.2;
+  #intro h2{
+    font-family:var(--font-display);
+    font-size:clamp(26px,4.4vw,34px);
+    line-height:1.18;
     margin:0;
+    text-wrap:balance;
+    max-width:20ch;
   }
-  #intro p{
+  #intro .lede{
     color:var(--muted);
     font-size:15px;
-    line-height:1.5;
+    line-height:1.6;
     margin:0;
+    max-width:62ch;
   }
   .pillars-preview{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:10px;
-    margin:6px 0;
   }
   .pillar-chip{
-    border:1px solid var(--border);
-    border-radius:12px;
-    padding:10px 12px;
-    font-size:13px;
-    font-weight:700;
+    border-top:2px solid var(--brass);
+    background:var(--panel-2);
+    padding:10px 12px 11px;
+    border-radius:0 0 4px 4px;
   }
-  .pillar-chip span{
+  .pillar-chip .name{
+    font-family:var(--font-display);
+    font-variant:small-caps;
+    letter-spacing:.03em;
+    font-size:15px;
+    font-weight:600;
+  }
+  .pillar-chip .sub{
     display:block;
-    font-weight:400;
+    font-size:11.5px;
     color:var(--muted);
-    font-size:11px;
     margin-top:2px;
   }
-  .mode-toggles{
+  .mode-toggle{
     display:flex;
-    gap:10px;
+    border:1px solid var(--hairline);
+    border-radius:6px;
+    overflow:hidden;
   }
-  .toggle-btn{
+  .mode-toggle button{
     flex:1;
-    padding:10px;
-    border-radius:12px;
-    border:1px solid var(--border);
-    background:#fff;
-    font-size:13px;
-    font-weight:600;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:6px;
-  }
-  .toggle-btn.active{
-    border-color:var(--green-dark);
-    background:#ecfdf3;
-    color:var(--green-dark);
-  }
-  .btn-primary{
-    background:var(--green);
-    color:#fff;
+    padding:11px 8px;
     border:none;
-    border-radius:12px;
-    padding:16px;
-    font-size:16px;
+    background:var(--panel-2);
+    color:var(--muted);
+    font-size:12.5px;
     font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.05em;
     cursor:pointer;
   }
-  .btn-primary:active{ transform:scale(.99); }
+  .mode-toggle button + button{ border-left:1px solid var(--hairline); }
+  .mode-toggle button.active{ background:var(--brass); color:var(--panel-2); }
 
-  /* Chat */
+  .btn-primary{
+    background:var(--brass);
+    color:var(--panel-2);
+    border:none;
+    border-radius:5px;
+    padding:16px;
+    font-size:14px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    cursor:pointer;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.22);
+  }
+  .btn-primary:active{ filter:brightness(.94); }
+  .btn-secondary{
+    background:var(--panel-2);
+    color:var(--ink);
+    border:1px solid var(--hairline);
+    border-radius:5px;
+    padding:16px;
+    font-size:13px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    cursor:pointer;
+  }
+
+  /* ---------- Chat ---------- */
   #chat{
     flex:1;
     display:none;
     flex-direction:column;
+    min-height:0;
   }
   #messages{
     flex:1;
     overflow-y:auto;
-    padding:16px;
+    padding:20px 24px;
     display:flex;
     flex-direction:column;
     gap:12px;
   }
   .bubble{
-    max-width:82%;
+    max-width:85%;
     padding:12px 14px;
-    border-radius:16px;
-    font-size:15px;
-    line-height:1.4;
+    border-radius:4px;
+    font-size:14.5px;
+    line-height:1.45;
     animation:pop .2s ease;
   }
-  @keyframes pop{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
-  .bot{
+  @keyframes pop{ from{ opacity:0; transform:translateY(5px);} to{ opacity:1; transform:translateY(0);} }
+  .bubble.bot{
     align-self:flex-start;
-    background:#f3f4f6;
-    border-bottom-left-radius:4px;
+    background:var(--panel-2);
+    border:1px solid var(--hairline);
+    border-top:2px solid var(--brass);
   }
-  .user{
+  .bubble.user{
     align-self:flex-end;
-    background:var(--green);
-    color:#fff;
-    border-bottom-right-radius:4px;
-    font-weight:600;
+    background:var(--brass);
+    color:var(--panel-2);
+    font-weight:700;
   }
-  .listening-note{
-    align-self:flex-start;
-    font-size:12px;
+  .bubble.system{
+    align-self:center;
+    background:none;
     color:var(--muted);
+    font-size:12.5px;
     font-style:italic;
+    text-align:center;
+    max-width:95%;
   }
+
   #answer-panel{
-    border-top:1px solid var(--border);
-    padding:12px 16px 16px;
+    border-top:1px solid var(--hairline);
+    background:var(--panel-2);
+    padding:14px 24px 18px;
     display:flex;
     flex-direction:column;
-    gap:8px;
+    gap:10px;
   }
-  .answer-buttons{
-    display:flex;
-    gap:8px;
-  }
+  .answer-buttons{ display:flex; gap:8px; }
   .ans-btn{
+    position:relative;
     flex:1;
-    padding:14px 8px;
-    border-radius:12px;
-    border:none;
-    background:var(--green);
-    color:#fff;
-    font-size:15px;
+    padding:13px 10px 13px 16px;
+    border-radius:5px;
+    border:1px solid var(--hairline);
+    background:var(--panel);
+    color:var(--ink);
+    font-size:12.5px;
     font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.06em;
     cursor:pointer;
+    overflow:hidden;
   }
-  .ans-btn:active{ filter:brightness(.92); }
-  .ans-btn.no{ background:#374151; }
-  .ans-btn.maybe{ background:var(--orange); }
-  .input-row{
-    display:flex;
-    gap:8px;
+  .ans-btn::before{
+    content:'';
+    position:absolute; left:0; top:0; bottom:0; width:4px;
+    background:var(--edge, var(--brass));
   }
+  .ans-btn.yes{ --edge:var(--moss); }
+  .ans-btn.no{ --edge:var(--ember); }
+  .ans-btn.maybe{ --edge:var(--brass); }
+  .ans-btn:hover{ filter:brightness(0.97); }
+  .ans-btn:active{ filter:brightness(0.92); }
+
+  .input-row{ display:flex; gap:8px; }
   .input-row input{
     flex:1;
-    border:1px solid var(--border);
-    border-radius:999px;
-    padding:12px 16px;
-    font-size:14px;
+    border:1px solid var(--hairline);
+    border-radius:4px;
+    background:var(--paper);
+    color:var(--ink);
+    padding:11px 14px;
+    font-size:13.5px;
     outline:none;
+    box-shadow: inset 0 1px 3px var(--shadow);
   }
-  .mic-btn{
-    width:44px;height:44px;
+  .mic-btn, .send-btn{
+    width:40px; height:40px;
     border-radius:50%;
-    border:1px solid var(--border);
-    background:#fff;
-    font-size:18px;
-    cursor:pointer;
-    flex-shrink:0;
-  }
-  .mic-btn.recording{
-    background:var(--red);
-    border-color:var(--red);
-    color:#fff;
-    animation:pulse 1s infinite;
-  }
-  @keyframes pulse{
-    0%{ box-shadow:0 0 0 0 rgba(239,68,68,.5); }
-    70%{ box-shadow:0 0 0 10px rgba(239,68,68,0); }
-    100%{ box-shadow:0 0 0 0 rgba(239,68,68,0); }
-  }
-  .send-btn{
-    width:44px;height:44px;
-    border-radius:50%;
-    border:none;
-    background:var(--text);
-    color:#fff;
+    border:1px solid var(--hairline);
+    background:var(--panel);
+    color:var(--ink);
     font-size:16px;
     cursor:pointer;
     flex-shrink:0;
   }
+  .send-btn{ background:var(--ink); color:var(--panel-2); border-color:var(--ink); }
+  .mic-btn.recording{
+    background:var(--ember);
+    border-color:var(--ember);
+    color:var(--panel-2);
+    animation:pulse 1.1s infinite;
+  }
+  @keyframes pulse{
+    0%{ box-shadow:0 0 0 0 rgba(168,64,42,.45); }
+    70%{ box-shadow:0 0 0 9px rgba(168,64,42,0); }
+    100%{ box-shadow:0 0 0 0 rgba(168,64,42,0); }
+  }
 
-  /* Results */
+  /* ---------- Results ---------- */
   #results{
     display:none;
     flex-direction:column;
-    padding:0 0 32px;
+    padding:0 0 36px;
   }
-  .score-card{
-    margin:20px;
-    padding:28px 20px;
-    border-radius:20px;
-    background:#fafafa;
-    border:1px solid var(--border);
+  .instrument-cluster{
+    padding:28px 24px 8px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
     text-align:center;
   }
-  .score-card .label{
-    font-size:13px;
-    font-weight:700;
-    letter-spacing:.08em;
+  .instrument-cluster .eyebrow{
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
     color:var(--muted);
   }
-  .score-card .big{
-    font-size:64px;
-    font-weight:800;
+  #gauge-wrap-results{ margin:6px 0 2px; }
+  .score-readout{
+    font-family:var(--font-mono);
+    font-variant-numeric:tabular-nums;
+    font-size:52px;
+    font-weight:700;
     line-height:1;
-    margin:8px 0;
+    margin-top:-58px;
   }
-  .score-card .zone{
-    font-size:22px;
-    font-weight:800;
-    letter-spacing:.02em;
+  .zone-readout{
+    font-family:var(--font-display);
+    font-variant:small-caps;
+    letter-spacing:.04em;
+    font-size:20px;
+    font-weight:700;
     margin-top:6px;
   }
   .zone-legend{
     display:flex;
     justify-content:center;
     gap:16px;
-    padding:0 20px 8px;
+    padding:14px 20px 4px;
     flex-wrap:wrap;
   }
   .zone-legend .item{
-    display:flex;
-    align-items:center;
-    gap:6px;
-    font-size:12px;
-    color:var(--muted);
+    display:flex; align-items:center; gap:6px;
+    font-size:11.5px; color:var(--muted);
+    font-family:var(--font-mono);
   }
-  .zone-legend .swatch{
-    width:12px;height:12px;border-radius:50%;
-  }
-  #results h2{
-    padding:8px 20px 0;
+  .zone-legend .swatch{ width:8px; height:8px; border-radius:1px; }
+
+  #results h2.title{
+    font-family:var(--font-display);
+    padding:18px 24px 0;
     font-size:24px;
-    margin:12px 0 0;
+    margin:0;
+    text-wrap:balance;
   }
   #results .subtitle{
-    padding:0 20px;
+    padding:2px 24px 0;
     color:var(--muted);
-    font-size:14px;
-    margin:4px 0 8px;
+    font-size:13.5px;
+    margin:4px 0 4px;
   }
-  #radar-wrap{
-    display:flex;
-    justify-content:center;
-    padding:8px 0 4px;
-  }
+  #radar-wrap{ display:flex; justify-content:center; padding:8px 0 0; }
+
   .pillar-card{
-    margin:14px 20px;
-    padding:18px;
-    border-radius:16px;
-    background:#fafafa;
-    border:1px solid var(--border);
+    margin:16px 24px 0;
+    padding:18px 18px 16px;
+    background:var(--panel-2);
+    border:1px solid var(--hairline);
+    border-top:3px solid var(--brass);
+    border-radius:0 0 4px 4px;
+  }
+  .pillar-card .eyebrow{
+    font-family:var(--font-mono);
+    font-size:10px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--muted);
   }
   .pillar-card h3{
-    margin:0 0 4px;
-    font-size:12px;
-    letter-spacing:.08em;
-    color:var(--muted);
-    text-transform:uppercase;
+    font-family:var(--font-display);
+    font-variant:small-caps;
+    letter-spacing:.02em;
+    font-size:19px;
+    font-weight:600;
+    margin:2px 0 8px;
   }
-  .pillar-card h4{
-    margin:0 0 8px;
-    font-size:18px;
+  .pillar-card h3 .sub{
+    font-family:var(--font-body);
+    font-variant:normal;
+    font-weight:400;
+    font-size:13px;
+    color:var(--muted);
   }
   .pillar-card p.desc{
-    font-size:13.5px;
+    font-size:13px;
     color:var(--muted);
-    line-height:1.45;
+    line-height:1.5;
     margin:0 0 12px;
   }
-  .move{
-    display:flex;
-    gap:8px;
-    font-size:13.5px;
-    line-height:1.4;
-    margin-bottom:10px;
-  }
-  .move .check{
-    color:var(--green-dark);
-    font-weight:800;
-    flex-shrink:0;
-  }
+  .move{ display:flex; gap:9px; font-size:13px; line-height:1.45; margin-bottom:9px; }
+  .move .check{ color:var(--moss); font-weight:800; flex-shrink:0; }
   .move b{ display:block; }
-  .pillar-score-row{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    margin-top:10px;
-  }
-  .pillar-track{
-    flex:1;
-    height:8px;
-    border-radius:999px;
-    background:#e5e7eb;
-    overflow:hidden;
-  }
-  .pillar-fill{ height:100%; }
+  .pillar-score-row{ display:flex; align-items:center; gap:10px; margin-top:12px; }
+  .pillar-score-row .tick-strip{ flex:1; }
   .pillar-score-text{
-    font-size:13px;
-    font-weight:800;
-    white-space:nowrap;
+    font-family:var(--font-mono);
+    font-variant-numeric:tabular-nums;
+    font-size:12.5px; font-weight:700; white-space:nowrap;
   }
   .pillar-zone-text{
-    font-size:12px;
-    font-weight:800;
-    text-transform:uppercase;
-    letter-spacing:.03em;
+    font-family:var(--font-display);
+    font-variant:small-caps;
+    font-size:12.5px; font-weight:700; margin-top:6px;
   }
-  #restart-btn{
-    margin:8px 20px 0;
+
+  .results-actions{
+    display:flex;
+    gap:10px;
+    margin:20px 24px 0;
   }
-  .voice-toggle-fab{
-    position:absolute;
-    top:18px;
-    right:18px;
-    background:none;
-    border:none;
-    font-size:18px;
-    cursor:pointer;
-    opacity:.6;
-  }
+  .results-actions button{ flex:1; }
 </style>
 </head>
 <body>
 <div id="app">
 
-  <header style="position:relative;">
-    <div class="brand"><span class="dot"></span>Good to Great Audit
-      <small>Find out if your business is stuck being good — or built to be great.</small>
+  <header>
+    <div class="brand-row">
+      <svg class="flywheel" id="flywheel" viewBox="0 0 100 100" width="40" height="40">
+        <circle cx="50" cy="50" r="44" fill="none" style="stroke:var(--brass); stroke-width:3; opacity:.5"/>
+        <g style="stroke:var(--brass); stroke-width:3; stroke-linecap:round;">
+          <line x1="64" y1="50" x2="90" y2="50"/>
+          <line x1="59.9" y1="59.9" x2="78.3" y2="78.3"/>
+          <line x1="50" y1="64" x2="50" y2="90"/>
+          <line x1="40.1" y1="59.9" x2="21.7" y2="78.3"/>
+          <line x1="36" y1="50" x2="10" y2="50"/>
+          <line x1="40.1" y1="40.1" x2="21.7" y2="21.7"/>
+          <line x1="50" y1="36" x2="50" y2="10"/>
+          <line x1="59.9" y1="40.1" x2="78.3" y2="21.7"/>
+        </g>
+        <circle cx="50" cy="50" r="11" style="fill:var(--brass)"/>
+      </svg>
+      <div class="brand-text">
+        <div class="eyebrow">Diagnostic Instrument</div>
+        <h1>Good to Great Audit</h1>
+      </div>
     </div>
-    <button class="voice-toggle-fab" id="voiceToggleFab" title="Toggle voice">🔊</button>
+    <button class="voice-toggle-fab" id="voiceToggleFab" title="Toggle spoken questions">🔊</button>
   </header>
 
-  <div class="progress-wrap" id="progressWrap" style="display:none;">
-    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-    <div class="progress-label" id="progressLabel">0% Complete</div>
+  <div class="gauge-wrap" id="gaugeWrap">
+    <div class="gauge-readout">
+      <span>QUESTION <b id="qNum">00</b> / 16</span>
+      <span id="pctLabel">0%</span>
+    </div>
+    <div class="tick-strip" id="tickStrip"></div>
   </div>
 
   <div id="intro">
-    <h1>16 questions.<br>4 growth pillars.<br>One honest score.</h1>
-    <p>Answer Yes / No / Maybe (and a few True / False calls) about how your business really runs today. In under 3 minutes you'll get a scored breakdown across the four pillars every growing business depends on — plus the exact moves to close the gap.</p>
+    <h2>Is your growth engine idling, or building torque?</h2>
+    <p class="lede">Sixteen calls about how your business actually runs today &mdash; not how you wish it ran. Answer honestly and in a few minutes you'll get a scored reading across the four pillars that decide whether a business stays good or becomes great, plus the specific moves that close the gap.</p>
     <div class="pillars-preview">
-      <div class="pillar-chip">Attract<span>Traffic & visibility</span></div>
-      <div class="pillar-chip">Convert<span>Leads → sales</span></div>
-      <div class="pillar-chip">Ascend<span>Retention & referral</span></div>
-      <div class="pillar-chip">Accelerate<span>Systems & team</span></div>
+      <div class="pillar-chip"><span class="name">Attract</span><span class="sub">Traffic &amp; visibility</span></div>
+      <div class="pillar-chip"><span class="name">Convert</span><span class="sub">Leads into sales</span></div>
+      <div class="pillar-chip"><span class="name">Ascend</span><span class="sub">Retention &amp; referral</span></div>
+      <div class="pillar-chip"><span class="name">Accelerate</span><span class="sub">Systems &amp; team</span></div>
     </div>
-    <div class="mode-toggles">
-      <button class="toggle-btn active" id="chatModeBtn">💬 Chat mode</button>
-      <button class="toggle-btn" id="voiceModeBtn">🎙️ Voice mode</button>
+    <div class="mode-toggle">
+      <button id="chatModeBtn" class="active">💬 Chat mode</button>
+      <button id="voiceModeBtn">🎙️ Voice mode</button>
     </div>
     <button class="btn-primary" id="startBtn">Start the Audit</button>
   </div>
@@ -448,29 +562,31 @@
       <div class="input-row">
         <button class="mic-btn" id="micBtn" title="Answer by voice">🎙️</button>
         <input type="text" id="textInput" placeholder="Or type your answer…" autocomplete="off">
-        <button class="send-btn" id="sendBtn">➜</button>
+        <button class="send-btn" id="sendBtn" title="Send">➜</button>
       </div>
     </div>
   </div>
 
   <div id="results">
-    <div class="score-card">
-      <div class="label">YOUR OVERALL SCORE</div>
-      <div class="big" id="overallScore">0%</div>
-      <div class="progress-track"><div class="progress-fill" id="overallBar"></div></div>
-      <div class="zone" id="overallZone">—</div>
+    <div class="instrument-cluster">
+      <div class="eyebrow">Overall Reading</div>
+      <div id="gauge-wrap-results"></div>
+      <div class="score-readout" id="overallScore">0%</div>
+      <div class="zone-readout" id="overallZone">—</div>
     </div>
     <div class="zone-legend">
-      <div class="item"><span class="swatch" style="background:var(--red)"></span>Struggle Zone</div>
-      <div class="item"><span class="swatch" style="background:var(--orange)"></span>Good Zone</div>
-      <div class="item"><span class="swatch" style="background:var(--green)"></span>Great Zone</div>
+      <div class="item"><span class="swatch" style="background:var(--ember)"></span>Struggle Zone</div>
+      <div class="item"><span class="swatch" style="background:var(--brass)"></span>Good Zone</div>
+      <div class="item"><span class="swatch" style="background:var(--moss)"></span>Great Zone</div>
     </div>
-    <h2>Your Good to Great Results</h2>
-    <div class="subtitle">The Four Growth Pillars: Attract, Convert, Ascend & Accelerate</div>
+    <h2 class="title">The Four Growth Pillars</h2>
+    <div class="subtitle">Attract &middot; Convert &middot; Ascend &middot; Accelerate</div>
     <div id="radar-wrap"></div>
     <div id="pillarCards"></div>
-    <button class="btn-primary" id="speakResultsBtn" style="margin:8px 20px 0;">🔊 Read my results aloud</button>
-    <button class="btn-primary" id="restart-btn" style="background:#374151;">Retake the Audit</button>
+    <div class="results-actions">
+      <button class="btn-secondary" id="speakResultsBtn">🔊 Read results aloud</button>
+      <button class="btn-primary" id="restart-btn">Retake audit</button>
+    </div>
   </div>
 
 </div>
@@ -482,7 +598,7 @@
   var PILLARS = {
     attract: {
       name:'Attract', subtitle:'Traffic & Visibility',
-      desc:'This pillar measures your ability to generate high-quality traffic and awareness from the right audience — not just any audience.',
+      desc:'Measures your ability to generate high-quality traffic and awareness from the right audience — not just any audience.',
       moves:[
         {t:'Document Your Ideal Customer', d:'Write down who they are, what they want, and why they actually buy — then check every campaign against it.'},
         {t:'Diversify Your Traffic', d:'Add a second and third channel so no single algorithm or platform controls your future.'},
@@ -491,7 +607,7 @@
     },
     convert: {
       name:'Convert', subtitle:'Leads → Sales',
-      desc:'This pillar measures how efficiently you turn attention into paying customers, without relying on hype or heroics.',
+      desc:'Measures how efficiently you turn attention into paying customers, without relying on hype or heroics.',
       moves:[
         {t:'Sharpen Your Offer', d:'Run an offer audit and rewrite the pitch until it reads like a must-have, not a nice-to-have.'},
         {t:'Map Your Funnel', d:'Draw the customer journey end-to-end so you can see exactly where people drop off.'},
@@ -500,7 +616,7 @@
     },
     ascend: {
       name:'Ascend', subtitle:'Retention & Referral',
-      desc:'This pillar measures your ability to turn happy customers into lifelong buyers and a steady stream of referrals.',
+      desc:'Measures your ability to turn happy customers into lifelong buyers and a steady stream of referrals.',
       moves:[
         {t:'Add a Premium Tier', d:'Build one higher-priced offer for your best 5–10% of customers to lift average order value.'},
         {t:'Automate Your Follow-Up', d:'Install an email/SMS sequence that nurtures leads and past customers on autopilot.'},
@@ -509,7 +625,7 @@
     },
     accelerate: {
       name:'Accelerate', subtitle:'Systems & Team',
-      desc:'This pillar measures how well systems, tech, and people let growth run without depending on any one person — including you.',
+      desc:'Measures how well systems, tech, and people let growth run without depending on any one person — including you.',
       moves:[
         {t:'Install a Scorecard', d:'Track 3–5 numbers weekly so growth decisions are based on data, not gut feel.'},
         {t:'Audit Your Tech Stack', d:'Review your tools every 6 months and cut anything that duplicates or doesn\'t integrate.'},
@@ -542,13 +658,16 @@
   ];
 
   var ZONES = [
-    {max:39.999, name:'Struggle Zone', color:'var(--red)'},
-    {max:74.999, name:'Good Zone', color:'var(--orange)'},
-    {max:100, name:'Great Zone', color:'var(--green)'}
+    {max:39.999, name:'Struggle Zone', varName:'--ember'},
+    {max:74.999, name:'Good Zone', varName:'--brass'},
+    {max:100, name:'Great Zone', varName:'--moss'}
   ];
   function zoneFor(pct){
     for(var i=0;i<ZONES.length;i++){ if(pct<=ZONES[i].max) return ZONES[i]; }
     return ZONES[ZONES.length-1];
+  }
+  function cssVar(name){
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   }
 
   // ---------- State ----------
@@ -563,9 +682,11 @@
   var introEl = document.getElementById('intro');
   var chatEl = document.getElementById('chat');
   var resultsEl = document.getElementById('results');
-  var progressWrap = document.getElementById('progressWrap');
-  var progressFill = document.getElementById('progressFill');
-  var progressLabel = document.getElementById('progressLabel');
+  var gaugeWrap = document.getElementById('gaugeWrap');
+  var tickStripEl = document.getElementById('tickStrip');
+  var qNumEl = document.getElementById('qNum');
+  var pctLabelEl = document.getElementById('pctLabel');
+  var flywheel = document.getElementById('flywheel');
   var messagesEl = document.getElementById('messages');
   var answerButtonsEl = document.getElementById('answerButtons');
   var textInput = document.getElementById('textInput');
@@ -576,15 +697,15 @@
   var voiceModeBtn = document.getElementById('voiceModeBtn');
 
   // ---------- Speech synthesis ----------
-  function speak(text){
-    if(!voiceEnabled) return;
-    if(!('speechSynthesis' in window)) return;
+  function speak(text, onEnd){
+    if(!voiceEnabled || !('speechSynthesis' in window)){ if(onEnd) onEnd(); return; }
     try{
       window.speechSynthesis.cancel();
       var u = new SpeechSynthesisUtterance(text);
       u.rate = 1.0;
+      if(onEnd){ u.onend = onEnd; u.onerror = onEnd; }
       window.speechSynthesis.speak(u);
-    }catch(e){}
+    }catch(e){ if(onEnd) onEnd(); }
   }
 
   voiceToggleFab.addEventListener('click', function(){
@@ -617,15 +738,16 @@
     micBtn.style.display = 'none';
   }
 
-  micBtn.addEventListener('click', function(){
-    if(!recognition) return;
-    if(recognizing){
-      recognition.stop();
-      return;
-    }
+  function startListening(){
+    if(!recognition || recognizing) return;
     recognizing = true;
     micBtn.classList.add('recording');
     try{ recognition.start(); }catch(e){ recognizing=false; micBtn.classList.remove('recording'); }
+  }
+
+  micBtn.addEventListener('click', function(){
+    if(recognizing){ recognition.stop(); return; }
+    startListening();
   });
 
   chatModeBtn.addEventListener('click', function(){ mode='chat'; chatModeBtn.classList.add('active'); voiceModeBtn.classList.remove('active'); });
@@ -640,18 +762,30 @@
     messagesEl.scrollTop = messagesEl.scrollHeight;
   }
 
+  function buildTicks(container, total, lit){
+    container.innerHTML = '';
+    for(var i=0;i<total;i++){
+      var t = document.createElement('div');
+      t.className = 'tick' + (i < lit ? ' lit' : '');
+      container.appendChild(t);
+    }
+  }
+
   function updateProgress(){
     var pct = Math.round((idx/QUESTIONS.length)*100);
-    progressFill.style.width = pct + '%';
-    progressLabel.textContent = pct + '% Complete';
+    qNumEl.textContent = String(Math.min(idx+1, QUESTIONS.length)).padStart(2,'0');
+    pctLabelEl.textContent = pct + '%';
+    buildTicks(tickStripEl, QUESTIONS.length, idx);
+    var spinDur = 3.6 - 3.0*(pct/100);
+    flywheel.style.setProperty('--spin-dur', spinDur.toFixed(2) + 's');
   }
 
   function renderAnswerButtons(type){
     answerButtonsEl.innerHTML = '';
-    var opts = type === 'tf' ? [['True','yes'],['False','no']] : [['Yes','yes'],['Maybe','maybe'],['No','no']];
+    var opts = type === 'tf' ? [['True','yes','yes'],['False','no','no']] : [['Yes','yes','yes'],['Maybe','maybe','maybe'],['No','no','no']];
     opts.forEach(function(o){
       var btn = document.createElement('button');
-      btn.className = 'ans-btn' + (o[1]==='no' ? ' no' : (o[1]==='maybe' ? ' maybe' : ''));
+      btn.className = 'ans-btn ' + o[2];
       btn.textContent = o[0];
       btn.addEventListener('click', function(){ commitAnswer(o[1], o[0]); });
       answerButtonsEl.appendChild(btn);
@@ -663,9 +797,11 @@
     var q = QUESTIONS[idx];
     updateProgress();
     addBubble(q.text, 'bot');
-    speak(q.text);
     renderAnswerButtons(q.type);
     textInput.value = '';
+    speak(q.text, function(){
+      if(mode === 'voice') startListening();
+    });
   }
 
   // normalized value is 'yes' | 'no' | 'maybe'  (for tf: yes==True, no==False)
@@ -707,7 +843,7 @@
     if(value){
       commitAnswer(value, label);
     } else {
-      addBubble('Heard: "' + raw + '" — I didn\'t catch a clear answer. Try again, or tap a button below.', 'bot');
+      addBubble('Heard: "' + raw + '" — didn\'t catch a clear answer. Try again, or tap a button below.', 'system');
     }
   }
 
@@ -725,10 +861,10 @@
   document.getElementById('startBtn').addEventListener('click', function(){
     introEl.style.display = 'none';
     chatEl.style.display = 'flex';
-    progressWrap.style.display = 'block';
+    gaugeWrap.style.display = 'block';
     idx = 0; answers = [];
     messagesEl.innerHTML = '';
-    addBubble('Let\'s find out where your business really stands. Answer honestly — this only works if you\'re straight with yourself.', 'bot');
+    addBubble('Let\'s find out where your business really stands. Answer honestly — this only works if you\'re straight with yourself.', 'system');
     setTimeout(askCurrentQuestion, 350);
   });
 
@@ -742,7 +878,7 @@
   function buildRadarSVG(scores){
     var order = ['attract','convert','ascend','accelerate'];
     var labels = ['Attract','Convert','Ascend','Accelerate'];
-    var size = 260, center = size/2, maxR = 95;
+    var size = 320, center = size/2, maxR = 82;
     var angles = [-90, 0, 90, 180]; // top, right, bottom, left
     function toXY(pct, angleDeg){
       var rad = angleDeg * Math.PI/180;
@@ -750,33 +886,76 @@
       return [center + r*Math.cos(rad), center + r*Math.sin(rad)];
     }
     var svg = '<svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'">';
-    // grid rings
     [25,50,75,100].forEach(function(ring){
       var pts = angles.map(function(a){ return toXY(ring, a).join(','); }).join(' ');
-      svg += '<polygon points="'+pts+'" fill="none" stroke="#e5e7eb" stroke-width="1"/>';
+      svg += '<polygon points="'+pts+'" fill="none" style="stroke:var(--hairline); stroke-width:1"/>';
     });
-    // axis lines
     angles.forEach(function(a){
       var p = toXY(100, a);
-      svg += '<line x1="'+center+'" y1="'+center+'" x2="'+p[0]+'" y2="'+p[1]+'" stroke="#e5e7eb" stroke-width="1"/>';
+      svg += '<line x1="'+center+'" y1="'+center+'" x2="'+p[0]+'" y2="'+p[1]+'" style="stroke:var(--hairline); stroke-width:1"/>';
     });
-    // data polygon
     var dataPts = order.map(function(key, i){
       var pct = (scores[key]/10)*100;
       return toXY(pct, angles[i]);
     });
     var poly = dataPts.map(function(p){ return p.join(','); }).join(' ');
-    svg += '<polygon points="'+poly+'" fill="rgba(249,115,22,0.35)" stroke="#f97316" stroke-width="2.5"/>';
+    svg += '<polygon points="'+poly+'" style="fill:var(--brass); fill-opacity:.28; stroke:var(--brass); stroke-width:2.5"/>';
     dataPts.forEach(function(p){
-      svg += '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="4" fill="#f97316" stroke="#fff" stroke-width="1.5"/>';
+      svg += '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="4" style="fill:var(--brass); stroke:var(--panel-2); stroke-width:1.5"/>';
     });
-    // labels
-    var labelOffsets = [[0,-16],[16,4],[0,26],[-16,4]];
+    var labelOffsets = [[0,-14],[10,4],[0,24],[-10,4]];
     labels.forEach(function(txt, i){
       var p = toXY(100, angles[i]);
       var anchor = i===1 ? 'start' : (i===3 ? 'end' : 'middle');
-      svg += '<text x="'+(p[0]+labelOffsets[i][0])+'" y="'+(p[1]+labelOffsets[i][1])+'" font-size="13" font-weight="700" fill="#1f2430" text-anchor="'+anchor+'">'+txt+'</text>';
+      svg += '<text x="'+(p[0]+labelOffsets[i][0])+'" y="'+(p[1]+labelOffsets[i][1])+'" font-size="11.5" font-weight="700" style="fill:var(--ink); font-family:var(--font-body);" text-anchor="'+anchor+'">'+txt+'</text>';
     });
+    svg += '</svg>';
+    return svg;
+  }
+
+  // Semicircular instrument gauge for the overall score, 0-100 across a 240deg sweep.
+  function buildScoreGauge(pct){
+    var size = 220, center = size/2, cy = size*0.62, r = 92;
+    var startAngle = -210, endAngle = 30; // 240 degree sweep, centered on bottom
+    function pointAt(angleDeg, radius){
+      var rad = angleDeg * Math.PI/180;
+      return [center + radius*Math.cos(rad), cy + radius*Math.sin(rad)];
+    }
+    function arcPath(a0, a1, radius){
+      var p0 = pointAt(a0, radius), p1 = pointAt(a1, radius);
+      var large = (a1-a0) > 180 ? 1 : 0;
+      return 'M '+p0[0]+' '+p0[1]+' A '+radius+' '+radius+' 0 '+large+' 1 '+p1[0]+' '+p1[1];
+    }
+    var sweep = endAngle - startAngle;
+    var bandStops = [0, 40, 75, 100];
+    var bandColors = ['var(--ember)','var(--brass)','var(--moss)'];
+    var svg = '<svg width="'+size+'" height="'+(cy+30)+'" viewBox="0 0 '+size+' '+(cy+30)+'">';
+    // track
+    svg += '<path d="'+arcPath(startAngle,endAngle,r)+'" fill="none" style="stroke:var(--hairline); stroke-width:14; stroke-linecap:round"/>';
+    // zone bands
+    for(var i=0;i<3;i++){
+      var a0 = startAngle + sweep*(bandStops[i]/100);
+      var a1 = startAngle + sweep*(bandStops[i+1]/100);
+      svg += '<path d="'+arcPath(a0,a1,r)+'" fill="none" style="stroke:'+bandColors[i]+'; stroke-width:5; opacity:.55" />';
+    }
+    // progress arc up to score
+    var scoreAngle = startAngle + sweep*(pct/100);
+    svg += '<path d="'+arcPath(startAngle,scoreAngle,r)+'" fill="none" style="stroke:var(--brass); stroke-width:14; stroke-linecap:round"/>';
+    // ticks every 10%
+    for(var tI=0; tI<=10; tI++){
+      var ta = startAngle + sweep*(tI/10);
+      var p0 = pointAt(ta, r-11), p1 = pointAt(ta, r+11);
+      svg += '<line x1="'+p0[0]+'" y1="'+p0[1]+'" x2="'+p1[0]+'" y2="'+p1[1]+'" style="stroke:var(--panel-2); stroke-width:2"/>';
+    }
+    // needle
+    var needleLen = r - 6;
+    var np = pointAt(scoreAngle, needleLen);
+    svg += '<line x1="'+center+'" y1="'+cy+'" x2="'+np[0]+'" y2="'+np[1]+'" style="stroke:var(--ink); stroke-width:3; stroke-linecap:round"/>';
+    svg += '<circle cx="'+center+'" cy="'+cy+'" r="7" style="fill:var(--ink)"/>';
+    // end labels
+    var lp0 = pointAt(startAngle, r+22), lp1 = pointAt(endAngle, r+22);
+    svg += '<text x="'+lp0[0]+'" y="'+lp0[1]+'" font-size="11" style="fill:var(--muted); font-family:var(--font-mono);" text-anchor="middle">0</text>';
+    svg += '<text x="'+lp1[0]+'" y="'+lp1[1]+'" font-size="11" style="fill:var(--muted); font-family:var(--font-mono);" text-anchor="middle">100</text>';
     svg += '</svg>';
     return svg;
   }
@@ -785,25 +964,26 @@
     var p = PILLARS[key];
     var pct = (score/10)*100;
     var z = zoneFor(pct);
+    var litTicks = Math.round((score/10)*10);
     var html = '<div class="pillar-card">' +
-      '<h3>Pillar</h3>' +
-      '<h4>'+p.name+' <span style="color:var(--muted);font-weight:400;font-size:14px;">— '+p.subtitle+'</span></h4>' +
+      '<div class="eyebrow">Pillar</div>' +
+      '<h3>'+p.name+' <span class="sub">— '+p.subtitle+'</span></h3>' +
       '<p class="desc">'+p.desc+'</p>';
     p.moves.forEach(function(m){
       html += '<div class="move"><span class="check">✓</span><div><b>'+m.t+'</b>'+m.d+'</div></div>';
     });
     html += '<div class="pillar-score-row">' +
-      '<div class="pillar-track"><div class="pillar-fill" style="width:'+pct+'%; background:'+z.color+';"></div></div>' +
+      '<div class="tick-strip small" data-ticks="10" data-lit="'+litTicks+'"></div>' +
       '<div class="pillar-score-text">'+score.toFixed(1).replace(/\.0$/,'')+'/10</div>' +
       '</div>' +
-      '<div class="pillar-zone-text" style="color:'+z.color+'; margin-top:4px;">'+z.name+'</div>' +
+      '<div class="pillar-zone-text" style="color:var('+z.varName+');">'+z.name+'</div>' +
       '</div>';
     return html;
   }
 
   function finish(){
     chatEl.style.display = 'none';
-    progressWrap.style.display = 'none';
+    gaugeWrap.style.display = 'none';
     resultsEl.style.display = 'flex';
 
     var scores = computePillarScores();
@@ -812,23 +992,27 @@
     var overallPct = Math.round((sum/40)*100);
     var oz = zoneFor(overallPct);
 
-    document.getElementById('overallScore').textContent = overallPct + '%';
-    document.getElementById('overallScore').style.color = oz.color;
-    document.getElementById('overallBar').style.width = overallPct + '%';
-    document.getElementById('overallZone').textContent = oz.name.toUpperCase();
-    document.getElementById('overallZone').style.color = oz.color;
+    document.getElementById('gauge-wrap-results').innerHTML = buildScoreGauge(overallPct);
+    var scoreEl = document.getElementById('overallScore');
+    scoreEl.textContent = overallPct + '%';
+    scoreEl.style.color = 'var(' + oz.varName + ')';
+    var zoneEl = document.getElementById('overallZone');
+    zoneEl.textContent = oz.name;
+    zoneEl.style.color = 'var(' + oz.varName + ')';
 
     document.getElementById('radar-wrap').innerHTML = buildRadarSVG(scores);
 
     var cardsHtml = '';
     order.forEach(function(key){ cardsHtml += renderPillarCard(key, scores[key]); });
     document.getElementById('pillarCards').innerHTML = cardsHtml;
+    document.querySelectorAll('.tick-strip[data-ticks]').forEach(function(el){
+      buildTicks(el, parseInt(el.dataset.ticks,10), parseInt(el.dataset.lit,10));
+    });
 
     document.getElementById('speakResultsBtn').onclick = function(){
       var lines = ['Your overall score is ' + overallPct + ' percent. You are in the ' + oz.name + '.'];
       order.forEach(function(key){
         var p = PILLARS[key];
-        var pct = Math.round((scores[key]/10)*100);
         lines.push(p.name + ' scored ' + scores[key].toFixed(1) + ' out of 10.');
       });
       var wasEnabled = voiceEnabled;
