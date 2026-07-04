@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Good to Great Audit</title>
+<style>
+  :root{
+    --bg:#f3f4f6;
+    --card:#ffffff;
+    --text:#1f2430;
+    --muted:#6b7280;
+    --green:#22c55e;
+    --green-dark:#16a34a;
+    --orange:#f97316;
+    --red:#ef4444;
+    --border:#e5e7eb;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    display:flex;
+    justify-content:center;
+    min-height:100vh;
+  }
+  #app{
+    width:100%;
+    max-width:480px;
+    background:var(--card);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    box-shadow:0 0 24px rgba(0,0,0,0.06);
+  }
+  header{
+    padding:20px 20px 12px;
+    border-bottom:1px solid var(--border);
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:800;
+    font-size:20px;
+    letter-spacing:-0.02em;
+  }
+  .brand .dot{
+    width:14px;height:14px;border-radius:50%;
+    background:linear-gradient(135deg,var(--green),var(--orange));
+    flex-shrink:0;
+  }
+  .brand small{
+    display:block;
+    font-weight:500;
+    font-size:12px;
+    color:var(--muted);
+    letter-spacing:0;
+    margin-top:2px;
+  }
+  .progress-wrap{
+    padding:10px 20px;
+    background:#fafafa;
+    border-bottom:1px solid var(--border);
+  }
+  .progress-track{
+    height:8px;
+    border-radius:999px;
+    background:#e5e7eb;
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    background:linear-gradient(90deg,var(--green),var(--orange));
+    width:0%;
+    transition:width .35s ease;
+  }
+  .progress-label{
+    margin-top:6px;
+    font-size:12px;
+    color:var(--muted);
+    text-align:center;
+  }
+
+  /* Intro screen */
+  #intro{
+    padding:28px 24px;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    gap:16px;
+  }
+  #intro h1{
+    font-size:28px;
+    line-height:1.2;
+    margin:0;
+  }
+  #intro p{
+    color:var(--muted);
+    font-size:15px;
+    line-height:1.5;
+    margin:0;
+  }
+  .pillars-preview{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin:6px 0;
+  }
+  .pillar-chip{
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:10px 12px;
+    font-size:13px;
+    font-weight:700;
+  }
+  .pillar-chip span{
+    display:block;
+    font-weight:400;
+    color:var(--muted);
+    font-size:11px;
+    margin-top:2px;
+  }
+  .mode-toggles{
+    display:flex;
+    gap:10px;
+  }
+  .toggle-btn{
+    flex:1;
+    padding:10px;
+    border-radius:12px;
+    border:1px solid var(--border);
+    background:#fff;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+  }
+  .toggle-btn.active{
+    border-color:var(--green-dark);
+    background:#ecfdf3;
+    color:var(--green-dark);
+  }
+  .btn-primary{
+    background:var(--green);
+    color:#fff;
+    border:none;
+    border-radius:12px;
+    padding:16px;
+    font-size:16px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .btn-primary:active{ transform:scale(.99); }
+
+  /* Chat */
+  #chat{
+    flex:1;
+    display:none;
+    flex-direction:column;
+  }
+  #messages{
+    flex:1;
+    overflow-y:auto;
+    padding:16px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .bubble{
+    max-width:82%;
+    padding:12px 14px;
+    border-radius:16px;
+    font-size:15px;
+    line-height:1.4;
+    animation:pop .2s ease;
+  }
+  @keyframes pop{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+  .bot{
+    align-self:flex-start;
+    background:#f3f4f6;
+    border-bottom-left-radius:4px;
+  }
+  .user{
+    align-self:flex-end;
+    background:var(--green);
+    color:#fff;
+    border-bottom-right-radius:4px;
+    font-weight:600;
+  }
+  .listening-note{
+    align-self:flex-start;
+    font-size:12px;
+    color:var(--muted);
+    font-style:italic;
+  }
+  #answer-panel{
+    border-top:1px solid var(--border);
+    padding:12px 16px 16px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .answer-buttons{
+    display:flex;
+    gap:8px;
+  }
+  .ans-btn{
+    flex:1;
+    padding:14px 8px;
+    border-radius:12px;
+    border:none;
+    background:var(--green);
+    color:#fff;
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .ans-btn:active{ filter:brightness(.92); }
+  .ans-btn.no{ background:#374151; }
+  .ans-btn.maybe{ background:var(--orange); }
+  .input-row{
+    display:flex;
+    gap:8px;
+  }
+  .input-row input{
+    flex:1;
+    border:1px solid var(--border);
+    border-radius:999px;
+    padding:12px 16px;
+    font-size:14px;
+    outline:none;
+  }
+  .mic-btn{
+    width:44px;height:44px;
+    border-radius:50%;
+    border:1px solid var(--border);
+    background:#fff;
+    font-size:18px;
+    cursor:pointer;
+    flex-shrink:0;
+  }
+  .mic-btn.recording{
+    background:var(--red);
+    border-color:var(--red);
+    color:#fff;
+    animation:pulse 1s infinite;
+  }
+  @keyframes pulse{
+    0%{ box-shadow:0 0 0 0 rgba(239,68,68,.5); }
+    70%{ box-shadow:0 0 0 10px rgba(239,68,68,0); }
+    100%{ box-shadow:0 0 0 0 rgba(239,68,68,0); }
+  }
+  .send-btn{
+    width:44px;height:44px;
+    border-radius:50%;
+    border:none;
+    background:var(--text);
+    color:#fff;
+    font-size:16px;
+    cursor:pointer;
+    flex-shrink:0;
+  }
+
+  /* Results */
+  #results{
+    display:none;
+    flex-direction:column;
+    padding:0 0 32px;
+  }
+  .score-card{
+    margin:20px;
+    padding:28px 20px;
+    border-radius:20px;
+    background:#fafafa;
+    border:1px solid var(--border);
+    text-align:center;
+  }
+  .score-card .label{
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:.08em;
+    color:var(--muted);
+  }
+  .score-card .big{
+    font-size:64px;
+    font-weight:800;
+    line-height:1;
+    margin:8px 0;
+  }
+  .score-card .zone{
+    font-size:22px;
+    font-weight:800;
+    letter-spacing:.02em;
+    margin-top:6px;
+  }
+  .zone-legend{
+    display:flex;
+    justify-content:center;
+    gap:16px;
+    padding:0 20px 8px;
+    flex-wrap:wrap;
+  }
+  .zone-legend .item{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:12px;
+    color:var(--muted);
+  }
+  .zone-legend .swatch{
+    width:12px;height:12px;border-radius:50%;
+  }
+  #results h2{
+    padding:8px 20px 0;
+    font-size:24px;
+    margin:12px 0 0;
+  }
+  #results .subtitle{
+    padding:0 20px;
+    color:var(--muted);
+    font-size:14px;
+    margin:4px 0 8px;
+  }
+  #radar-wrap{
+    display:flex;
+    justify-content:center;
+    padding:8px 0 4px;
+  }
+  .pillar-card{
+    margin:14px 20px;
+    padding:18px;
+    border-radius:16px;
+    background:#fafafa;
+    border:1px solid var(--border);
+  }
+  .pillar-card h3{
+    margin:0 0 4px;
+    font-size:12px;
+    letter-spacing:.08em;
+    color:var(--muted);
+    text-transform:uppercase;
+  }
+  .pillar-card h4{
+    margin:0 0 8px;
+    font-size:18px;
+  }
+  .pillar-card p.desc{
+    font-size:13.5px;
+    color:var(--muted);
+    line-height:1.45;
+    margin:0 0 12px;
+  }
+  .move{
+    display:flex;
+    gap:8px;
+    font-size:13.5px;
+    line-height:1.4;
+    margin-bottom:10px;
+  }
+  .move .check{
+    color:var(--green-dark);
+    font-weight:800;
+    flex-shrink:0;
+  }
+  .move b{ display:block; }
+  .pillar-score-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:10px;
+  }
+  .pillar-track{
+    flex:1;
+    height:8px;
+    border-radius:999px;
+    background:#e5e7eb;
+    overflow:hidden;
+  }
+  .pillar-fill{ height:100%; }
+  .pillar-score-text{
+    font-size:13px;
+    font-weight:800;
+    white-space:nowrap;
+  }
+  .pillar-zone-text{
+    font-size:12px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+  }
+  #restart-btn{
+    margin:8px 20px 0;
+  }
+  .voice-toggle-fab{
+    position:absolute;
+    top:18px;
+    right:18px;
+    background:none;
+    border:none;
+    font-size:18px;
+    cursor:pointer;
+    opacity:.6;
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <header style="position:relative;">
+    <div class="brand"><span class="dot"></span>Good to Great Audit
+      <small>Find out if your business is stuck being good — or built to be great.</small>
+    </div>
+    <button class="voice-toggle-fab" id="voiceToggleFab" title="Toggle voice">🔊</button>
+  </header>
+
+  <div class="progress-wrap" id="progressWrap" style="display:none;">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label" id="progressLabel">0% Complete</div>
+  </div>
+
+  <div id="intro">
+    <h1>16 questions.<br>4 growth pillars.<br>One honest score.</h1>
+    <p>Answer Yes / No / Maybe (and a few True / False calls) about how your business really runs today. In under 3 minutes you'll get a scored breakdown across the four pillars every growing business depends on — plus the exact moves to close the gap.</p>
+    <div class="pillars-preview">
+      <div class="pillar-chip">Attract<span>Traffic & visibility</span></div>
+      <div class="pillar-chip">Convert<span>Leads → sales</span></div>
+      <div class="pillar-chip">Ascend<span>Retention & referral</span></div>
+      <div class="pillar-chip">Accelerate<span>Systems & team</span></div>
+    </div>
+    <div class="mode-toggles">
+      <button class="toggle-btn active" id="chatModeBtn">💬 Chat mode</button>
+      <button class="toggle-btn" id="voiceModeBtn">🎙️ Voice mode</button>
+    </div>
+    <button class="btn-primary" id="startBtn">Start the Audit</button>
+  </div>
+
+  <div id="chat">
+    <div id="messages"></div>
+    <div id="answer-panel">
+      <div class="answer-buttons" id="answerButtons"></div>
+      <div class="input-row">
+        <button class="mic-btn" id="micBtn" title="Answer by voice">🎙️</button>
+        <input type="text" id="textInput" placeholder="Or type your answer…" autocomplete="off">
+        <button class="send-btn" id="sendBtn">➜</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="results">
+    <div class="score-card">
+      <div class="label">YOUR OVERALL SCORE</div>
+      <div class="big" id="overallScore">0%</div>
+      <div class="progress-track"><div class="progress-fill" id="overallBar"></div></div>
+      <div class="zone" id="overallZone">—</div>
+    </div>
+    <div class="zone-legend">
+      <div class="item"><span class="swatch" style="background:var(--red)"></span>Struggle Zone</div>
+      <div class="item"><span class="swatch" style="background:var(--orange)"></span>Good Zone</div>
+      <div class="item"><span class="swatch" style="background:var(--green)"></span>Great Zone</div>
+    </div>
+    <h2>Your Good to Great Results</h2>
+    <div class="subtitle">The Four Growth Pillars: Attract, Convert, Ascend & Accelerate</div>
+    <div id="radar-wrap"></div>
+    <div id="pillarCards"></div>
+    <button class="btn-primary" id="speakResultsBtn" style="margin:8px 20px 0;">🔊 Read my results aloud</button>
+    <button class="btn-primary" id="restart-btn" style="background:#374151;">Retake the Audit</button>
+  </div>
+
+</div>
+
+<script>
+(function(){
+
+  // ---------- Content ----------
+  var PILLARS = {
+    attract: {
+      name:'Attract', subtitle:'Traffic & Visibility',
+      desc:'This pillar measures your ability to generate high-quality traffic and awareness from the right audience — not just any audience.',
+      moves:[
+        {t:'Document Your Ideal Customer', d:'Write down who they are, what they want, and why they actually buy — then check every campaign against it.'},
+        {t:'Diversify Your Traffic', d:'Add a second and third channel so no single algorithm or platform controls your future.'},
+        {t:'Build a Content Engine', d:'Set a repeatable weekly cadence for one core piece of content, then repurpose it everywhere.'}
+      ]
+    },
+    convert: {
+      name:'Convert', subtitle:'Leads → Sales',
+      desc:'This pillar measures how efficiently you turn attention into paying customers, without relying on hype or heroics.',
+      moves:[
+        {t:'Sharpen Your Offer', d:'Run an offer audit and rewrite the pitch until it reads like a must-have, not a nice-to-have.'},
+        {t:'Map Your Funnel', d:'Draw the customer journey end-to-end so you can see exactly where people drop off.'},
+        {t:'Build a Swipe File', d:'Keep a running archive of your best-performing promotions so you never start from zero.'}
+      ]
+    },
+    ascend: {
+      name:'Ascend', subtitle:'Retention & Referral',
+      desc:'This pillar measures your ability to turn happy customers into lifelong buyers and a steady stream of referrals.',
+      moves:[
+        {t:'Add a Premium Tier', d:'Build one higher-priced offer for your best 5–10% of customers to lift average order value.'},
+        {t:'Automate Your Follow-Up', d:'Install an email/SMS sequence that nurtures leads and past customers on autopilot.'},
+        {t:'Systemize Referrals', d:'Create a simple, repeatable ask for reviews and referrals right after a customer\'s best moment.'}
+      ]
+    },
+    accelerate: {
+      name:'Accelerate', subtitle:'Systems & Team',
+      desc:'This pillar measures how well systems, tech, and people let growth run without depending on any one person — including you.',
+      moves:[
+        {t:'Install a Scorecard', d:'Track 3–5 numbers weekly so growth decisions are based on data, not gut feel.'},
+        {t:'Audit Your Tech Stack', d:'Review your tools every 6 months and cut anything that duplicates or doesn\'t integrate.'},
+        {t:'Clarify Your Org Chart', d:'Define who owns what so growth doesn\'t depend on any single person, including you.'}
+      ]
+    }
+  };
+
+  var QUESTIONS = [
+    {pillar:'attract', type:'ynm', text:'We know exactly who our ideal customer is — their goals, objections, and what makes them buy.'},
+    {pillar:'attract', type:'ynm', text:'Our traffic comes from multiple channels, and losing any single one wouldn\'t sink us.'},
+    {pillar:'attract', type:'ynm', text:'We publish fresh, valuable content on a regular schedule across more than one platform.'},
+
+    {pillar:'convert', type:'ynm', text:'Our offer is so clear and compelling that people say yes without heavy convincing.'},
+    {pillar:'convert', type:'ynm', text:'We have a repeatable funnel that turns strangers into leads, and leads into customers, without heroics.'},
+    {pillar:'convert', type:'ynm', text:'We know which past campaigns performed best, and we can relaunch them anytime.'},
+
+    {pillar:'ascend', type:'ynm', text:'We have higher-priced offers ready for customers who want to go deeper with us.'},
+    {pillar:'ascend', type:'ynm', text:'Follow-up with new and past customers happens automatically — we don\'t rely on remembering.'},
+    {pillar:'ascend', type:'ynm', text:'Happy customers regularly leave reviews and send us referrals, and we have a system for it.'},
+
+    {pillar:'accelerate', type:'ynm', text:'We set goals, track them with real numbers, and know at any moment if we\'re on pace.'},
+    {pillar:'accelerate', type:'ynm', text:'Our tools (CRM, funnel builder, email/SMS, analytics) all talk to each other instead of fighting each other.'},
+    {pillar:'accelerate', type:'ynm', text:'Our team knows their role and executes without us having to micromanage.'},
+
+    {pillar:'attract', type:'tf', text:'Traffic is NOT holding us back — we already get all the visibility we need.'},
+    {pillar:'convert', type:'tf', text:'Conversion is NOT holding us back — the traffic we get turns into customers just fine.'},
+    {pillar:'ascend', type:'tf', text:'Retention and referrals are NOT holding us back — customers buy again and refer often.'},
+    {pillar:'accelerate', type:'tf', text:'Systems and team are NOT holding us back — the business runs without depending on any one person.'}
+  ];
+
+  var ZONES = [
+    {max:39.999, name:'Struggle Zone', color:'var(--red)'},
+    {max:74.999, name:'Good Zone', color:'var(--orange)'},
+    {max:100, name:'Great Zone', color:'var(--green)'}
+  ];
+  function zoneFor(pct){
+    for(var i=0;i<ZONES.length;i++){ if(pct<=ZONES[i].max) return ZONES[i]; }
+    return ZONES[ZONES.length-1];
+  }
+
+  // ---------- State ----------
+  var idx = 0;
+  var answers = [];
+  var voiceEnabled = true;
+  var mode = 'chat'; // 'chat' | 'voice'
+  var recognition = null;
+  var recognizing = false;
+
+  // ---------- Elements ----------
+  var introEl = document.getElementById('intro');
+  var chatEl = document.getElementById('chat');
+  var resultsEl = document.getElementById('results');
+  var progressWrap = document.getElementById('progressWrap');
+  var progressFill = document.getElementById('progressFill');
+  var progressLabel = document.getElementById('progressLabel');
+  var messagesEl = document.getElementById('messages');
+  var answerButtonsEl = document.getElementById('answerButtons');
+  var textInput = document.getElementById('textInput');
+  var micBtn = document.getElementById('micBtn');
+  var sendBtn = document.getElementById('sendBtn');
+  var voiceToggleFab = document.getElementById('voiceToggleFab');
+  var chatModeBtn = document.getElementById('chatModeBtn');
+  var voiceModeBtn = document.getElementById('voiceModeBtn');
+
+  // ---------- Speech synthesis ----------
+  function speak(text){
+    if(!voiceEnabled) return;
+    if(!('speechSynthesis' in window)) return;
+    try{
+      window.speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(text);
+      u.rate = 1.0;
+      window.speechSynthesis.speak(u);
+    }catch(e){}
+  }
+
+  voiceToggleFab.addEventListener('click', function(){
+    voiceEnabled = !voiceEnabled;
+    voiceToggleFab.textContent = voiceEnabled ? '🔊' : '🔇';
+    if(!voiceEnabled && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+  });
+
+  // ---------- Speech recognition ----------
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(SR){
+    recognition = new SR();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+
+    recognition.onresult = function(e){
+      var transcript = e.results[0][0].transcript;
+      handleRawInput(transcript);
+    };
+    recognition.onend = function(){
+      recognizing = false;
+      micBtn.classList.remove('recording');
+    };
+    recognition.onerror = function(){
+      recognizing = false;
+      micBtn.classList.remove('recording');
+    };
+  } else {
+    micBtn.style.display = 'none';
+  }
+
+  micBtn.addEventListener('click', function(){
+    if(!recognition) return;
+    if(recognizing){
+      recognition.stop();
+      return;
+    }
+    recognizing = true;
+    micBtn.classList.add('recording');
+    try{ recognition.start(); }catch(e){ recognizing=false; micBtn.classList.remove('recording'); }
+  });
+
+  chatModeBtn.addEventListener('click', function(){ mode='chat'; chatModeBtn.classList.add('active'); voiceModeBtn.classList.remove('active'); });
+  voiceModeBtn.addEventListener('click', function(){ mode='voice'; voiceModeBtn.classList.add('active'); chatModeBtn.classList.remove('active'); });
+
+  // ---------- Chat helpers ----------
+  function addBubble(text, who){
+    var b = document.createElement('div');
+    b.className = 'bubble ' + who;
+    b.textContent = text;
+    messagesEl.appendChild(b);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function updateProgress(){
+    var pct = Math.round((idx/QUESTIONS.length)*100);
+    progressFill.style.width = pct + '%';
+    progressLabel.textContent = pct + '% Complete';
+  }
+
+  function renderAnswerButtons(type){
+    answerButtonsEl.innerHTML = '';
+    var opts = type === 'tf' ? [['True','yes'],['False','no']] : [['Yes','yes'],['Maybe','maybe'],['No','no']];
+    opts.forEach(function(o){
+      var btn = document.createElement('button');
+      btn.className = 'ans-btn' + (o[1]==='no' ? ' no' : (o[1]==='maybe' ? ' maybe' : ''));
+      btn.textContent = o[0];
+      btn.addEventListener('click', function(){ commitAnswer(o[1], o[0]); });
+      answerButtonsEl.appendChild(btn);
+    });
+  }
+
+  function askCurrentQuestion(){
+    if(idx >= QUESTIONS.length){ return finish(); }
+    var q = QUESTIONS[idx];
+    updateProgress();
+    addBubble(q.text, 'bot');
+    speak(q.text);
+    renderAnswerButtons(q.type);
+    textInput.value = '';
+  }
+
+  // normalized value is 'yes' | 'no' | 'maybe'  (for tf: yes==True, no==False)
+  function scoreFor(type, value){
+    if(type === 'tf') return value === 'yes' ? 2.5 : 0;
+    if(value === 'yes') return 2.5;
+    if(value === 'maybe') return 1.25;
+    return 0;
+  }
+
+  function commitAnswer(value, label){
+    var q = QUESTIONS[idx];
+    addBubble(label, 'user');
+    answers.push({pillar:q.pillar, type:q.type, value:value, points: scoreFor(q.type, value)});
+    idx++;
+    setTimeout(function(){
+      if(idx >= QUESTIONS.length){
+        updateProgress();
+        finish();
+      } else {
+        askCurrentQuestion();
+      }
+    }, 220);
+  }
+
+  function handleRawInput(raw){
+    var t = raw.toLowerCase();
+    var q = QUESTIONS[idx];
+    if(!q) return;
+    var value = null, label = null;
+    if(q.type === 'tf'){
+      if(/\btrue\b|\byes\b|\byeah\b|\byep\b/.test(t)){ value='yes'; label='True'; }
+      else if(/\bfalse\b|\bno\b|\bnope\b/.test(t)){ value='no'; label='False'; }
+    } else {
+      if(/\bmaybe\b|\bsometimes\b|\bkind of\b|\bsort of\b/.test(t)){ value='maybe'; label='Maybe'; }
+      else if(/\byes\b|\byeah\b|\byep\b/.test(t)){ value='yes'; label='Yes'; }
+      else if(/\bno\b|\bnope\b|\bnot really\b/.test(t)){ value='no'; label='No'; }
+    }
+    if(value){
+      commitAnswer(value, label);
+    } else {
+      addBubble('Heard: "' + raw + '" — I didn\'t catch a clear answer. Try again, or tap a button below.', 'bot');
+    }
+  }
+
+  textInput.addEventListener('keydown', function(e){
+    if(e.key === 'Enter') sendBtn.click();
+  });
+  sendBtn.addEventListener('click', function(){
+    var v = textInput.value.trim();
+    if(!v) return;
+    handleRawInput(v);
+    textInput.value = '';
+  });
+
+  // ---------- Start ----------
+  document.getElementById('startBtn').addEventListener('click', function(){
+    introEl.style.display = 'none';
+    chatEl.style.display = 'flex';
+    progressWrap.style.display = 'block';
+    idx = 0; answers = [];
+    messagesEl.innerHTML = '';
+    addBubble('Let\'s find out where your business really stands. Answer honestly — this only works if you\'re straight with yourself.', 'bot');
+    setTimeout(askCurrentQuestion, 350);
+  });
+
+  // ---------- Results ----------
+  function computePillarScores(){
+    var totals = {attract:0, convert:0, ascend:0, accelerate:0};
+    answers.forEach(function(a){ totals[a.pillar] += a.points; });
+    return totals; // each out of 10
+  }
+
+  function buildRadarSVG(scores){
+    var order = ['attract','convert','ascend','accelerate'];
+    var labels = ['Attract','Convert','Ascend','Accelerate'];
+    var size = 260, center = size/2, maxR = 95;
+    var angles = [-90, 0, 90, 180]; // top, right, bottom, left
+    function toXY(pct, angleDeg){
+      var rad = angleDeg * Math.PI/180;
+      var r = (pct/100) * maxR;
+      return [center + r*Math.cos(rad), center + r*Math.sin(rad)];
+    }
+    var svg = '<svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'">';
+    // grid rings
+    [25,50,75,100].forEach(function(ring){
+      var pts = angles.map(function(a){ return toXY(ring, a).join(','); }).join(' ');
+      svg += '<polygon points="'+pts+'" fill="none" stroke="#e5e7eb" stroke-width="1"/>';
+    });
+    // axis lines
+    angles.forEach(function(a){
+      var p = toXY(100, a);
+      svg += '<line x1="'+center+'" y1="'+center+'" x2="'+p[0]+'" y2="'+p[1]+'" stroke="#e5e7eb" stroke-width="1"/>';
+    });
+    // data polygon
+    var dataPts = order.map(function(key, i){
+      var pct = (scores[key]/10)*100;
+      return toXY(pct, angles[i]);
+    });
+    var poly = dataPts.map(function(p){ return p.join(','); }).join(' ');
+    svg += '<polygon points="'+poly+'" fill="rgba(249,115,22,0.35)" stroke="#f97316" stroke-width="2.5"/>';
+    dataPts.forEach(function(p){
+      svg += '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="4" fill="#f97316" stroke="#fff" stroke-width="1.5"/>';
+    });
+    // labels
+    var labelOffsets = [[0,-16],[16,4],[0,26],[-16,4]];
+    labels.forEach(function(txt, i){
+      var p = toXY(100, angles[i]);
+      var anchor = i===1 ? 'start' : (i===3 ? 'end' : 'middle');
+      svg += '<text x="'+(p[0]+labelOffsets[i][0])+'" y="'+(p[1]+labelOffsets[i][1])+'" font-size="13" font-weight="700" fill="#1f2430" text-anchor="'+anchor+'">'+txt+'</text>';
+    });
+    svg += '</svg>';
+    return svg;
+  }
+
+  function renderPillarCard(key, score){
+    var p = PILLARS[key];
+    var pct = (score/10)*100;
+    var z = zoneFor(pct);
+    var html = '<div class="pillar-card">' +
+      '<h3>Pillar</h3>' +
+      '<h4>'+p.name+' <span style="color:var(--muted);font-weight:400;font-size:14px;">— '+p.subtitle+'</span></h4>' +
+      '<p class="desc">'+p.desc+'</p>';
+    p.moves.forEach(function(m){
+      html += '<div class="move"><span class="check">✓</span><div><b>'+m.t+'</b>'+m.d+'</div></div>';
+    });
+    html += '<div class="pillar-score-row">' +
+      '<div class="pillar-track"><div class="pillar-fill" style="width:'+pct+'%; background:'+z.color+';"></div></div>' +
+      '<div class="pillar-score-text">'+score.toFixed(1).replace(/\.0$/,'')+'/10</div>' +
+      '</div>' +
+      '<div class="pillar-zone-text" style="color:'+z.color+'; margin-top:4px;">'+z.name+'</div>' +
+      '</div>';
+    return html;
+  }
+
+  function finish(){
+    chatEl.style.display = 'none';
+    progressWrap.style.display = 'none';
+    resultsEl.style.display = 'flex';
+
+    var scores = computePillarScores();
+    var order = ['attract','convert','ascend','accelerate'];
+    var sum = order.reduce(function(s,k){ return s + scores[k]; }, 0);
+    var overallPct = Math.round((sum/40)*100);
+    var oz = zoneFor(overallPct);
+
+    document.getElementById('overallScore').textContent = overallPct + '%';
+    document.getElementById('overallScore').style.color = oz.color;
+    document.getElementById('overallBar').style.width = overallPct + '%';
+    document.getElementById('overallZone').textContent = oz.name.toUpperCase();
+    document.getElementById('overallZone').style.color = oz.color;
+
+    document.getElementById('radar-wrap').innerHTML = buildRadarSVG(scores);
+
+    var cardsHtml = '';
+    order.forEach(function(key){ cardsHtml += renderPillarCard(key, scores[key]); });
+    document.getElementById('pillarCards').innerHTML = cardsHtml;
+
+    document.getElementById('speakResultsBtn').onclick = function(){
+      var lines = ['Your overall score is ' + overallPct + ' percent. You are in the ' + oz.name + '.'];
+      order.forEach(function(key){
+        var p = PILLARS[key];
+        var pct = Math.round((scores[key]/10)*100);
+        lines.push(p.name + ' scored ' + scores[key].toFixed(1) + ' out of 10.');
+      });
+      var wasEnabled = voiceEnabled;
+      voiceEnabled = true;
+      speak(lines.join(' '));
+      voiceEnabled = wasEnabled;
+    };
+  }
+
+  document.getElementById('restart-btn').addEventListener('click', function(){
+    resultsEl.style.display = 'none';
+    introEl.style.display = 'flex';
+    idx = 0; answers = [];
+  });
+
+})();
+</script>
+</body>
+</html>
