@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WhatsApp CRM</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">💬 WhatsApp CRM</div>
+    <nav id="nav">
+      <button data-view="inbox" class="active">Inbox <span id="unreadBadge" class="badge hidden"></span></button>
+      <button data-view="contacts">Contacts</button>
+      <button data-view="pipeline">Pipeline</button>
+      <button data-view="followups">Follow-ups</button>
+      <button data-view="bot">Bot</button>
+      <button data-view="settings">Settings</button>
+    </nav>
+    <div id="modeBadge" class="mode"></div>
+  </header>
+
+  <main id="view"></main>
+
+  <dialog id="modal"><form method="dialog" id="modalForm"></form></dialog>
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
