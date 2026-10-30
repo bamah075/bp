@@ -1,6 +1,6 @@
 // Follow-up scheduler: every N seconds, send follow-ups whose time has come.
 const db = require('../db');
-const { sendMessage, sqlTime } = require('./messages');
+const { sendMessage, sqlTime, getContact } = require('./messages');
 
 let running = false;
 
@@ -18,9 +18,12 @@ async function runDueFollowups(now = new Date()) {
       const claimed = db.get().prepare("UPDATE followups SET status = 'sending' WHERE id = ? AND status = 'pending'").run(f.id);
       if (!claimed.changes) continue;
       try {
+        // Use the version written for the contact's language, if there is one
+        const lang = getContact(f.contact_id)?.language;
+        const translations = JSON.parse(f.translations || '{}');
         await sendMessage(f.contact_id, f.template_name
           ? { templateName: f.template_name, templateLang: f.template_lang, templateParams: f.template_params.split('\n').map((s) => s.trim()).filter(Boolean) }
-          : { body: f.body }, 'followup');
+          : { body: (lang && translations[lang]?.trim()) || f.body }, 'followup');
         db.get().prepare("UPDATE followups SET status = 'sent', sent_at = ? WHERE id = ?").run(sqlTime(), f.id);
         sent++;
       } catch (err) {

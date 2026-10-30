@@ -10,13 +10,14 @@
   <header class="topbar">
     <div class="brand">💬 WhatsApp CRM</div>
     <nav id="nav">
-      <button data-view="inbox" class="active">Inbox <span id="unreadBadge" class="badge hidden"></span></button>
-      <button data-view="contacts">Contacts</button>
-      <button data-view="pipeline">Pipeline</button>
-      <button data-view="followups">Follow-ups</button>
-      <button data-view="bot">Bot</button>
-      <button data-view="settings">Settings</button>
+      <button data-view="inbox" class="active"><span data-i18n="nav.inbox">Inbox</span> <span id="unreadBadge" class="badge hidden"></span></button>
+      <button data-view="contacts" data-i18n="nav.contacts">Contacts</button>
+      <button data-view="pipeline" data-i18n="nav.pipeline">Pipeline</button>
+      <button data-view="followups" data-i18n="nav.followups">Follow-ups</button>
+      <button data-view="bot" data-i18n="nav.bot">Bot</button>
+      <button data-view="settings" data-i18n="nav.settings">Settings</button>
     </nav>
+    <select id="uiLang" class="langpick" aria-label="Dashboard language"></select>
     <div id="modeBadge" class="mode"></div>
   </header>
 
@@ -25,6 +26,7 @@
   <dialog id="modal"><form method="dialog" id="modalForm"></form></dialog>
   <div id="toast" class="toast hidden"></div>
 
+  <script src="i18n.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

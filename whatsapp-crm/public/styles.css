@@ -101,3 +101,7 @@ code { background: var(--bg); border: 1px solid var(--border); border-radius: 4p
   .grid2 { grid-template-columns: 1fr; }
   .brand { display: none; }
 }
+
+.langpick { width: auto; background: rgba(0,0,0,.2); color: #fff; border: 1px solid rgba(255,255,255,.3); padding: 4px 8px; font-size: 13px; }
+.langpick option { color: #111827; }
+.langpill { font-size: 11px; border-radius: 999px; padding: 0 7px; border: 1px solid var(--border); color: var(--muted); margin-left: 6px; vertical-align: middle; }

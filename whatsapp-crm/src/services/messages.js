@@ -1,6 +1,7 @@
 // Core messaging logic shared by the webhook, the dashboard, the bot and the scheduler.
 const db = require('../db');
 const { getChannel } = require('../channels');
+const { detectLanguage, templateLanguage } = require('../i18n');
 
 const WINDOW_MS = 24 * 60 * 60 * 1000;
 
@@ -63,6 +64,11 @@ function recordInbound({ channel = 'whatsapp', from, name, externalId, type = 't
   d.prepare('UPDATE contacts SET unread = unread + 1, last_inbound_at = ?, last_message_at = ? WHERE id = ?')
     .run(now, now, contact.id);
 
+  // Remember the customer's language from their first message we can recognise.
+  // Staff can change it on the contact; we never overwrite a language that is already set.
+  const detected = !contact.language && detectLanguage(body);
+  if (detected) d.prepare('UPDATE contacts SET language = ? WHERE id = ?').run(detected, contact.id);
+
   // The customer replied, so cancel follow-ups that were waiting for "no reply"
   d.prepare(
     `UPDATE followups SET status = 'cancelled', error = 'Contact replied'
@@ -94,7 +100,7 @@ async function sendMessage(contactId, content, sentBy = 'agent') {
   try {
     const channel = getChannel('whatsapp');
     const { externalId } = isTemplate
-      ? await channel.sendTemplate(contact.phone, content.templateName, content.templateLang,
+      ? await channel.sendTemplate(contact.phone, content.templateName, content.templateLang || templateLanguage(contact.language),
           (content.templateParams || []).map((p) => personalize(p, contact)))
       : await channel.sendText(contact.phone, body);
     d.prepare("UPDATE messages SET status = 'sent', external_id = ? WHERE id = ?").run(externalId, id);

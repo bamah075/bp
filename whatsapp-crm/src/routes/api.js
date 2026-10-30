@@ -5,6 +5,7 @@ const { getChannel } = require('../channels');
 const msg = require('../services/messages');
 const { processInbound } = require('../services/bot');
 const { runDueFollowups } = require('../services/scheduler');
+const { LANGUAGES, DEFAULT_LANGUAGE, isLanguage, settingKey } = require('../i18n');
 
 const router = express.Router();
 const wrap = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
@@ -29,6 +30,8 @@ router.get('/status', (req, res) => {
   const one = (sql, ...p) => q().prepare(sql).get(...p);
   res.json({
     live: getChannel('whatsapp').isLive(),
+    languages: LANGUAGES,
+    defaultLanguage: DEFAULT_LANGUAGE,
     stats: {
       contacts: one('SELECT COUNT(*) AS n FROM contacts').n,
       unread: one('SELECT COALESCE(SUM(unread),0) AS n FROM contacts').n,
@@ -40,7 +43,11 @@ router.get('/status', (req, res) => {
 });
 
 // ---------- Contacts ----------
-const CONTACT_FIELDS = ['name', 'email', 'tags', 'notes', 'social', 'bot_paused'];
+const CONTACT_FIELDS = ['name', 'email', 'tags', 'notes', 'social', 'bot_paused', 'language'];
+const checkLanguage = (code, allowEmpty = true) => {
+  if (code === undefined || (allowEmpty && code === '') || isLanguage(code)) return;
+  throw new HttpError(400, `Unsupported language: ${code}`);
+};
 
 router.get('/contacts', (req, res) => {
   const where = [];
@@ -63,9 +70,9 @@ router.get('/contacts', (req, res) => {
 });
 
 router.get('/contacts/export.csv', (req, res) => {
-  const rows = q().prepare('SELECT name, phone, email, tags, notes, source, created_at FROM contacts ORDER BY id').all();
+  const rows = q().prepare('SELECT name, phone, email, language, tags, notes, source, created_at FROM contacts ORDER BY id').all();
   const cell = (v) => `"${String(v ?? '').replaceAll('"', '""')}"`;
-  const csv = ['name,phone,email,tags,notes,source,created_at', ...rows.map((r) => Object.values(r).map(cell).join(','))].join('\n');
+  const csv = ['name,phone,email,language,tags,notes,source,created_at', ...rows.map((r) => Object.values(r).map(cell).join(','))].join('\n');
   res.type('text/csv').attachment('contacts.csv').send(csv);
 });
 
@@ -73,8 +80,9 @@ router.post('/contacts', (req, res) => {
   const phone = msg.normalizePhone(req.body.phone);
   if (!phone) throw new HttpError(400, 'Phone number is required (international format, e.g. 6591234567)');
   if (q().prepare('SELECT 1 FROM contacts WHERE phone = ?').get(phone)) throw new HttpError(409, 'A contact with this phone already exists');
+  checkLanguage(req.body.language);
   const { contact } = msg.upsertContact({ phone, name: req.body.name || '', source: req.body.source || 'manual' });
-  patch('contacts', contact.id, req.body, ['email', 'tags', 'notes']);
+  patch('contacts', contact.id, req.body, ['email', 'tags', 'notes', 'language']);
   res.status(201).json(msg.getContact(contact.id));
 });
 
@@ -88,6 +96,7 @@ router.patch('/contacts/:id', (req, res) => {
   const body = { ...req.body };
   if (body.social && typeof body.social === 'object') body.social = JSON.stringify(body.social);
   if (body.bot_paused !== undefined) body.bot_paused = body.bot_paused ? 1 : 0;
+  checkLanguage(body.language);
   patch('contacts', req.params.id, body, CONTACT_FIELDS, true);
   res.json(msg.getContact(req.params.id));
 });
@@ -180,14 +189,17 @@ router.get('/followups', (req, res) => {
   let where = '';
   if (req.query.status) { where = 'WHERE f.status = ?'; params.push(req.query.status); }
   if (req.query.contactId) { where += (where ? ' AND' : 'WHERE') + ' f.contact_id = ?'; params.push(req.query.contactId); }
-  res.json(q().prepare(`SELECT f.*, c.name AS contact_name, c.phone AS contact_phone
+  res.json(q().prepare(`SELECT f.*, c.name AS contact_name, c.phone AS contact_phone, c.language AS contact_language
     FROM followups f JOIN contacts c ON c.id = f.contact_id ${where}
     ORDER BY CASE f.status WHEN 'pending' THEN 0 ELSE 1 END, f.send_at DESC LIMIT 500`).all(...params));
 });
 
 // Schedule for one contact (contactId) or every contact with a tag (tag)
 router.post('/followups', (req, res) => {
-  const { contactId, tag, body = '', templateName = '', templateLang = 'en_US', templateParams = '', sendAt, delayMinutes, cancelOnReply = true } = req.body;
+  const { contactId, tag, body = '', templateName = '', templateLang = '', templateParams = '', sendAt, delayMinutes, cancelOnReply = true } = req.body;
+  // Optional per-language versions, e.g. { zh: '...' }. Contacts in other languages get `body`.
+  const translations = Object.fromEntries(Object.entries(req.body.translations || {})
+    .filter(([lang, text]) => isLanguage(lang) && String(text || '').trim()));
   if (!body.trim() && !templateName) throw new HttpError(400, 'Write a message or choose a template');
 
   const when = sendAt ? new Date(sendAt) : new Date(Date.now() + (Number(delayMinutes) || 0) * 60000);
@@ -198,9 +210,11 @@ router.post('/followups', (req, res) => {
   else if (tag) ids = q().prepare("SELECT id FROM contacts WHERE (',' || tags || ',') LIKE ?").all(`%,${tag},%`).map((r) => r.id);
   if (!ids.length) throw new HttpError(400, 'No matching contacts');
 
-  const ins = q().prepare(`INSERT INTO followups (contact_id, body, template_name, template_lang, template_params, send_at, cancel_on_reply)
-    VALUES (?, ?, ?, ?, ?, ?, ?)`);
-  for (const id of ids) ins.run(id, body, templateName, templateLang, templateParams, msg.sqlTime(when), cancelOnReply ? 1 : 0);
+  const ins = q().prepare(`INSERT INTO followups (contact_id, body, template_name, template_lang, template_params, translations, send_at, cancel_on_reply)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`);
+  for (const id of ids) {
+    ins.run(id, body, templateName, templateLang, templateParams, JSON.stringify(translations), msg.sqlTime(when), cancelOnReply ? 1 : 0);
+  }
   res.status(201).json({ scheduled: ids.length, sendAt: when.toISOString() });
 });
 
@@ -222,25 +236,29 @@ router.get('/bot', (req, res) => {
 });
 
 router.put('/bot/settings', (req, res) => {
-  for (const k of ['bot_enabled', 'welcome_message', 'fallback_message', 'pause_bot_on_agent_reply']) {
+  const perLanguage = ['welcome_message', 'fallback_message']
+    .flatMap((k) => Object.keys(LANGUAGES).map((lang) => settingKey(k, lang)));
+  for (const k of ['bot_enabled', 'pause_bot_on_agent_reply', ...perLanguage]) {
     if (req.body[k] !== undefined) db.setSetting(k, req.body[k]);
   }
   res.json(db.getSettings());
 });
 
-const RULE_FIELDS = ['match_type', 'keyword', 'reply', 'add_tag', 'handoff', 'priority', 'enabled'];
+const RULE_FIELDS = ['match_type', 'keyword', 'reply', 'add_tag', 'handoff', 'priority', 'enabled', 'language'];
 
 router.post('/bot/rules', (req, res) => {
-  const r = { match_type: 'contains', reply: '', add_tag: '', handoff: 0, priority: 0, enabled: 1, ...req.body };
+  const r = { match_type: 'contains', reply: '', add_tag: '', handoff: 0, priority: 0, enabled: 1, language: '', ...req.body };
   if (!r.keyword) throw new HttpError(400, 'Keyword is required');
-  const { lastInsertRowid } = q().prepare(`INSERT INTO bot_rules (${RULE_FIELDS.join(', ')}) VALUES (?, ?, ?, ?, ?, ?, ?)`)
-    .run(r.match_type, r.keyword, r.reply, r.add_tag, r.handoff ? 1 : 0, Number(r.priority) || 0, r.enabled ? 1 : 0);
+  checkLanguage(r.language);
+  const { lastInsertRowid } = q().prepare(`INSERT INTO bot_rules (${RULE_FIELDS.join(', ')}) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`)
+    .run(r.match_type, r.keyword, r.reply, r.add_tag, r.handoff ? 1 : 0, Number(r.priority) || 0, r.enabled ? 1 : 0, r.language);
   res.status(201).json(q().prepare('SELECT * FROM bot_rules WHERE id = ?').get(lastInsertRowid));
 });
 
 router.patch('/bot/rules/:id', (req, res) => {
   const body = { ...req.body };
   for (const k of ['handoff', 'enabled']) if (body[k] !== undefined) body[k] = body[k] ? 1 : 0;
+  checkLanguage(body.language);
   patch('bot_rules', req.params.id, body, RULE_FIELDS);
   res.json(must(q().prepare('SELECT * FROM bot_rules WHERE id = ?').get(req.params.id)));
 });

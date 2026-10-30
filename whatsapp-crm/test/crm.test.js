@@ -128,5 +128,70 @@ test('contacts CSV export', async () => {
   const res = await fetch(base + '/api/contacts/export.csv');
   const text = await res.text();
   assert.match(text, /^name,phone,email/);
-  assert.match(text, /"Alice Tan","6591234567"/);
+  assert.match(text, /"Alice Tan","6591234567","","en"/);
+});
+
+test('multi-language: Chinese contact is detected and the bot replies in Chinese', async () => {
+  const { data } = await call('/api/simulate', 'POST', { phone: '8613800138000', name: '王伟', body: '你好，请问价格是多少？' });
+  const wang = data.contact;
+  assert.equal(wang.language, 'zh');
+  assert.ok(wang.tags.includes('interested-pricing'));
+  const { data: msgs } = await call(`/api/contacts/${wang.id}/messages`);
+  assert.match(msgs[1].body, /^您好 王伟/);     // Chinese welcome
+  assert.match(msgs[2].body, /套餐每月/);       // Chinese "price" rule, not the English one
+  assert.equal(msgs.length, 3);
+
+  // English-only rules don't fire for a Chinese contact
+  await call('/api/simulate', 'POST', { phone: '8613800138000', body: 'hours' });
+  const { data: after } = await call(`/api/contacts/${wang.id}/messages`);
+  assert.equal(after.length, 4);
+
+  // Staff can override the language; unknown codes are rejected
+  assert.equal((await call(`/api/contacts/${wang.id}`, 'PATCH', { language: 'xx' })).status, 400);
+});
+
+test('multi-language: follow-ups send the version for the contact\'s language; templates pick zh_CN', async () => {
+  const { data: [wang] } = await call('/api/contacts?q=8613800138000');
+  const { data: [alice] } = await call('/api/contacts?q=Alice');
+  await call('/api/contacts/' + alice.id, 'PATCH', { tags: 'promo' });
+  await call('/api/contacts/' + wang.id, 'PATCH', { tags: 'promo', bot_paused: false });
+  await call('/api/followups', 'POST', { tag: 'promo', body: 'Promo ends Friday, {first_name}!', translations: { zh: '{name}，优惠周五结束！' }, delayMinutes: 0, cancelOnReply: false });
+  assert.equal(await runDueFollowups(), 2);
+  const last = async (id) => (await call(`/api/contacts/${id}/messages`)).data.at(-1).body;
+  assert.equal(await last(wang.id), '王伟，优惠周五结束！');
+  assert.equal(await last(alice.id), 'Promo ends Friday, Alice!');
+
+  const wa = require('../src/channels/whatsapp');
+  const original = wa.sendTemplate;
+  let usedLang;
+  wa.sendTemplate = async (to, name, lang) => { usedLang = lang; return { externalId: 'tpl-1' }; };
+  try {
+    await call(`/api/contacts/${wang.id}/messages`, 'POST', { templateName: 'order_update' });
+    assert.equal(usedLang, 'zh_CN');
+  } finally {
+    wa.sendTemplate = original;
+  }
+});
+
+test('multi-language: an existing database from before this feature is upgraded', () => {
+  const { DatabaseSync } = require('node:sqlite');
+  const os = require('node:os');
+  const path = require('node:path');
+  const file = path.join(os.tmpdir(), `crm-migrate-${process.pid}.db`);
+  const old = new DatabaseSync(file);
+  old.exec(`CREATE TABLE contacts (id INTEGER PRIMARY KEY, name TEXT NOT NULL DEFAULT '', phone TEXT NOT NULL UNIQUE, email TEXT NOT NULL DEFAULT '',
+    tags TEXT NOT NULL DEFAULT '', notes TEXT NOT NULL DEFAULT '', source TEXT NOT NULL DEFAULT 'whatsapp', social TEXT NOT NULL DEFAULT '{}',
+    bot_paused INTEGER NOT NULL DEFAULT 0, unread INTEGER NOT NULL DEFAULT 0, last_inbound_at TEXT, last_message_at TEXT,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')), updated_at TEXT NOT NULL DEFAULT (datetime('now')));
+    INSERT INTO contacts (phone, name) VALUES ('123', 'Old');`);
+  old.close();
+  const upgraded = db.init(file);
+  try {
+    assert.equal(upgraded.prepare('SELECT language FROM contacts').get().language, '');
+    assert.ok(upgraded.prepare('PRAGMA table_info(bot_rules)').all().some((c) => c.name === 'language'));
+  } finally {
+    upgraded.close();
+    for (const f of [file, `${file}-wal`, `${file}-shm`]) require('node:fs').rmSync(f, { force: true });
+    db.init(':memory:');
+  }
 });

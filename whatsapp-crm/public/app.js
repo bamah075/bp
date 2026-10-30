@@ -3,11 +3,50 @@ const $ = (sel, el = document) => el.querySelector(sel);
 const $$ = (sel, el = document) => [...el.querySelectorAll(sel)];
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const fromSql = (s) => (s ? new Date(s.replace(' ', 'T') + 'Z') : null);
-const fmtTime = (s) => { const d = fromSql(s); return d ? d.toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : ''; };
-const money = (v) => Number(v || 0).toLocaleString(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
 const tagsOf = (c) => (c.tags || '').split(',').map((t) => t.trim()).filter(Boolean);
 
-const state = { view: 'inbox', activeId: null, search: '', lastMsgSig: '' };
+// ---------------- Language ----------------
+// Dashboard language is a per-browser preference. Customer languages come from the server (/api/status).
+const storage = {
+  get: (k) => { try { return localStorage.getItem(k); } catch { return null; } },
+  set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* private mode: not remembered */ } },
+};
+let uiLang = storage.get('crm.uiLang') || (navigator.language?.toLowerCase().startsWith('zh') ? 'zh' : 'en');
+if (!I18N[uiLang]) uiLang = 'en';
+
+// t('fu.scheduled', { n: 3 }) -> "Scheduled 3 follow-up(s)". Unknown {placeholders} are left as-is.
+function t(key, vars = {}) {
+  const text = I18N[uiLang][key] ?? I18N.en[key] ?? key;
+  return text.replace(/\{(\w+)\}/g, (m, k) => (k in vars ? vars[k] : m));
+}
+const locale = () => (uiLang === 'zh' ? 'zh-CN' : 'en');
+const fmtTime = (s) => { const d = fromSql(s); return d ? d.toLocaleString(locale(), { dateStyle: 'short', timeStyle: 'short' }) : ''; };
+const money = (v) => Number(v || 0).toLocaleString(locale(), { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+
+// Starting text for new follow-ups, per customer language
+const FOLLOWUP_DEFAULTS = {
+  en: 'Hi {first_name}, just following up on our chat. Any questions I can help with?',
+  zh: '您好 {first_name}，跟进一下我们之前的对话。请问还有什么可以帮您的吗？',
+};
+
+const state = { view: 'inbox', activeId: null, search: '', lastMsgSig: '', languages: { en: { name: 'English' } }, defaultLang: 'en' };
+const langName = (code) => state.languages[code]?.name || code;
+const otherLanguages = () => Object.keys(state.languages).filter((c) => c !== state.defaultLang);
+
+function applyStaticText() {
+  document.documentElement.lang = uiLang === 'zh' ? 'zh-CN' : 'en';
+  $$('[data-i18n]').forEach((el) => { el.textContent = t(el.dataset.i18n); });
+  const pick = $('#uiLang');
+  pick.innerHTML = Object.entries(I18N).map(([code, d]) => `<option value="${code}" ${code === uiLang ? 'selected' : ''}>${esc(d._name)}</option>`).join('');
+  pick.title = t('common.uiLanguage');
+}
+$('#uiLang').addEventListener('change', (e) => {
+  uiLang = e.target.value;
+  storage.set('crm.uiLang', uiLang);
+  applyStaticText();
+  refreshStatus();
+  go(state.view);
+});
 
 async function api(path, { method = 'GET', body } = {}) {
   const res = await fetch('/api' + path, {
@@ -17,23 +56,23 @@ async function api(path, { method = 'GET', body } = {}) {
   });
   if (res.status === 204) return null;
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
+  if (!res.ok) throw new Error(data.error || t('common.requestFailed', { status: res.status }));
   return data;
 }
 
 function toast(text, isError = false) {
-  const t = $('#toast');
-  t.textContent = text;
-  t.className = 'toast' + (isError ? ' error' : '');
+  const el = $('#toast');
+  el.textContent = text;
+  el.className = 'toast' + (isError ? ' error' : '');
   clearTimeout(toast.timer);
-  toast.timer = setTimeout(() => t.classList.add('hidden'), 3500);
+  toast.timer = setTimeout(() => el.classList.add('hidden'), 3500);
 }
 
 // Run an async action and show any error as a toast
 const safe = (fn) => async (...args) => { try { await fn(...args); } catch (e) { toast(e.message, true); } };
 
 // Generic modal: fields = [{ name, label, type, value, options }]
-function openModal(title, fields, submitLabel = 'Save') {
+function openModal(title, fields, submitLabel = t('common.save')) {
   return new Promise((resolve) => {
     const dlg = $('#modal');
     const form = $('#modalForm');
@@ -45,7 +84,7 @@ function openModal(title, fields, submitLabel = 'Save') {
       if (f.type === 'textarea') return `<label>${esc(f.label)}</label><textarea name="${f.name}">${esc(f.value)}</textarea>`;
       if (f.type === 'checkbox') return `<label class="inline"><input type="checkbox" name="${f.name}" ${f.value ? 'checked' : ''}> ${esc(f.label)}</label>`;
       return `<label>${esc(f.label)}</label><input name="${f.name}" type="${f.type || 'text'}" value="${esc(f.value)}" ${f.placeholder ? `placeholder="${esc(f.placeholder)}"` : ''}>`;
-    }).join('') + `<div class="actions"><button class="btn secondary" value="cancel">Cancel</button><button class="btn" value="ok">${esc(submitLabel)}</button></div>`;
+    }).join('') + `<div class="actions"><button class="btn secondary" value="cancel">${t('common.cancel')}</button><button class="btn" value="ok">${esc(submitLabel)}</button></div>`;
     dlg.onclose = () => {
       if (dlg.returnValue !== 'ok') return resolve(null);
       const out = {};
@@ -71,8 +110,10 @@ $('#nav').addEventListener('click', (e) => { const b = e.target.closest('button'
 async function refreshStatus() {
   try {
     const s = await api('/status');
-    $('#modeBadge').textContent = s.live ? '● Live' : '● Mock mode';
-    $('#modeBadge').title = s.live ? 'Connected to WhatsApp Cloud API' : 'No WhatsApp credentials - messages are not really sent';
+    state.languages = s.languages;
+    state.defaultLang = s.defaultLanguage;
+    $('#modeBadge').textContent = s.live ? t('mode.live') : t('mode.mock');
+    $('#modeBadge').title = s.live ? t('mode.liveTitle') : t('mode.mockTitle');
     const b = $('#unreadBadge');
     b.textContent = s.stats.unread;
     b.classList.toggle('hidden', !s.stats.unread);
@@ -85,10 +126,10 @@ async function renderInbox() {
   $('#view').innerHTML = `
     <div class="inbox ${state.activeId ? 'has-chat' : ''}" id="inbox">
       <div class="convlist">
-        <div class="search"><input id="convSearch" placeholder="Search name, phone…" value="${esc(state.search)}"></div>
+        <div class="search"><input id="convSearch" placeholder="${esc(t('inbox.search'))}" value="${esc(state.search)}"></div>
         <div class="convs" id="convs"></div>
       </div>
-      <div class="chat" id="chat"><div class="empty">Select a conversation<br><span class="muted">New WhatsApp messages appear here automatically.</span></div></div>
+      <div class="chat" id="chat"><div class="empty">${t('inbox.select')}<br><span class="muted">${t('inbox.selectHint')}</span></div></div>
       <div class="side" id="side"></div>
     </div>`;
   $('#convSearch').addEventListener('input', (e) => { state.search = e.target.value; loadConvs(); });
@@ -104,9 +145,9 @@ async function loadConvs() {
     <div class="conv ${c.id === state.activeId ? 'active' : ''}" data-id="${c.id}">
       <div class="top"><span class="name">${esc(c.name || '+' + c.phone)}</span>
         <span class="muted" style="font-size:11px">${fmtTime(c.last_message_at)}</span></div>
-      <div class="top"><span class="preview">${esc(c.last_message || 'No messages yet')}</span>
+      <div class="top"><span class="preview">${esc(c.last_message || t('inbox.noMessagesYet'))}</span>
         ${c.unread ? `<span class="badge">${c.unread}</span>` : ''}</div>
-    </div>`).join('') : '<div class="empty">No contacts yet.<br>Use Settings → Simulator to test.</div>';
+    </div>`).join('') : `<div class="empty">${t('inbox.noContacts')}<br>${t('inbox.noContactsHint')}</div>`;
   $$('.conv', el).forEach((n) => n.addEventListener('click', () => openChat(Number(n.dataset.id))));
 }
 
@@ -119,22 +160,22 @@ async function openChat(id) {
 
   $('#chat').innerHTML = `
     <div class="chathead">
-      <div class="row"><button class="btn secondary small" id="backBtn" title="Back">←</button>
-        <div><b>${esc(c.name || '+' + c.phone)}</b><div class="muted" style="font-size:12px">+${esc(c.phone)}</div></div></div>
-      <label class="inline" title="When paused, the bot will not auto-reply to this contact">
-        <input type="checkbox" id="botToggle" ${c.bot_paused ? '' : 'checked'}> 🤖 Bot</label>
+      <div class="row"><button class="btn secondary small" id="backBtn" title="${esc(t('inbox.back'))}">←</button>
+        <div><b>${esc(c.name || '+' + c.phone)}</b>${c.language ? `<span class="langpill">${esc(langName(c.language))}</span>` : ''}
+          <div class="muted" style="font-size:12px">+${esc(c.phone)}</div></div></div>
+      <label class="inline" title="${esc(t('inbox.botTitle'))}">
+        <input type="checkbox" id="botToggle" ${c.bot_paused ? '' : 'checked'}> 🤖 ${t('inbox.bot')}</label>
     </div>
     <div class="msgs" id="msgs"></div>
     <div class="composer">
-      <div class="warnbar ${c.in_window ? 'hidden' : ''}">⚠️ More than 24h since this contact last messaged you. WhatsApp only allows
-        <b>approved templates</b> now. <a href="#" id="tplLink">Send a template</a></div>
-      <div class="row"><textarea id="composer" class="grow" placeholder="Type a message… (Enter to send, Shift+Enter for new line). {name} is replaced with the contact's name"></textarea>
-        <button class="btn" id="sendBtn">Send</button></div>
+      <div class="warnbar ${c.in_window ? 'hidden' : ''}">${t('inbox.windowWarning')} <a href="#" id="tplLink">${t('inbox.sendTemplate')}</a></div>
+      <div class="row"><textarea id="composer" class="grow" placeholder="${esc(t('inbox.composer'))}"></textarea>
+        <button class="btn" id="sendBtn">${t('common.send')}</button></div>
     </div>`;
   $('#backBtn').onclick = () => { state.activeId = null; $('#inbox').classList.remove('has-chat'); };
   $('#botToggle').onchange = safe(async (e) => {
     await api(`/contacts/${id}`, { method: 'PATCH', body: { bot_paused: !e.target.checked } });
-    toast(e.target.checked ? 'Bot resumed for this contact' : 'Bot paused - you are handling this chat');
+    toast(e.target.checked ? t('inbox.botResumed') : t('inbox.botPaused'));
   });
   const send = safe(async () => {
     const body = $('#composer').value;
@@ -163,13 +204,12 @@ async function loadMessages(id) {
   if (!el || sig === state.lastMsgSig) return;
   state.lastMsgSig = sig;
   api(`/contacts/${id}/read`, { method: 'POST' }).then(() => { refreshStatus(); loadConvs(); }).catch(() => {}); // you're looking at it, so it's read
-  const tick = { queued: '🕓', sent: '✓', delivered: '✓✓', read: '✓✓ read', failed: '⚠️ failed' };
   el.innerHTML = msgs.map((m) => `
     <div class="msg ${m.direction} ${m.status === 'failed' ? 'failed' : ''}" ${m.error ? `title="${esc(m.error)}"` : ''}>
       <div class="body">${esc(m.body)}</div>
-      <div class="meta">${m.sent_by && m.sent_by !== 'agent' ? (m.sent_by === 'bot' ? '🤖 bot · ' : '⏰ follow-up · ') : ''}${fmtTime(m.created_at)}
-        ${m.direction === 'out' ? ' ' + (tick[m.status] || '') : ''}</div>
-    </div>`).join('') || '<div class="empty">No messages yet. Say hello 👋</div>';
+      <div class="meta">${m.sent_by && m.sent_by !== 'agent' ? (m.sent_by === 'bot' ? t('inbox.byBot') : t('inbox.byFollowup')) : ''}${fmtTime(m.created_at)}
+        ${m.direction === 'out' ? ' ' + t('status.' + m.status) : ''}</div>
+    </div>`).join('') || `<div class="empty">${t('inbox.sayHello')}</div>`;
   el.scrollTop = el.scrollHeight;
 }
 
@@ -177,59 +217,66 @@ async function renderSide(c) {
   const [deals, fus] = await Promise.all([api(`/deals?contactId=${c.id}`), api(`/followups?contactId=${c.id}&status=pending`)]);
   const social = JSON.parse(c.social || '{}');
   $('#side').innerHTML = `
-    <div class="row"><b class="grow">Contact</b><button class="btn secondary small" id="editC">Edit</button></div>
+    <div class="row"><b class="grow">${t('side.contact')}</b><button class="btn secondary small" id="editC">${t('common.edit')}</button></div>
     <div>${esc(c.name || '—')}</div><div class="muted">+${esc(c.phone)}${c.email ? ' · ' + esc(c.email) : ''}</div>
-    <div>${tagsOf(c).map((t) => `<span class="tag">${esc(t)}</span>`).join('')}</div>
-    ${c.notes ? `<h3>Notes</h3><div style="white-space:pre-wrap">${esc(c.notes)}</div>` : ''}
-    ${Object.values(social).some(Boolean) ? `<h3>Social</h3>${Object.entries(social).filter(([, v]) => v).map(([k, v]) => `<div>${esc(k)}: ${esc(v)}</div>`).join('')}` : ''}
-    <h3>Deals</h3>
-    ${deals.map((d) => `<div class="deal" style="cursor:default">${esc(d.title)} <span class="v">${money(d.value)}</span></div>`).join('') || '<div class="muted">No deals</div>'}
-    <button class="btn secondary small" id="addDealC" style="margin-top:6px">+ Deal</button>
-    <h3>Pending follow-ups</h3>
-    ${fus.map((f) => `<div class="muted" style="font-size:12px">⏰ ${fmtTime(f.send_at)} — ${esc(f.template_name ? 'template: ' + f.template_name : f.body).slice(0, 80)}</div>`).join('') || '<div class="muted">None</div>'}
-    <button class="btn secondary small" id="addFuC" style="margin-top:6px">+ Follow-up</button>`;
+    <div class="muted">${t('common.language')}: ${esc(c.language ? langName(c.language) : t('side.languageNotSet'))}</div>
+    <div>${tagsOf(c).map((tag) => `<span class="tag">${esc(tag)}</span>`).join('')}</div>
+    ${c.notes ? `<h3>${t('common.notes')}</h3><div style="white-space:pre-wrap">${esc(c.notes)}</div>` : ''}
+    ${Object.values(social).some(Boolean) ? `<h3>${t('side.social')}</h3>${Object.entries(social).filter(([, v]) => v).map(([k, v]) => `<div>${esc(k)}: ${esc(v)}</div>`).join('')}` : ''}
+    <h3>${t('side.deals')}</h3>
+    ${deals.map((d) => `<div class="deal" style="cursor:default">${esc(d.title)} <span class="v">${money(d.value)}</span></div>`).join('') || `<div class="muted">${t('side.noDeals')}</div>`}
+    <button class="btn secondary small" id="addDealC" style="margin-top:6px">${t('side.addDeal')}</button>
+    <h3>${t('side.pendingFollowups')}</h3>
+    ${fus.map((f) => `<div class="muted" style="font-size:12px">⏰ ${fmtTime(f.send_at)} — ${esc(f.template_name ? t('side.template', { name: f.template_name }) : (JSON.parse(f.translations || '{}')[c.language] || f.body)).slice(0, 80)}</div>`).join('') || `<div class="muted">${t('common.none')}</div>`}
+    <button class="btn secondary small" id="addFuC" style="margin-top:6px">${t('side.addFollowup')}</button>`;
   $('#editC').onclick = safe(async () => { if (await editContactDialog(c)) openChat(c.id); });
-  $('#addDealC').onclick = safe(async () => { if (await dealDialog({ contact_id: c.id, title: `${c.name || c.phone} deal` })) renderSide(c); });
+  $('#addDealC').onclick = safe(async () => { if (await dealDialog({ contact_id: c.id, title: t('side.dealTitle', { who: c.name || c.phone }) })) renderSide(c); });
   $('#addFuC').onclick = safe(async () => { if (await followupDialog(c.id)) renderSide(c); });
 }
 
 async function sendTemplateDialog(contactId) {
-  const v = await openModal('Send WhatsApp template', [
-    { name: 'templateName', label: 'Template name (as approved in Meta WhatsApp Manager)', placeholder: 'hello_world' },
-    { name: 'templateLang', label: 'Language code', value: 'en_US' },
-    { name: 'templateParams', label: 'Body parameters {{1}}, {{2}}… one per line ({name} allowed)', type: 'textarea' },
-  ], 'Send');
+  const v = await openModal(t('tpl.title'), [
+    { name: 'templateName', label: t('tpl.name'), placeholder: 'hello_world' },
+    { name: 'templateLang', label: t('tpl.lang'), placeholder: 'en_US / zh_CN' },
+    { name: 'templateParams', label: t('tpl.params'), type: 'textarea' },
+  ], t('common.send'));
   if (!v || !v.templateName) return;
   await safe(async () => {
     await api(`/contacts/${contactId}/messages`, { method: 'POST', body: { ...v, templateParams: v.templateParams.split('\n').map((s) => s.trim()).filter(Boolean) } });
-    toast('Template sent');
+    toast(t('tpl.sent'));
   })();
   loadMessages(contactId);
 }
 
 // ---------------- Contacts ----------------
+const languageOptions = (emptyLabel) => [
+  { value: '', label: emptyLabel },
+  ...Object.keys(state.languages).map((code) => ({ value: code, label: langName(code) })),
+];
+
 async function editContactDialog(c = {}) {
   const social = JSON.parse(c.social || '{}');
-  const v = await openModal(c.id ? 'Edit contact' : 'New contact', [
-    ...(c.id ? [] : [{ name: 'phone', label: 'WhatsApp number (with country code, e.g. 6591234567)' }]),
-    { name: 'name', label: 'Name', value: c.name },
-    { name: 'email', label: 'Email', value: c.email },
-    { name: 'tags', label: 'Tags (comma separated)', value: c.tags },
-    { name: 'notes', label: 'Notes', type: 'textarea', value: c.notes },
-    { name: 'instagram', label: 'Instagram handle', value: social.instagram },
-    { name: 'facebook', label: 'Facebook profile', value: social.facebook },
-    { name: 'tiktok', label: 'TikTok handle', value: social.tiktok },
+  const v = await openModal(c.id ? t('contact.edit') : t('contact.new'), [
+    ...(c.id ? [] : [{ name: 'phone', label: t('contact.phone') }]),
+    { name: 'name', label: t('common.name'), value: c.name },
+    { name: 'language', label: t('contact.language'), type: 'select', value: c.language || '', options: languageOptions(t('common.autoDetect')) },
+    { name: 'email', label: t('common.email'), value: c.email },
+    { name: 'tags', label: t('contact.tags'), value: c.tags },
+    { name: 'notes', label: t('common.notes'), type: 'textarea', value: c.notes },
+    { name: 'instagram', label: t('contact.instagram'), value: social.instagram },
+    { name: 'facebook', label: t('contact.facebook'), value: social.facebook },
+    { name: 'tiktok', label: t('contact.tiktok'), value: social.tiktok },
   ]);
   if (!v) return null;
   const { instagram, facebook, tiktok, ...rest } = v;
-  const body = { ...rest, tags: rest.tags.split(',').map((t) => t.trim()).filter(Boolean).join(',') };
+  const body = { ...rest, tags: rest.tags.split(',').map((tag) => tag.trim()).filter(Boolean).join(',') };
   let saved;
   if (c.id) saved = await api(`/contacts/${c.id}`, { method: 'PATCH', body: { ...body, social: { instagram, facebook, tiktok } } });
   else {
     saved = await api('/contacts', { method: 'POST', body });
     await api(`/contacts/${saved.id}`, { method: 'PATCH', body: { social: { instagram, facebook, tiktok } } });
   }
-  toast('Contact saved');
+  toast(t('contact.saved'));
   return saved;
 }
 
@@ -237,14 +284,15 @@ async function renderContacts() {
   $('#view').innerHTML = `
     <div class="card">
       <div class="row wrap">
-        <input id="cSearch" class="grow" placeholder="Search…" style="max-width:320px" value="${esc(state.search)}">
-        <input id="cTag" placeholder="Filter by tag" style="max-width:180px">
+        <input id="cSearch" class="grow" placeholder="${esc(t('contacts.search'))}" style="max-width:320px" value="${esc(state.search)}">
+        <input id="cTag" placeholder="${esc(t('contacts.filterTag'))}" style="max-width:180px">
         <span class="grow"></span>
-        <a class="btn secondary" href="/api/contacts/export.csv">Export CSV</a>
-        <button class="btn" id="newC">+ New contact</button>
+        <a class="btn secondary" href="/api/contacts/export.csv">${t('contacts.export')}</a>
+        <button class="btn" id="newC">${t('contacts.new')}</button>
       </div>
     </div>
-    <div class="card tablewrap"><table><thead><tr><th>Name</th><th>Phone</th><th>Tags</th><th>Deals</th><th>Bot</th><th>Last message</th><th></th></tr></thead>
+    <div class="card tablewrap"><table><thead><tr><th>${t('common.name')}</th><th>${t('common.phone')}</th><th>${t('common.language')}</th><th>${t('common.tags')}</th>
+      <th>${t('contacts.deals')}</th><th>${t('contacts.bot')}</th><th>${t('contacts.lastMessage')}</th><th></th></tr></thead>
       <tbody id="cRows"></tbody></table></div>`;
   const load = safe(async () => {
     const params = new URLSearchParams();
@@ -255,12 +303,13 @@ async function renderContacts() {
       <tr class="click" data-id="${c.id}">
         <td><b>${esc(c.name || '—')}</b>${c.email ? `<div class="muted">${esc(c.email)}</div>` : ''}</td>
         <td>+${esc(c.phone)}</td>
-        <td>${tagsOf(c).map((t) => `<span class="tag">${esc(t)}</span>`).join('')}</td>
+        <td>${c.language ? esc(langName(c.language)) : '<span class="muted">—</span>'}</td>
+        <td>${tagsOf(c).map((tag) => `<span class="tag">${esc(tag)}</span>`).join('')}</td>
         <td>${c.deal_count}</td>
-        <td>${c.bot_paused ? '⏸ paused' : '🤖 on'}</td>
+        <td>${c.bot_paused ? t('contacts.paused') : t('contacts.on')}</td>
         <td class="muted">${fmtTime(c.last_message_at)}</td>
-        <td><button class="btn danger small" data-del="${c.id}">Delete</button></td>
-      </tr>`).join('') || '<tr><td colspan="7" class="muted">No contacts found.</td></tr>';
+        <td><button class="btn danger small" data-del="${c.id}">${t('common.delete')}</button></td>
+      </tr>`).join('') || `<tr><td colspan="8" class="muted">${t('contacts.empty')}</td></tr>`;
   });
   $('#cSearch').addEventListener('input', load);
   $('#cTag').addEventListener('input', load);
@@ -268,7 +317,7 @@ async function renderContacts() {
   $('#cRows').addEventListener('click', safe(async (e) => {
     const del = e.target.closest('[data-del]');
     if (del) {
-      if (confirm('Delete this contact and all of their messages and follow-ups?')) { await api(`/contacts/${del.dataset.del}`, { method: 'DELETE' }); load(); }
+      if (confirm(t('contacts.confirmDelete'))) { await api(`/contacts/${del.dataset.del}`, { method: 'DELETE' }); load(); }
       return;
     }
     const tr = e.target.closest('tr[data-id]');
@@ -280,22 +329,22 @@ async function renderContacts() {
 // ---------------- Pipeline ----------------
 async function contactOptions() {
   const list = await api('/contacts');
-  return [{ value: '', label: '— none —' }, ...list.map((c) => ({ value: c.id, label: `${c.name || 'Unnamed'} (+${c.phone})` }))];
+  return [{ value: '', label: t('common.noneOption') }, ...list.map((c) => ({ value: c.id, label: `${c.name || t('common.unnamed')} (+${c.phone})` }))];
 }
 
 async function dealDialog(d = {}) {
   const [stages, contacts] = await Promise.all([api('/stages'), contactOptions()]);
-  const v = await openModal(d.id ? 'Edit deal' : 'New deal', [
-    { name: 'title', label: 'Title', value: d.title },
-    { name: 'value', label: 'Value', type: 'number', value: d.value ?? 0 },
-    { name: 'contact_id', label: 'Contact', type: 'select', value: d.contact_id, options: contacts },
-    { name: 'stage_id', label: 'Stage', type: 'select', value: d.stage_id ?? stages[0]?.id, options: stages.map((s) => ({ value: s.id, label: s.name })) },
-    { name: 'notes', label: 'Notes', type: 'textarea', value: d.notes },
+  const v = await openModal(d.id ? t('deal.edit') : t('deal.new'), [
+    { name: 'title', label: t('deal.title'), value: d.title },
+    { name: 'value', label: t('deal.value'), type: 'number', value: d.value ?? 0 },
+    { name: 'contact_id', label: t('deal.contact'), type: 'select', value: d.contact_id, options: contacts },
+    { name: 'stage_id', label: t('deal.stage'), type: 'select', value: d.stage_id ?? stages[0]?.id, options: stages.map((s) => ({ value: s.id, label: s.name })) },
+    { name: 'notes', label: t('common.notes'), type: 'textarea', value: d.notes },
   ]);
   if (!v) return null;
   const body = { ...v, value: Number(v.value) || 0, contact_id: v.contact_id ? Number(v.contact_id) : null, stage_id: Number(v.stage_id) };
   const saved = d.id ? await api(`/deals/${d.id}`, { method: 'PATCH', body }) : await api('/deals', { method: 'POST', body });
-  toast('Deal saved');
+  toast(t('deal.saved'));
   return saved;
 }
 
@@ -303,27 +352,27 @@ async function renderPipeline() {
   const [stages, deals, status] = await Promise.all([api('/stages'), api('/deals'), api('/status')]);
   $('#view').innerHTML = `
     <div class="stats">
-      <div class="stat"><span class="muted">Open deals</span><b>${status.stats.openDeals.n}</b></div>
-      <div class="stat"><span class="muted">Open pipeline value</span><b>${money(status.stats.openDeals.v)}</b></div>
-      <div class="stat"><span class="muted">Won</span><b>${money(status.stats.wonValue)}</b></div>
-      <div class="stat"><span class="muted">Contacts</span><b>${status.stats.contacts}</b></div>
+      <div class="stat"><span class="muted">${t('pipe.openDeals')}</span><b>${status.stats.openDeals.n}</b></div>
+      <div class="stat"><span class="muted">${t('pipe.openValue')}</span><b>${money(status.stats.openDeals.v)}</b></div>
+      <div class="stat"><span class="muted">${t('pipe.won')}</span><b>${money(status.stats.wonValue)}</b></div>
+      <div class="stat"><span class="muted">${t('pipe.contacts')}</span><b>${status.stats.contacts}</b></div>
     </div>
-    <div class="row" style="margin-bottom:12px"><button class="btn" id="newDeal">+ New deal</button>
-      <button class="btn secondary" id="newStage">+ Stage</button>
-      <span class="muted">Drag deals between stages · click a stage name to rename it</span></div>
+    <div class="row wrap" style="margin-bottom:12px"><button class="btn" id="newDeal">${t('pipe.newDeal')}</button>
+      <button class="btn secondary" id="newStage">${t('pipe.newStage')}</button>
+      <span class="muted">${t('pipe.hint')}</span></div>
     <div class="board" id="board">${stages.map((s) => {
       const items = deals.filter((d) => d.stage_id === s.id);
       return `<div class="col" data-stage="${s.id}">
         <div class="colhead" style="border-color:${esc(s.color)}">
           <span class="t" data-rename="${s.id}">${esc(s.name)}</span>
           <span class="muted" style="font-size:12px">${items.length} · ${money(items.reduce((a, d) => a + d.value, 0))}
-            <button class="btn secondary small" data-delstage="${s.id}" title="Delete stage">×</button></span>
+            <button class="btn secondary small" data-delstage="${s.id}" title="${esc(t('pipe.deleteStage'))}">×</button></span>
         </div>
         <div class="colbody">${items.map((d) => `
           <div class="deal" draggable="true" data-deal="${d.id}">
             <div><b>${esc(d.title)}</b></div>
             <div class="row"><span class="v grow">${money(d.value)}</span>
-              ${d.contact_id ? `<a href="#" data-chat="${d.contact_id}" title="Open chat">💬</a>` : ''}</div>
+              ${d.contact_id ? `<a href="#" data-chat="${d.contact_id}" title="${esc(t('pipe.openChat'))}">💬</a>` : ''}</div>
             ${d.contact_name || d.contact_phone ? `<div class="muted" style="font-size:12px">${esc(d.contact_name || '+' + d.contact_phone)}</div>` : ''}
           </div>`).join('')}</div>
       </div>`;
@@ -347,12 +396,12 @@ async function renderPipeline() {
     const ren = e.target.closest('[data-rename]');
     if (ren) {
       const s = stages.find((x) => x.id === Number(ren.dataset.rename));
-      const v = await openModal('Edit stage', [{ name: 'name', label: 'Name', value: s.name }, { name: 'color', label: 'Color', type: 'color', value: s.color }]);
+      const v = await openModal(t('pipe.editStage'), [{ name: 'name', label: t('common.name'), value: s.name }, { name: 'color', label: t('common.color'), type: 'color', value: s.color }]);
       if (v) { await api(`/stages/${s.id}`, { method: 'PATCH', body: v }); renderPipeline(); }
       return;
     }
     const del = e.target.closest('[data-delstage]');
-    if (del) { if (confirm('Delete this stage?')) { await api(`/stages/${del.dataset.delstage}`, { method: 'DELETE' }); renderPipeline(); } return; }
+    if (del) { if (confirm(t('pipe.confirmDeleteStage'))) { await api(`/stages/${del.dataset.delstage}`, { method: 'DELETE' }); renderPipeline(); } return; }
     const card = e.target.closest('[data-deal]');
     if (card) {
       const d = deals.find((x) => x.id === Number(card.dataset.deal));
@@ -361,7 +410,7 @@ async function renderPipeline() {
   }));
   $('#newDeal').onclick = safe(async () => { if (await dealDialog()) renderPipeline(); });
   $('#newStage').onclick = safe(async () => {
-    const v = await openModal('New stage', [{ name: 'name', label: 'Name' }, { name: 'color', label: 'Color', type: 'color', value: '#64748b' }]);
+    const v = await openModal(t('pipe.newStageTitle'), [{ name: 'name', label: t('common.name') }, { name: 'color', label: t('common.color'), type: 'color', value: '#64748b' }]);
     if (v?.name) { await api('/stages', { method: 'POST', body: v }); renderPipeline(); }
   });
 }
@@ -374,52 +423,64 @@ function localInputValue(date) {
 
 async function followupDialog(contactId = null) {
   const contacts = (await contactOptions()).slice(1);
-  const v = await openModal('Schedule follow-up', [
+  // One message box per extra language; each contact receives the version for their language
+  const translationFields = otherLanguages().map((code) => ({
+    name: `tr_${code}`, label: t('fu.translation', { lang: langName(code) }), type: 'textarea', value: FOLLOWUP_DEFAULTS[code] || '',
+  }));
+  const v = await openModal(t('fu.title'), [
     contactId
-      ? { name: 'contactId', label: 'Contact', type: 'select', value: contactId, options: contacts }
-      : { name: 'contactId', label: 'Contact (or leave empty and use a tag below)', type: 'select', value: '', options: [{ value: '', label: '— by tag —' }, ...contacts] },
-    ...(contactId ? [] : [{ name: 'tag', label: 'Send to every contact with tag', placeholder: 'e.g. interested-pricing' }]),
-    { name: 'sendAt', label: 'Send at', type: 'datetime-local', value: localInputValue(new Date(Date.now() + 24 * 3600 * 1000)) },
-    { name: 'body', label: 'Message ({name}, {first_name} allowed)', type: 'textarea', value: 'Hi {first_name}, just following up on our chat. Any questions I can help with?' },
-    { name: 'templateName', label: 'OR approved template name (required if >24h since their last message)', placeholder: 'optional' },
-    { name: 'templateLang', label: 'Template language', value: 'en_US' },
-    { name: 'templateParams', label: 'Template body parameters, one per line', type: 'textarea' },
-    { name: 'cancelOnReply', label: 'Cancel automatically if the contact replies first', type: 'checkbox', value: true },
-  ], 'Schedule');
+      ? { name: 'contactId', label: t('fu.contact'), type: 'select', value: contactId, options: contacts }
+      : { name: 'contactId', label: t('fu.contactOrTag'), type: 'select', value: '', options: [{ value: '', label: t('fu.byTag') }, ...contacts] },
+    ...(contactId ? [] : [{ name: 'tag', label: t('fu.tag'), placeholder: t('fu.tagPlaceholder') }]),
+    { name: 'sendAt', label: t('fu.sendAt'), type: 'datetime-local', value: localInputValue(new Date(Date.now() + 24 * 3600 * 1000)) },
+    { name: 'body', label: `${t('fu.body')} — ${langName(state.defaultLang)}`, type: 'textarea', value: FOLLOWUP_DEFAULTS[state.defaultLang] },
+    ...translationFields,
+    { name: 'templateName', label: t('fu.templateName'), placeholder: t('fu.optional') },
+    { name: 'templateLang', label: t('fu.templateLang'), placeholder: 'en_US / zh_CN' },
+    { name: 'templateParams', label: t('fu.templateParams'), type: 'textarea' },
+    { name: 'cancelOnReply', label: t('fu.cancelOnReply'), type: 'checkbox', value: true },
+  ], t('fu.schedule'));
   if (!v) return null;
+  const translations = Object.fromEntries(otherLanguages().map((code) => [code, v[`tr_${code}`]]));
   const r = await api('/followups', {
     method: 'POST',
-    body: { ...v, contactId: v.contactId ? Number(v.contactId) : null, sendAt: new Date(v.sendAt).toISOString() },
+    body: { ...v, translations, contactId: v.contactId ? Number(v.contactId) : null, sendAt: new Date(v.sendAt).toISOString() },
   });
-  toast(`Scheduled ${r.scheduled} follow-up(s)`);
+  toast(t('fu.scheduled', { n: r.scheduled }));
   return r;
 }
 
 async function renderFollowups() {
+  const statuses = ['pending', 'sent', 'failed', 'cancelled'];
   $('#view').innerHTML = `
     <div class="card"><div class="row wrap">
       <select id="fuFilter" style="max-width:200px">
-        <option value="">All</option><option value="pending" selected>Pending</option><option value="sent">Sent</option>
-        <option value="failed">Failed</option><option value="cancelled">Cancelled</option></select>
+        <option value="">${t('fu.all')}</option>
+        ${statuses.map((s) => `<option value="${s}" ${s === 'pending' ? 'selected' : ''}>${t('fu.' + s)}</option>`).join('')}</select>
       <span class="grow"></span>
-      <button class="btn secondary" id="runNow" title="Send everything that is due right now">Run due now</button>
-      <button class="btn" id="newFu">+ Schedule follow-up</button></div>
-      <p class="muted" style="margin:10px 0 0">Tip: WhatsApp allows free-text only within 24h of the contact's last message. For older chats, use an approved <b>template</b>.</p>
+      <button class="btn secondary" id="runNow" title="${esc(t('fu.runNowTitle'))}">${t('fu.runNow')}</button>
+      <button class="btn" id="newFu">${t('fu.new')}</button></div>
+      <p class="muted" style="margin:10px 0 0">${t('fu.tip')}</p>
     </div>
-    <div class="card tablewrap"><table><thead><tr><th>When</th><th>Contact</th><th>Message</th><th>Status</th><th></th></tr></thead><tbody id="fuRows"></tbody></table></div>`;
+    <div class="card tablewrap"><table><thead><tr><th>${t('fu.when')}</th><th>${t('fu.contact')}</th><th>${t('fu.message')}</th><th>${t('fu.status')}</th><th></th></tr></thead><tbody id="fuRows"></tbody></table></div>`;
   const load = safe(async () => {
     const list = await api('/followups' + ($('#fuFilter').value ? `?status=${$('#fuFilter').value}` : ''));
-    $('#fuRows').innerHTML = list.map((f) => `
+    $('#fuRows').innerHTML = list.map((f) => {
+      // Show the version this contact will actually receive (same rule as the server's scheduler)
+      const translated = JSON.parse(f.translations || '{}')[f.contact_language];
+      const text = translated?.trim() ? translated : f.body;
+      const lang = f.contact_language ? `<span class="langpill" style="margin:0 6px 0 0">${esc(langName(f.contact_language))}</span>` : '';
+      return `
       <tr><td>${fmtTime(f.send_at)}</td>
         <td><a href="#" data-chat="${f.contact_id}">${esc(f.contact_name || '+' + f.contact_phone)}</a></td>
-        <td style="white-space:pre-wrap">${f.template_name ? `<span class="tag">template: ${esc(f.template_name)}</span>` : esc(f.body)}</td>
-        <td><span class="pill ${esc(f.status)}">${esc(f.status)}</span>${f.error ? `<div class="muted" style="font-size:12px">${esc(f.error)}</div>` : ''}</td>
-        <td>${f.status === 'pending' ? `<button class="btn secondary small" data-cancel="${f.id}">Cancel</button>` : ''}</td></tr>`).join('')
-      || '<tr><td colspan="5" class="muted">Nothing here.</td></tr>';
+        <td style="white-space:pre-wrap">${lang}${f.template_name ? `<span class="tag">${esc(t('side.template', { name: f.template_name }))}</span>` : esc(text)}</td>
+        <td><span class="pill ${esc(f.status)}">${esc(t('fu.' + f.status))}</span>${f.error ? `<div class="muted" style="font-size:12px">${esc(f.error)}</div>` : ''}</td>
+        <td>${f.status === 'pending' ? `<button class="btn secondary small" data-cancel="${f.id}">${t('common.cancel')}</button>` : ''}</td></tr>`;
+    }).join('') || `<tr><td colspan="5" class="muted">${t('fu.empty')}</td></tr>`;
   });
   $('#fuFilter').onchange = load;
   $('#newFu').onclick = safe(async () => { if (await followupDialog()) load(); });
-  $('#runNow').onclick = safe(async () => { const r = await api('/followups/run', { method: 'POST' }); toast(`Sent ${r.sent} follow-up(s)`); load(); });
+  $('#runNow').onclick = safe(async () => { const r = await api('/followups/run', { method: 'POST' }); toast(t('fu.sentN', { n: r.sent })); load(); });
   $('#fuRows').addEventListener('click', safe(async (e) => {
     const c = e.target.closest('[data-cancel]');
     if (c) { await api(`/followups/${c.dataset.cancel}`, { method: 'DELETE' }); load(); }
@@ -430,16 +491,20 @@ async function renderFollowups() {
 }
 
 // ---------------- Bot ----------------
+// Per-language setting keys mirror src/i18n.js: welcome_message (default language), welcome_message_zh, ...
+const settingKey = (key, code) => (code === state.defaultLang ? key : `${key}_${code}`);
+
 async function ruleDialog(r = {}) {
-  const v = await openModal(r.id ? 'Edit rule' : 'New bot rule', [
-    { name: 'keyword', label: 'Keyword', value: r.keyword, placeholder: 'e.g. price' },
-    { name: 'match_type', label: 'Match', type: 'select', value: r.match_type || 'contains', options: [
-      { value: 'contains', label: 'Message contains the word' }, { value: 'exact', label: 'Message is exactly the keyword' }] },
-    { name: 'reply', label: 'Bot reply ({name}, {first_name} allowed)', type: 'textarea', value: r.reply },
-    { name: 'add_tag', label: 'Add tag to contact (optional)', value: r.add_tag },
-    { name: 'priority', label: 'Priority (higher wins when several rules match)', type: 'number', value: r.priority ?? 0 },
-    { name: 'handoff', label: 'Hand off to a human (pause the bot for this contact)', type: 'checkbox', value: r.handoff },
-    { name: 'enabled', label: 'Enabled', type: 'checkbox', value: r.enabled ?? 1 },
+  const v = await openModal(r.id ? t('rule.edit') : t('rule.new'), [
+    { name: 'keyword', label: t('rule.keyword'), value: r.keyword, placeholder: t('rule.keywordPlaceholder') },
+    { name: 'language', label: t('rule.language'), type: 'select', value: r.language || '', options: languageOptions(t('common.anyLanguage')) },
+    { name: 'match_type', label: t('rule.match'), type: 'select', value: r.match_type || 'contains', options: [
+      { value: 'contains', label: t('rule.contains') }, { value: 'exact', label: t('rule.exact') }] },
+    { name: 'reply', label: t('rule.reply'), type: 'textarea', value: r.reply },
+    { name: 'add_tag', label: t('rule.addTag'), value: r.add_tag },
+    { name: 'priority', label: t('rule.priority'), type: 'number', value: r.priority ?? 0 },
+    { name: 'handoff', label: t('rule.handoff'), type: 'checkbox', value: r.handoff },
+    { name: 'enabled', label: t('rule.enabled'), type: 'checkbox', value: r.enabled ?? 1 },
   ]);
   if (!v) return null;
   return r.id ? api(`/bot/rules/${r.id}`, { method: 'PATCH', body: v }) : api('/bot/rules', { method: 'POST', body: v });
@@ -447,46 +512,50 @@ async function ruleDialog(r = {}) {
 
 async function renderBot() {
   const { settings, rules } = await api('/bot');
+  const codes = Object.keys(state.languages);
+  const perLang = (key, labelKey) => codes.map((code) => `
+    <label>${t(labelKey, { lang: langName(code) })}</label>
+    <textarea data-setting="${settingKey(key, code)}">${esc(settings[settingKey(key, code)])}</textarea>`).join('');
   $('#view').innerHTML = `
     <div class="grid2">
-      <div class="card"><h2>🤖 Bot settings</h2>
-        <label class="inline"><input type="checkbox" id="bEnabled" ${settings.bot_enabled === '1' ? 'checked' : ''}> Bot enabled</label>
-        <label class="inline"><input type="checkbox" id="bPause" ${settings.pause_bot_on_agent_reply === '1' ? 'checked' : ''}> Pause bot for a contact when a human replies</label>
-        <label>Welcome message (sent to brand-new contacts)</label><textarea id="bWelcome">${esc(settings.welcome_message)}</textarea>
-        <label>Fallback message (when no rule matches; leave empty to stay silent)</label><textarea id="bFallback">${esc(settings.fallback_message)}</textarea>
-        <div class="actions"><button class="btn" id="bSave">Save settings</button></div>
+      <div class="card"><h2>${t('bot.settings')}</h2>
+        <label class="inline"><input type="checkbox" id="bEnabled" ${settings.bot_enabled === '1' ? 'checked' : ''}> ${t('bot.enabled')}</label>
+        <label class="inline"><input type="checkbox" id="bPause" ${settings.pause_bot_on_agent_reply === '1' ? 'checked' : ''}> ${t('bot.pauseOnReply')}</label>
+        ${perLang('welcome_message', 'bot.welcome')}
+        ${perLang('fallback_message', 'bot.fallback')}
+        <div class="actions"><button class="btn" id="bSave">${t('bot.save')}</button></div>
       </div>
-      <div class="card"><h2>How the bot decides</h2>
+      <div class="card"><h2>${t('bot.how')}</h2>
         <ol class="muted" style="padding-left:18px;margin:0">
-          <li>If the bot is off, or paused for that contact → do nothing.</li>
-          <li>Brand-new contact → send the welcome message.</li>
-          <li>Find the highest-priority keyword rule that matches → send its reply, add its tag, and optionally hand off to a human.</li>
-          <li>No match → send the fallback message (if set).</li>
+          <li>${t('bot.step1')}</li><li>${t('bot.step2')}</li><li>${t('bot.step3')}</li><li>${t('bot.step4')}</li>
         </ol>
-        <p class="muted">Test it under <b>Settings → Simulator</b>.</p>
+        <p class="muted">🌐 ${t('bot.langNote')}</p>
+        <p class="muted">${t('bot.test')}</p>
       </div>
     </div>
-    <div class="card"><div class="row"><h2 class="grow" style="margin:0">Keyword rules</h2><button class="btn" id="newRule">+ Rule</button></div>
-      <div class="tablewrap"><table><thead><tr><th>Keyword</th><th>Match</th><th>Reply</th><th>Tag</th><th>Handoff</th><th>Priority</th><th>On</th><th></th></tr></thead>
+    <div class="card"><div class="row"><h2 class="grow" style="margin:0">${t('bot.rules')}</h2><button class="btn" id="newRule">${t('bot.newRule')}</button></div>
+      <div class="tablewrap"><table><thead><tr><th>${t('rule.keyword')}</th><th>${t('common.language')}</th><th>${t('rule.match')}</th><th>${t('bot.reply')}</th>
+        <th>${t('bot.tag')}</th><th>${t('bot.handoff')}</th><th>${t('bot.priority')}</th><th>${t('bot.on')}</th><th></th></tr></thead>
       <tbody>${rules.map((r) => `<tr class="click" data-rule="${r.id}">
-        <td><b>${esc(r.keyword)}</b></td><td>${esc(r.match_type)}</td><td style="white-space:pre-wrap">${esc(r.reply)}</td>
-        <td>${r.add_tag ? `<span class="tag">${esc(r.add_tag)}</span>` : ''}</td><td>${r.handoff ? '👤 yes' : ''}</td>
+        <td><b>${esc(r.keyword)}</b></td><td>${r.language ? esc(langName(r.language)) : `<span class="muted">${t('common.anyLanguage')}</span>`}</td>
+        <td>${t('bot.' + r.match_type)}</td><td style="white-space:pre-wrap">${esc(r.reply)}</td>
+        <td>${r.add_tag ? `<span class="tag">${esc(r.add_tag)}</span>` : ''}</td><td>${r.handoff ? t('bot.yes') : ''}</td>
         <td>${r.priority}</td><td>${r.enabled ? '✅' : '—'}</td>
-        <td><button class="btn danger small" data-delrule="${r.id}">Delete</button></td></tr>`).join('') || '<tr><td colspan="8" class="muted">No rules yet.</td></tr>'}</tbody></table></div>
+        <td><button class="btn danger small" data-delrule="${r.id}">${t('common.delete')}</button></td></tr>`).join('') || `<tr><td colspan="9" class="muted">${t('bot.noRules')}</td></tr>`}</tbody></table></div>
     </div>`;
   $('#bSave').onclick = safe(async () => {
-    await api('/bot/settings', { method: 'PUT', body: {
+    const body = {
       bot_enabled: $('#bEnabled').checked ? '1' : '0',
       pause_bot_on_agent_reply: $('#bPause').checked ? '1' : '0',
-      welcome_message: $('#bWelcome').value,
-      fallback_message: $('#bFallback').value,
-    } });
-    toast('Bot settings saved');
+    };
+    $$('[data-setting]').forEach((el) => { body[el.dataset.setting] = el.value; });
+    await api('/bot/settings', { method: 'PUT', body });
+    toast(t('bot.saved'));
   });
   $('#newRule').onclick = safe(async () => { if (await ruleDialog()) renderBot(); });
   $('#view > .card:last-child').addEventListener('click', safe(async (e) => {
     const del = e.target.closest('[data-delrule]');
-    if (del) { e.stopPropagation(); if (confirm('Delete rule?')) { await api(`/bot/rules/${del.dataset.delrule}`, { method: 'DELETE' }); renderBot(); } return; }
+    if (del) { e.stopPropagation(); if (confirm(t('bot.confirmDelete'))) { await api(`/bot/rules/${del.dataset.delrule}`, { method: 'DELETE' }); renderBot(); } return; }
     const row = e.target.closest('[data-rule]');
     if (row) { if (await ruleDialog(rules.find((r) => r.id === Number(row.dataset.rule)))) renderBot(); }
   }));
@@ -498,32 +567,27 @@ async function renderSettings() {
   const webhookUrl = `${location.origin}/webhook`;
   $('#view').innerHTML = `
     <div class="grid2">
-      <div class="card"><h2>WhatsApp connection</h2>
-        <p>Status: <b>${s.live ? '🟢 Live - connected to WhatsApp Cloud API' : '🟡 Mock mode - messages are logged, not sent'}</b></p>
+      <div class="card"><h2>${t('settings.connection')}</h2>
+        <p>${t('settings.status')}: <b>${s.live ? t('settings.live') : t('settings.mock')}</b></p>
         <ol style="padding-left:18px">
-          <li>Create an app at <a href="https://developers.facebook.com/apps" target="_blank" rel="noopener">developers.facebook.com</a> → add the <b>WhatsApp</b> product.</li>
-          <li>Copy the <b>access token</b> and <b>Phone number ID</b> into <code>.env</code> (<code>WHATSAPP_TOKEN</code>, <code>WHATSAPP_PHONE_NUMBER_ID</code>), and the App Secret into <code>WHATSAPP_APP_SECRET</code>.</li>
-          <li>In WhatsApp → Configuration, set the webhook URL to <code>${esc(webhookUrl)}</code> and the verify token to the value of <code>WHATSAPP_VERIFY_TOKEN</code>.</li>
-          <li>Subscribe to the <b>messages</b> webhook field, then restart this app.</li>
+          <li>${t('settings.step1')}</li><li>${t('settings.step2')}</li>
+          <li>${t('settings.step3', { url: esc(webhookUrl) })}</li><li>${t('settings.step4')}</li>
         </ol>
-        <p class="muted">The webhook must be reachable over public HTTPS. For local testing use a tunnel such as ngrok or Cloudflare Tunnel.</p>
+        <p class="muted">${t('settings.https')}</p>
+        <p class="muted">📘 ${t('settings.guide')}</p>
       </div>
-      <div class="card"><h2>🧪 Simulator</h2>
-        <p class="muted">Pretend a customer sent you a WhatsApp message. Useful for testing contacts, the bot and follow-ups before going live.</p>
-        <label>From phone</label><input id="simPhone" value="15551234567">
-        <label>Name</label><input id="simName" value="Test Customer">
-        <label>Message</label><input id="simBody" value="Hi, what is the price?">
-        <div class="actions"><button class="btn" id="simSend">Simulate incoming message</button></div>
+      <div class="card"><h2>${t('sim.title')}</h2>
+        <p class="muted">${t('sim.hint')}</p>
+        <label>${t('sim.from')}</label><input id="simPhone" value="15551234567">
+        <label>${t('common.name')}</label><input id="simName" value="Test Customer">
+        <label>${t('sim.message')}</label><input id="simBody" value="${uiLang === 'zh' ? '你好，请问价格是多少？' : 'Hi, what is the price?'}">
+        <div class="actions"><button class="btn" id="simSend">${t('sim.send')}</button></div>
       </div>
     </div>
-    <div class="card"><h2>Coming next: social media channels</h2>
-      <p class="muted">Contacts already store Instagram / Facebook / TikTok handles, and every message records its channel.
-      Instagram DMs and Facebook Messenger use the same Meta webhook system as WhatsApp, so they can be added as new adapters in
-      <code>src/channels/</code> without changing the rest of the CRM. See the README.</p>
-    </div>`;
+    <div class="card"><h2>${t('settings.socialTitle')}</h2><p class="muted">${t('settings.social')}</p></div>`;
   $('#simSend').onclick = safe(async () => {
     const r = await api('/simulate', { method: 'POST', body: { phone: $('#simPhone').value, name: $('#simName').value, body: $('#simBody').value } });
-    toast('Message received - check the Inbox');
+    toast(t('sim.received'));
     if (r?.contact) state.activeId = r.contact.id;
     refreshStatus();
   });
@@ -540,5 +604,5 @@ setInterval(() => {
   }
 }, 4000);
 
-refreshStatus();
-go('inbox');
+applyStaticText();
+refreshStatus().then(() => go('inbox'));

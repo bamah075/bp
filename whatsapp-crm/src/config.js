@@ -18,6 +18,6 @@ module.exports = {
     phoneNumberId: env.WHATSAPP_PHONE_NUMBER_ID || '',
     verifyToken: env.WHATSAPP_VERIFY_TOKEN || 'my-verify-token',
     appSecret: env.WHATSAPP_APP_SECRET || '',
-    graphVersion: env.GRAPH_API_VERSION || 'v21.0',
+    graphVersion: env.GRAPH_API_VERSION || 'v26.0',
   },
 };
