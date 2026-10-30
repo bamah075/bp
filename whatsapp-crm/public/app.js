@@ -162,7 +162,7 @@ async function loadMessages(id) {
   const el = $('#msgs');
   if (!el || sig === state.lastMsgSig) return;
   state.lastMsgSig = sig;
-  api(`/contacts/${id}/read`, { method: 'POST' }).then(refreshStatus).catch(() => {}); // you're looking at it, so it's read
+  api(`/contacts/${id}/read`, { method: 'POST' }).then(() => { refreshStatus(); loadConvs(); }).catch(() => {}); // you're looking at it, so it's read
   const tick = { queued: '🕓', sent: '✓', delivered: '✓✓', read: '✓✓ read', failed: '⚠️ failed' };
   el.innerHTML = msgs.map((m) => `
     <div class="msg ${m.direction} ${m.status === 'failed' ? 'failed' : ''}" ${m.error ? `title="${esc(m.error)}"` : ''}>
