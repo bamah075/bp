@@ -17,4 +17,7 @@ You are the planner. You do NOT edit files.
      libraries, missing hardware, network calls).
    - **Test plan** — what tests prove it works, and what to mock.
    - **Open questions** — anything the user must decide (or "none").
+   - **Suggested agents** — which agents should run after you and why
+     (for example `coder → tester → reviewer`, add `security` if user input
+     reaches the shell or files, add `docs` if setup steps change).
 Prefer the smallest change that fully solves the request.
